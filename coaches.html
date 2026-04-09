@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX — Coaches & Coach IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="forgex-auth.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-deep:#05050A;--bg-mid:#09090F;--bg-card:#0D0D16;--bg-raised:#111120;
+      --border-dim:rgba(255,255,255,0.04);--border-soft:rgba(255,255,255,0.08);
+      --crimson:#E8192C;--crimson-light:#FF3D52;--crimson-dim:rgba(232,25,44,0.18);--crimson-glow:rgba(232,25,44,0.40);
+      --magenta:#C026D3;--magenta-light:#D946EF;--magenta-dim:rgba(192,38,211,0.15);--magenta-glow:rgba(192,38,211,0.35);
+      --led-mid:#E879F9;--led-mid-glow:rgba(232,121,249,0.25);
+      --text-primary:#F2F0F8;--text-secondary:#8B8A9E;--text-muted:#4A4A62;
+      --font-display:'Bebas Neue',sans-serif;--font-body:'Barlow',sans-serif;
+      --font-cond:'Barlow Condensed',sans-serif;--font-mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg-deep);color:var(--text-primary);font-family:var(--font-body);font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;opacity:0;transition:opacity 0.4s ease}
+
+    .led-top{height:2px;background:linear-gradient(90deg,transparent,var(--crimson) 20%,var(--led-mid) 50%,var(--magenta) 80%,transparent);box-shadow:0 0 10px var(--crimson-glow),0 0 30px var(--magenta-glow)}
+
+    nav{background:rgba(5,5,10,0.96);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:66px;border-bottom:1px solid var(--border-dim);position:sticky;top:0;z-index:200}
+    nav::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent)}
+    .nav-logo{font-family:var(--font-display);font-size:26px;letter-spacing:6px;color:var(--text-primary);text-decoration:none;line-height:1}
+    .nav-logo em{font-style:normal;color:var(--crimson);text-shadow:0 0 18px var(--crimson-glow)}
+    .nav-links{display:flex;gap:40px;list-style:none}
+    .nav-links a{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text-primary);border-bottom-color:var(--crimson)}
+    .nav-right{display:flex;align-items:center;gap:24px}
+    .nav-login{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .nav-login:hover{color:var(--text-primary)}
+    .nav-cta{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--crimson-light);background:transparent;border:1px solid var(--crimson);padding:9px 22px;cursor:pointer;box-shadow:0 0 10px var(--crimson-dim);transition:all 0.22s}
+    .nav-cta:hover{background:var(--crimson);color:#fff;box-shadow:0 0 22px var(--crimson-glow)}
+
+    /* ── HERO ── */
+    .page-hero{padding:80px 64px 64px;position:relative;overflow:hidden;border-bottom:1px solid var(--border-dim)}
+    .page-hero::before{content:'';position:absolute;top:-200px;right:-100px;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(232,25,44,0.055) 0%,transparent 65%);pointer-events:none}
+    .ph-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:var(--crimson);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+    .ph-tag-line{width:22px;height:1px;background:var(--crimson);box-shadow:0 0 6px var(--crimson)}
+    .ph-title{font-family:var(--font-display);font-size:clamp(64px,9vw,120px);line-height:0.88;letter-spacing:3px;margin-bottom:20px}
+    .ph-title .cr{color:var(--crimson);text-shadow:0 0 28px var(--crimson-glow)}
+    .ph-title .mg{color:var(--led-mid);text-shadow:0 0 28px var(--led-mid-glow)}
+    .ph-sub{font-size:16px;font-weight:300;color:var(--text-secondary);max-width:560px;line-height:1.75}
+
+    /* ── SECTION HEADER ── */
+    .s-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:var(--crimson);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+    .s-tag-line{width:22px;height:1px;background:var(--crimson);box-shadow:0 0 6px var(--crimson)}
+    .s-tag.mg{color:var(--magenta-light)}
+    .s-tag-line.mg{background:var(--magenta-light);box-shadow:0 0 6px var(--magenta-light)}
+    .s-title{font-family:var(--font-display);font-size:clamp(48px,5.5vw,72px);line-height:0.9;letter-spacing:2px;margin-bottom:48px}
+
+    /* ═══════════════════════
+       COACH IA — Section principale
+    ═══════════════════════ */
+    .ai-section{padding:80px 64px;background:var(--bg-deep);position:relative;overflow:hidden}
+    .ai-section::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(232,25,44,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(232,25,44,0.022) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
+
+    .ai-layout{display:grid;grid-template-columns:1fr 440px;gap:48px;align-items:start;position:relative;z-index:1}
+
+    /* Carte coach IA */
+    .ai-card{background:var(--bg-card);border:1px solid var(--border-soft);position:relative;overflow:hidden}
+    .ai-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light));box-shadow:0 0 18px var(--crimson-glow)}
+
+    .ai-card-head{padding:28px 28px 20px;border-bottom:1px solid var(--border-dim);display:flex;align-items:center;gap:16px}
+    .ai-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(232,25,44,0.3),rgba(192,38,211,0.3));border:2px solid var(--crimson);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 0 16px var(--crimson-glow),0 0 32px rgba(192,38,211,0.2)}
+    .ai-head-info{}
+    .ai-name{font-family:var(--font-display);font-size:22px;letter-spacing:2px;color:var(--text-primary);line-height:1;margin-bottom:4px}
+    .ai-status{display:flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--crimson-light)}
+    .ai-dot{width:7px;height:7px;border-radius:50%;background:var(--crimson);box-shadow:0 0 8px var(--crimson);animation:aipulse 1.8s ease-in-out infinite}
+    @keyframes aipulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+
+    /* Messages */
+    .ai-messages{height:420px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth}
+    .ai-messages::-webkit-scrollbar{width:3px}
+    .ai-messages::-webkit-scrollbar-thumb{background:var(--crimson-dim);border-radius:2px}
+
+    .msg{display:flex;gap:10px;align-items:flex-start;animation:msgIn 0.3s cubic-bezier(0.4,0,0.2,1)}
+    @keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .msg.user{flex-direction:row-reverse}
+
+    .msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px}
+    .msg-avatar.ai{background:linear-gradient(135deg,rgba(232,25,44,0.25),rgba(192,38,211,0.25));border:1px solid rgba(232,25,44,0.3)}
+    .msg-avatar.user{background:rgba(255,255,255,0.06);border:1px solid var(--border-soft);font-family:var(--font-display);font-size:12px;color:var(--text-muted)}
+
+    .msg-bubble{max-width:82%;padding:12px 16px;font-size:14px;font-weight:300;line-height:1.6;border:1px solid var(--border-dim)}
+    .msg.ai .msg-bubble{background:var(--bg-raised);color:var(--text-secondary);border-color:rgba(232,25,44,0.15)}
+    .msg.user .msg-bubble{background:var(--crimson-dim);color:var(--text-primary);border-color:rgba(232,25,44,0.3)}
+
+    /* Typing indicator */
+    .typing-indicator{display:none;align-items:center;gap:10px}
+    .typing-indicator.show{display:flex}
+    .typing-dots{display:flex;gap:4px;padding:12px 16px;background:var(--bg-raised);border:1px solid rgba(232,25,44,0.15)}
+    .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--crimson);opacity:0.4;animation:tdot 1.2s ease-in-out infinite}
+    .typing-dot:nth-child(2){animation-delay:0.2s}
+    .typing-dot:nth-child(3){animation-delay:0.4s}
+    @keyframes tdot{0%,80%,100%{opacity:0.4;transform:scale(1)}40%{opacity:1;transform:scale(1.2)}}
+
+    /* Suggestions rapides */
+    .ai-suggestions{padding:12px 20px;border-top:1px solid var(--border-dim);display:flex;gap:8px;flex-wrap:wrap;background:var(--bg-mid)}
+    .ai-sug-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);background:var(--bg-raised);border:1px solid var(--border-soft);padding:5px 12px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+    .ai-sug-btn:hover{border-color:var(--crimson);color:var(--crimson-light)}
+
+    /* Input */
+    .ai-input-area{padding:16px 20px;border-top:1px solid var(--border-dim);background:var(--bg-deep);display:flex;gap:10px;align-items:flex-end}
+    .ai-input{flex:1;background:var(--bg-card);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:11px 16px;outline:none;resize:none;min-height:44px;max-height:120px;transition:border-color 0.2s;line-height:1.5}
+    .ai-input::placeholder{color:var(--text-muted)}
+    .ai-input:focus{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-dim)}
+    .ai-send{width:44px;height:44px;background:var(--crimson);border:none;color:#fff;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all 0.2s;box-shadow:0 0 12px var(--crimson-glow);flex-shrink:0}
+    .ai-send:hover{background:var(--crimson-light);box-shadow:0 0 20px var(--crimson-glow)}
+    .ai-send:disabled{background:var(--bg-raised);box-shadow:none;cursor:not-allowed;opacity:0.5}
+
+    /* Infos coach IA */
+    .ai-info{display:flex;flex-direction:column;gap:24px}
+    .ai-info-title{font-family:var(--font-display);font-size:clamp(48px,5vw,64px);line-height:0.88;letter-spacing:2px;color:var(--text-primary);margin-bottom:16px}
+    .ai-info-title .cr{color:var(--crimson);text-shadow:0 0 20px var(--crimson-glow)}
+    .ai-desc{font-size:15px;font-weight:300;color:var(--text-secondary);line-height:1.75;margin-bottom:8px}
+    .ai-feats{display:flex;flex-direction:column;gap:12px}
+    .ai-feat{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border-dim);border-left:2px solid var(--crimson)}
+    .ai-feat-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+    .ai-feat-title{font-family:var(--font-cond);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-primary);margin-bottom:3px}
+    .ai-feat-txt{font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.55}
+
+    /* ═══════════════════════
+       COACHS HUMAINS
+    ═══════════════════════ */
+    .coaches-section{padding:80px 64px;background:var(--bg-mid);border-top:1px solid var(--border-dim)}
+    .coaches-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-dim)}
+
+    .coach-card{background:var(--bg-card);transition:background 0.22s;position:relative;overflow:hidden}
+    .coach-card:hover{background:var(--bg-raised)}
+    .coach-thumb{height:260px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+    .coach-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px}
+    .coach-bg-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--bg-card) 100%)}
+    .coach-card:hover .coach-bg-overlay{background:linear-gradient(to bottom,transparent 40%,var(--bg-raised) 100%)}
+    .coach-badge{position:absolute;top:16px;left:16px;font-family:var(--font-mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border:1px solid;background:rgba(5,5,10,0.7)}
+    .coach-body{padding:24px}
+    .coach-spec{font-family:var(--font-mono);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+    .coach-name{font-family:var(--font-display);font-size:28px;letter-spacing:2px;color:var(--text-primary);margin-bottom:10px;line-height:1}
+    .coach-desc{font-size:13px;font-weight:300;color:var(--text-secondary);line-height:1.65;margin-bottom:16px}
+    .coach-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+    .coach-tag{font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;background:var(--bg-raised);border:1px solid var(--border-dim);color:var(--text-muted)}
+    .coach-stats{display:flex;gap:20px;padding-top:16px;border-top:1px solid var(--border-dim);margin-bottom:20px}
+    .coach-stat-n{font-family:var(--font-display);font-size:22px;line-height:1;color:var(--crimson-light);text-shadow:0 0 8px var(--crimson-glow)}
+    .coach-stat-l{font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-top:2px}
+    .btn-book{width:100%;font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:transparent;color:var(--text-muted);border:1px solid var(--border-soft);padding:11px;cursor:pointer;transition:all 0.22s}
+    .btn-book:hover,.btn-book.featured{background:var(--crimson);color:#fff;border-color:var(--crimson);box-shadow:0 0 18px var(--crimson-glow)}
+
+    /* ═══════════════════════
+       COMMENT ÇA MARCHE
+    ═══════════════════════ */
+    .how-section{padding:80px 64px;background:var(--bg-deep);border-top:1px solid var(--border-dim)}
+    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border-dim)}
+    .step{background:var(--bg-card);padding:32px 28px;position:relative}
+    .step-num{font-family:var(--font-display);font-size:64px;line-height:1;color:rgba(232,25,44,0.12);margin-bottom:16px}
+    .step-icon{font-size:28px;margin-bottom:14px;display:block}
+    .step-title{font-family:var(--font-cond);font-size:15px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-primary);margin-bottom:8px}
+    .step-txt{font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.65}
+
+    /* ── MODALE RÉSERVATION ── */
+    .book-overlay{position:fixed;inset:0;z-index:9000;background:rgba(5,5,10,0.92);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.28s}
+    .book-overlay.open{opacity:1;pointer-events:all}
+    .book-modal{background:var(--bg-card);border:1px solid var(--border-soft);width:min(520px,94vw);transform:translateY(20px) scale(0.97);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+    .book-overlay.open .book-modal{transform:translateY(0) scale(1)}
+    .book-led{height:2px;background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light));box-shadow:0 0 14px var(--crimson-glow)}
+    .book-head{padding:24px 28px 18px;border-bottom:1px solid var(--border-dim);display:flex;align-items:center;justify-content:space-between}
+    .book-title{font-family:var(--font-display);font-size:28px;letter-spacing:2px;color:var(--text-primary)}
+    .book-close{background:transparent;border:1px solid var(--border-soft);color:var(--text-muted);font-size:16px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+    .book-close:hover{border-color:var(--crimson);color:var(--crimson)}
+    .book-body{padding:24px 28px;display:flex;flex-direction:column;gap:16px}
+    .book-field label{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px}
+    .book-field input,.book-field select,.book-field textarea{width:100%;background:var(--bg-raised);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:11px 14px;outline:none;transition:border-color 0.2s}
+    .book-field input:focus,.book-field select:focus,.book-field textarea:focus{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-dim)}
+    .book-field textarea{resize:vertical;min-height:80px}
+    .book-field select option{background:var(--bg-card)}
+    .book-field input::placeholder,.book-field textarea::placeholder{color:var(--text-muted)}
+    .btn-book-submit{width:100%;font-family:var(--font-cond);font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:var(--crimson);color:#fff;border:none;padding:14px;cursor:pointer;box-shadow:0 0 18px var(--crimson-glow);transition:all 0.22s}
+    .btn-book-submit:hover{background:var(--crimson-light);box-shadow:0 0 28px var(--crimson-glow)}
+
+    /* FOOTER */
+    footer{background:var(--bg-deep);border-top:1px solid var(--border-dim);padding:48px 64px 28px;position:relative}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent)}
+    .foot-btm{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .foot-copy{font-size:12px;font-weight:300;color:var(--text-muted)}
+    .foot-links{display:flex;gap:24px}
+    .foot-links a{font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .foot-links a:hover{color:var(--crimson)}
+
+    @media(max-width:1024px){nav{padding:0 32px}.nav-links{display:none}.ai-layout{grid-template-columns:1fr}.coaches-grid{grid-template-columns:1fr 1fr}.steps-grid{grid-template-columns:1fr 1fr}.page-hero,.ai-section,.coaches-section,.how-section{padding-left:32px;padding-right:32px}}
+    @media(max-width:640px){.coaches-grid{grid-template-columns:1fr}.steps-grid{grid-template-columns:1fr}footer{padding:40px 24px 20px}}
+  
+  </style>
+</head>
+<body>
+
+<div class="led-top"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">FORGE<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="entrainements.html">Entraînements</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="coaches.html" class="active">Coaches</a></li>
+    <li><a href="communaute.html">Communauté</a></li>
+    <li><a href="tarifs.html">Tarifs</a></li></ul></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-login" href="login.html" id="nav-login-lnk">Connexion</a>
+    <button class="nav-cta" id="nav-cta-btn">Commencer →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="ph-tag"><span class="ph-tag-line"></span>Coaching personnalisé</div>
+  <h1 class="ph-title">TES COACHS<br><span class="cr">HUMAINS</span> &<br>COACH <span class="mg">IA</span></h1>
+  <p class="ph-sub">Un coach IA disponible 24h/24 pour répondre à toutes tes questions, et des coachs experts pour un suivi personnalisé approfondi.</p>
+</div>
+
+<!-- ═══ COACH IA ═══ -->
+<section class="ai-section">
+  <div class="ai-layout">
+
+    <!-- Infos coach IA -->
+    <div class="ai-info">
+      <div>
+        <div class="s-tag mg"><span class="s-tag-line mg"></span>Disponible 24h/24</div>
+        <div class="ai-info-title">FORGE<br><span class="cr">AI</span><br>COACH</div>
+        <p class="ai-desc">ForgeAI est ton coach personnel dopé à l'intelligence artificielle. Il connaît chaque programme ForgeX, les bases de la nutrition sportive, et s'adapte à tes objectifs et ton niveau pour te donner des conseils précis et personnalisés.</p>
+      </div>
+      <div class="ai-feats">
+        <div class="ai-feat">
+          <div class="ai-feat-icon">🧠</div>
+          <div>
+            <div class="ai-feat-title">Expert en musculation & nutrition</div>
+            <div class="ai-feat-txt">Programmes, exercices, macros, timing des repas — ForgeAI maîtrise tous les aspects du fitness sportif.</div>
+          </div>
+        </div>
+        <div class="ai-feat">
+          <div class="ai-feat-icon">⚡</div>
+          <div>
+            <div class="ai-feat-title">Réponse instantanée</div>
+            <div class="ai-feat-txt">Pas d'attente, pas de rendez-vous. Pose ta question à 3h du matin, ForgeAI est là.</div>
+          </div>
+        </div>
+        <div class="ai-feat">
+          <div class="ai-feat-icon">🎯</div>
+          <div>
+            <div class="ai-feat-title">Conseils adaptés à toi</div>
+            <div class="ai-feat-txt">Précise ton niveau, tes objectifs et tes contraintes — ForgeAI personnalise chaque réponse.</div>
+          </div>
+        </div>
+        <div class="ai-feat">
+          <div class="ai-feat-icon">🔒</div>
+          <div>
+            <div class="ai-feat-title">Conversation privée</div>
+            <div class="ai-feat-txt">Tes questions restent confidentielles. Parle de tout sans filtre.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat IA -->
+    <div class="ai-card">
+      <div class="ai-card-head">
+        <div class="ai-avatar">🤖</div>
+        <div class="ai-head-info">
+          <div class="ai-name">FORGE AI</div>
+          <div class="ai-status"><div class="ai-dot"></div>En ligne — Prêt à t'aider</div>
+        </div>
+      </div>
+
+      <div class="ai-messages" id="ai-messages">
+        <div class="msg ai">
+          <div class="msg-avatar ai">🤖</div>
+          <div class="msg-bubble">Salut ! Je suis ForgeAI, ton coach personnel. Je suis là pour t'aider sur l'entraînement, la nutrition, la récupération ou tout ce qui touche à ta progression fitness. C'est quoi ta question du jour ? 💪</div>
+        </div>
+      </div>
+
+      <div class="typing-indicator" id="typing-indicator" style="padding:8px 20px">
+        <div class="msg-avatar ai" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,rgba(232,25,44,0.25),rgba(192,38,211,0.25));border:1px solid rgba(232,25,44,0.3);display:flex;align-items:center;justify-content:center;font-size:14px">🤖</div>
+        <div class="typing-dots">
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+          <div class="typing-dot"></div>
+        </div>
+      </div>
+
+      <div class="ai-suggestions" id="ai-suggestions">
+        <button class="ai-sug-btn" onclick="sendSuggestion(this)">Programme débutant ?</button>
+        <button class="ai-sug-btn" onclick="sendSuggestion(this)">Mes macros idéales ?</button>
+        <button class="ai-sug-btn" onclick="sendSuggestion(this)">Progresser en squat</button>
+        <button class="ai-sug-btn" onclick="sendSuggestion(this)">Plan sèche efficace</button>
+        <button class="ai-sug-btn" onclick="sendSuggestion(this)">Récupération musculaire</button>
+      </div>
+
+      <div class="ai-input-area">
+        <textarea class="ai-input" id="ai-input" placeholder="Pose ta question à ForgeAI..." rows="1"></textarea>
+        <button class="ai-send" id="ai-send-btn" title="Envoyer">➤</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ COMMENT ÇA MARCHE ═══ -->
+<section class="how-section">
+  <div class="s-tag"><span class="s-tag-line"></span>Process</div>
+  <h2 class="s-title">COMMENT<br>ÇA MARCHE</h2>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">01</div>
+      <span class="step-icon">🎯</span>
+      <div class="step-title">Définis tes objectifs</div>
+      <p class="step-txt">Parle à ForgeAI ou remplis le formulaire de réservation. On identifie tes besoins, ton niveau et tes contraintes.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <span class="step-icon">👤</span>
+      <div class="step-title">Choisis ton coach</div>
+      <p class="step-txt">IA pour une disponibilité 24h/24, ou un coach humain pour un suivi complet et personnalisé selon ta spécialité.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <span class="step-icon">📋</span>
+      <div class="step-title">Reçois ton plan</div>
+      <p class="step-txt">Programme d'entraînement et plan nutritionnel entièrement adaptés à toi. Ajustements hebdomadaires inclus.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <span class="step-icon">🔥</span>
+      <div class="step-title">Forge ton corps</div>
+      <p class="step-txt">Suis le plan, pose tes questions à ForgeAI, et vois tes résultats progresser semaine après semaine.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODALE RÉSERVATION -->
+<div class="book-overlay" id="book-overlay">
+  <div class="book-modal" id="book-modal">
+    <div class="book-led"></div>
+    <div class="book-head">
+      <div class="book-title">RÉSERVER</div>
+      <button class="book-close" id="book-close">✕</button>
+    </div>
+    <div class="book-body">
+      <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--crimson-light);margin-bottom:4px">Coach sélectionné</div>
+      <div style="font-family:var(--font-display);font-size:22px;letter-spacing:2px;color:var(--text-primary);margin-bottom:16px" id="book-coach-name">—</div>
+      <div class="book-field">
+        <label>Ton prénom</label>
+        <input type="text" id="bk-name" placeholder="Ex: Alexandre">
+      </div>
+      <div class="book-field">
+        <label>Email</label>
+        <input type="email" id="bk-email" placeholder="ton@email.com">
+      </div>
+      <div class="book-field">
+        <label>Type de séance</label>
+        <select id="bk-type">
+          <option value="">Sélectionne...</option>
+          <option value="decouverte">Séance découverte (30 min) — Gratuit</option>
+          <option value="bilan">Bilan complet (1h) — 49€</option>
+          <option value="suivi">Suivi mensuel (4 séances) — 149€</option>
+          <option value="elite">Pack Elite (12 séances) — 399€</option>
+        </select>
+      </div>
+      <div class="book-field">
+        <label>Ton objectif principal</label>
+        <textarea id="bk-goal" placeholder="Décris ton objectif et ta situation actuelle..."></textarea>
+      </div>
+      <button class="btn-book-submit" onclick="submitBooking()">Envoyer ma demande →</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-btm">
+    <span class="foot-copy">© 2025 ForgeX — Tous droits réservés</span>
+    <div class="foot-links">
+      <a href="blog.html">Blog</a>
+      <a href="faq.html">FAQ</a>
+      <a href="index.html">Accueil</a>
+      <a href="tarifs.html">Tarifs</a>
+      <a href="faq.html">FAQ</a>
+      <a href="blog.html">Blog</a>
+      <a href="cgu.html">CGU</a>
+      <a href="confidentialite.html">Confidentialité</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   FORGE AI — Moteur de coaching intelligent
+   Fonctionne 100% hors ligne, sans API
+══════════════════════════════════════════ */
+
+const KNOWLEDGE = {
+  programmes: {
+    keys: ['programme','split','ppl','full body','séance','routine','entraînement','exercice','planning','jours'],
+    answers: [
+      "Pour un débutant, je recommande un **Full Body 3x/semaine** (Lundi-Mercredi-Vendredi). Tu travailles chaque muscle à chaque séance, ce qui est optimal pour apprendre les mouvements et progresser vite 💪\n\nUne séance type : Squat, Développé couché, Traction, Rowing, Curl, Gainage. 3 séries de 8-12 reps chaque exercice.",
+      "Le **PPL (Push Pull Legs)** est idéal à partir du niveau intermédiaire. 6 jours par semaine :\n- Push : Pectoraux, épaules, triceps\n- Pull : Dos, biceps, trapèzes\n- Legs : Quadriceps, ischio, fessiers, mollets\n\nChaque muscle est travaillé 2x par semaine — la fréquence optimale pour l'hypertrophie 🔥",
+      "Pour la force maximale, le protocole **5×5** est imbattable : Squat, Développé couché, Soulevé de terre, Rowing, Développé militaire. 5 séries de 5 reps, progression de 2.5kg par séance. Simple, efficace, prouvé scientifiquement ⚡"
+    ]
+  },
+  nutrition: {
+    keys: ['manger','protéine','calorie','macro','glucide','lipide','nutrition','alimentation','régime','masse','sèche','poids','faim'],
+    answers: [
+      "Pour les protéines, vise **1.8 à 2.2g par kg de poids corporel**. Exemple : 80kg → 144 à 176g de protéines/jour. Sources : poulet, œufs, poisson, fromage blanc, whey. Répartis sur 4-5 repas pour maximiser la synthèse protéique 🥩",
+      "Pour calculer tes calories :\n- **Prise de masse** : TDEE + 200 à 300 kcal\n- **Maintien** : TDEE (poids × 35 environ)\n- **Sèche** : TDEE - 300 à 500 kcal\n\nNe descends jamais en dessous de 1500 kcal pour un homme ou 1200 kcal pour une femme. La patience est la clé 🎯",
+      "La **fenêtre post-workout** : consomme 30-40g de protéines + 60-80g de glucides dans les 45 min après l'entraînement. Shake whey + banane = combo parfait. Ça optimise la récupération et la synthèse protéique ⚡"
+    ]
+  },
+  recuperation: {
+    keys: ['récupération','dormir','sommeil','repos','douleur','courbature','blessure','douleur','fatigue','overtraining'],
+    answers: [
+      "Le **sommeil est le meilleur anabolisant naturel**. 7-9h par nuit minimum. La GH (hormone de croissance) est libérée principalement durant les premières heures de sommeil profond. Couche-toi à heure fixe, chambre fraîche (18°C), pas d'écran 1h avant 😴",
+      "Les **courbatures** (DOMS) durent 24-72h après une séance intense. C'est normal, surtout en début de programme. Pour accélérer la récupération : hydratation optimale (35ml/kg/jour), protéines suffisantes, léger cardio actif, et sommeil. La chaleur (bain chaud) aide aussi 🛁",
+      "Signe d'**overtraining** : performances qui chutent, fatigue persistante, sommeil perturbé, irritabilité, blessures à répétition. Solution : 1 semaine de décharge (50% du volume), plus de sommeil, plus de protéines. Prévenir vaut mieux que guérir 🔴"
+    ]
+  },
+  musculation: {
+    keys: ['squat','développé','soulevé','traction','rowing','curl','triceps','biceps','pectoraux','dos','jambes','épaules','abdos'],
+    answers: [
+      "Le **Squat** est le roi des exercices. Points clés : pieds largeur d'épaules légèrement tournés vers l'extérieur, descend jusqu'à la parallèle (cuisses parallèles au sol), genoux dans l'axe des orteils, dos droit, regard droit devant. Commence léger et maîtrise la technique avant d'ajouter de la charge 🏋️",
+      "Pour le **développé couché**, prise légèrement plus large que les épaules, descends la barre jusqu'à 1cm de la poitrine, coudes à 45-75° du corps (pas à 90°, ça blessure les épaules). Presse les pieds au sol pour créer une base stable. Expire en poussant 💪",
+      "La **traction** est l'exercice roi pour le dos. Si tu ne peux pas en faire, utilise un élastique ou la machine d'assistance. Prise pronation ou supination, descends complètement, tire les coudes vers les poches, pas vers l'arrière. Le dos fait le travail, pas les bras 🦅"
+    ]
+  },
+  cardio: {
+    keys: ['cardio','course','vélo','hiit','endurance','calories brûlées','gras','bruler','courir','tapis','rameur'],
+    answers: [
+      "**HIIT vs Cardio steady-state** : Le HIIT (20-30 min, intervalles intenses) brûle plus de calories sur 24h grâce à l'effet afterburn (EPOC). Le cardio modéré (zone 2, 45-60 min) est meilleur pour la santé cardiovasculaire et la combustion des graisses à jeun. Les deux ont leur place 🏃",
+      "Pour préserver le muscle en sèche : fais ton **cardio après la musculation** ou le matin à jeun. Limite à 3-4 sessions/semaine de 30-40 min. Zone 2 (tu peux parler mais tu es essoufflé = FC 60-70% max). Le rameur est excellent car il sollicite 86% des muscles 🚣"
+    ]
+  },
+  motivation: {
+    keys: ['motivat','abandon','difficile','dur','démotiv','fatigue','lâche','envie','progress','résultat','lent','plateau'],
+    answers: [
+      "La **constance bat l'intensité** sur le long terme. Plutôt que de t'entraîner 7 jours d'affilée puis lâcher, vise 3 séances semaine pendant 52 semaines. C'est 156 séances vs 0. Le meilleur programme est celui que tu fais vraiment 💪🔥",
+      "**Tu traverses un plateau ?** C'est normal après 2-3 mois. Solutions : augmente le volume (+ 1 série), change les exercices, varie la cadence d'exécution, assure-toi de dormir suffisamment et de manger assez. Le corps s'adapte — tu dois le surprendre ⚡",
+      "Les résultats en musculation prennent **3 mois minimum** pour être visibles. 6 mois pour une vraie transformation. 1 an pour impressionner. Ne compare pas ton chapitre 1 avec le chapitre 20 de quelqu'un d'autre. Ton seul concurrent c'est toi hier 🎯"
+    ]
+  },
+  supplementation: {
+    keys: ['whey','créatine','supplément','bcaa','protéine poudre','mass gainer','bruleur','pré workout','vitamine'],
+    answers: [
+      "Les **suppléments essentiels** par ordre de priorité :\n1. Whey protéine (pratique pour atteindre tes apports)\n2. Créatine monohydrate 5g/jour (le + prouvé scientifiquement, +5-10% de force)\n3. Vitamine D3 (1000-2000 UI/jour, surtout en hiver)\n4. Oméga-3 (2g EPA+DHA/jour)\n\nTout le reste est marketing 🎯",
+      "La **créatine** : 5g par jour, tous les jours (pas besoin de phase de charge). Prends-la avec ton repas post-entraînement. Effets en 2-3 semaines : +5% de force, meilleure récupération, légère prise de poids (eau intramusculaire). C'est le supplément le mieux étudié en science du sport ⚡"
+    ]
+  }
+};
+
+const GREETINGS = ['bonjour','salut','hello','coucou','hey','bonsoir','bjr','slt'];
+const THANKS = ['merci','thanks','super','parfait','nickel','top','génial','excellent','cool','ok'];
+
+let chatHistory = [];
+let isTyping = false;
+
+function getUserInitials(){
+  const user = typeof FX !== 'undefined' && FX.isLoggedIn() ? FX.getUser() : null;
+  return user ? user.slice(0,2).toUpperCase() : 'Tu';
+}
+
+function escHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\n/g,'<br>')
+    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+}
+
+function addMessage(text, role){
+  const container = document.getElementById('ai-messages');
+  const isAI = role === 'assistant';
+  const div = document.createElement('div');
+  div.className = 'msg ' + (isAI ? 'ai' : 'user');
+  div.innerHTML = `
+    <div class="msg-avatar ${isAI?'ai':'user'}">${isAI?'🤖':getUserInitials()}</div>
+    <div class="msg-bubble">${escHtml(text)}</div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function showTyping(show){
+  isTyping = show;
+  document.getElementById('typing-indicator').classList.toggle('show', show);
+  document.getElementById('ai-send-btn').disabled = show;
+  document.getElementById('ai-messages').scrollTop = 99999;
+}
+
+function getResponse(text){
+  const lower = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+
+  /* Salutation */
+  if(GREETINGS.some(g => lower.includes(g) && lower.length < 20)){
+    const user = typeof FX !== 'undefined' && FX.isLoggedIn() ? FX.getUser() : null;
+    return `Hey ${user||''}! 💪 Je suis ForgeAI, ton coach sportif personnel. Pose-moi n'importe quelle question sur l'entraînement, la nutrition, la récupération ou la supplémentation. Je suis là pour t'aider à atteindre tes objectifs !`;
+  }
+
+  /* Remerciement */
+  if(THANKS.some(t => lower.includes(t) && lower.length < 25)){
+    return "Avec plaisir ! 🔥 N'hésite pas si tu as d'autres questions. On forge ensemble !";
+  }
+
+  /* Chercher dans la base de connaissances */
+  let bestCategory = null;
+  let bestScore = 0;
+  for(const [cat, data] of Object.entries(KNOWLEDGE)){
+    const score = data.keys.filter(k => lower.includes(k)).length;
+    if(score > bestScore){ bestScore = score; bestCategory = cat; }
+  }
+
+  if(bestCategory && bestScore > 0){
+    const answers = KNOWLEDGE[bestCategory].answers;
+    /* Varier les réponses pour éviter la répétition */
+    const idx = chatHistory.length % answers.length;
+    return answers[idx];
+  }
+
+  /* Réponse générique intelligente */
+  const generics = [
+    "Bonne question ! Pour te donner un conseil précis, dis-moi :\n- Ton niveau (débutant/intermédiaire/avancé)\n- Ton objectif principal (masse/sèche/force/endurance)\n- Tes contraintes (équipement, temps disponible)\n\nAvec ces infos je peux personnaliser ma réponse 🎯",
+    "Je vais être honnête : pour ce type de question spécifique, le mieux est de consulter un professionnel de santé ou un coach humain. Mais si c'est une question sur l'entraînement ou la nutrition, reformule et je ferai de mon mieux ! 💪",
+    "Intéressant comme question ! Essaie d'être plus précis sur ce que tu cherches — programme, nutrition, récupération, ou motivation — et je t'apporte une réponse détaillée et personnalisée ⚡"
+  ];
+  return generics[Math.floor(Math.random() * generics.length)];
+}
+
+async function sendMessage(userText){
+  if(!userText.trim() || isTyping) return;
+  document.getElementById('ai-suggestions').style.display = 'none';
+  addMessage(userText, 'user');
+  chatHistory.push(userText);
+  showTyping(true);
+
+  /* Délai simulé pour effet naturel (600ms - 1.4s selon longueur) */
+  const delay = Math.min(600 + userText.length * 12, 1400);
+  await new Promise(r => setTimeout(r, delay));
+
+  const reply = getResponse(userText);
+  showTyping(false);
+  addMessage(reply, 'assistant');
+}
+
+function sendSuggestion(btn){
+  const text = btn.textContent;
+  document.getElementById('ai-input').value = text;
+  sendMessage(text);
+  document.getElementById('ai-input').value = '';
+}
+
+/* Events */
+document.getElementById('ai-send-btn').addEventListener('click', function(){
+  const input = document.getElementById('ai-input');
+  const text = input.value.trim();
+  if(text){ sendMessage(text); input.value=''; input.style.height='auto'; }
+});
+
+document.getElementById('ai-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    const text = this.value.trim();
+    if(text){ sendMessage(text); this.value=''; this.style.height='auto'; }
+  }
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+/* ══════════════════════════════════════════
+   MODALE RÉSERVATION
+══════════════════════════════════════════ */
+function openBooking(coachName){
+  document.getElementById('book-coach-name').textContent = coachName;
+  document.getElementById('book-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeBooking(){
+  document.getElementById('book-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('book-close').addEventListener('click', closeBooking);
+document.getElementById('book-overlay').addEventListener('click', function(e){ if(e.target===this) closeBooking(); });
+document.getElementById('book-modal').addEventListener('click', e=>e.stopPropagation());
+
+function submitBooking(){
+  const name  = document.getElementById('bk-name').value.trim();
+  const email = document.getElementById('bk-email').value.trim();
+  const type  = document.getElementById('bk-type').value;
+  if(!name || !email || !type){ alert('Remplis tous les champs obligatoires.'); return; }
+
+  const body = document.querySelector('.book-body');
+  body.innerHTML = `
+    <div style="text-align:center;padding:32px 0">
+      <div style="font-size:48px;margin-bottom:20px">✅</div>
+      <div style="font-family:var(--font-display);font-size:28px;letter-spacing:2px;color:var(--text-primary);margin-bottom:10px">DEMANDE ENVOYÉE</div>
+      <p style="font-size:14px;font-weight:300;color:var(--text-secondary);line-height:1.7">Ton coach te contactera sous 24h à l'adresse <strong style="color:var(--crimson-light)">${email}</strong> pour confirmer et fixer votre première séance.</p>
+      <button onclick="closeBooking()" style="margin-top:24px;font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:transparent;color:var(--text-muted);border:1px solid var(--border-soft);padding:10px 20px;cursor:pointer">Fermer</button>
+    </div>`;
+}
+
+/* ══ TRANSITIONS ══ */
+document.querySelectorAll('a[href]').forEach(function(a){
+  const h=a.getAttribute('href');
+  if(!h||h.startsWith('#')||h.startsWith('mailto:')||a.target==='_blank') return;
+  if(h.startsWith('http')&&!h.includes(window.location.hostname)) return;
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    document.body.style.opacity='0';
+    document.body.style.transition='opacity 0.3s ease';
+    setTimeout(function(){window.location.href=h;},320);
+  });
+});
+requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.style.opacity='1'; }); });
+</script>
+<script src="forgex-ui.js"></script>
+<script src="forgex-nav.js"></script>
+</body>
+</html>

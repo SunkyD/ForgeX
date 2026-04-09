@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX — Tarifs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="forgex-auth.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-deep:#05050A; --bg-mid:#09090F; --bg-card:#0D0D16; --bg-raised:#111120;
+      --border-dim:rgba(255,255,255,0.04); --border-soft:rgba(255,255,255,0.08);
+      --crimson:#E8192C; --crimson-light:#FF3D52; --crimson-dim:rgba(232,25,44,0.18); --crimson-glow:rgba(232,25,44,0.40);
+      --magenta:#C026D3; --magenta-light:#D946EF; --magenta-dim:rgba(192,38,211,0.15); --magenta-glow:rgba(192,38,211,0.35);
+      --led-mid:#E879F9; --led-mid-glow:rgba(232,121,249,0.25);
+      --text-primary:#F2F0F8; --text-secondary:#8B8A9E; --text-muted:#4A4A62;
+      --font-display:'Bebas Neue',sans-serif; --font-body:'Barlow',sans-serif;
+      --font-cond:'Barlow Condensed',sans-serif; --font-mono:'DM Mono',monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background:var(--bg-deep); color:var(--text-primary); font-family:var(--font-body); font-weight:400; line-height:1.6; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+
+    /* LED TOP */
+    .led-top { height:2px; background:linear-gradient(90deg,transparent 0%,var(--crimson) 20%,var(--led-mid) 50%,var(--magenta) 80%,transparent 100%); box-shadow:0 0 10px var(--crimson-glow),0 0 30px var(--magenta-glow); }
+
+    /* NAV */
+    nav { background:rgba(5,5,10,0.96); backdrop-filter:blur(20px); display:flex; align-items:center; justify-content:space-between; padding:0 64px; height:66px; border-bottom:1px solid var(--border-dim); position:sticky; top:0; z-index:100; }
+    nav::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent); }
+    .nav-logo { font-family:var(--font-display); font-size:26px; letter-spacing:6px; color:var(--text-primary); text-decoration:none; line-height:1; }
+    .nav-logo em { font-style:normal; color:var(--crimson); text-shadow:0 0 18px var(--crimson-glow); }
+    .nav-links { display:flex; gap:40px; list-style:none; }
+    .nav-links a { font-family:var(--font-cond); font-size:13px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--text-muted); text-decoration:none; padding-bottom:2px; border-bottom:1px solid transparent; transition:color 0.2s,border-color 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--text-primary); border-bottom-color:var(--crimson); }
+    .nav-right { display:flex; align-items:center; gap:24px; }
+    .nav-login { font-family:var(--font-cond); font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); text-decoration:none; transition:color 0.2s; }
+    .nav-login:hover { color:var(--text-primary); }
+    .nav-cta { font-family:var(--font-cond); font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--crimson-light); background:transparent; border:1px solid var(--crimson); padding:9px 22px; cursor:pointer; box-shadow:0 0 10px var(--crimson-dim); transition:all 0.22s; }
+    .nav-cta:hover { background:var(--crimson); color:#fff; box-shadow:0 0 22px var(--crimson-glow); }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: 80px 64px 60px;
+      background: var(--bg-deep);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+    .page-hero::before {
+      content:''; position:absolute; top:-200px; left:50%; transform:translateX(-50%);
+      width:800px; height:800px; border-radius:50%;
+      background:radial-gradient(circle,rgba(232,25,44,0.05) 0%,transparent 60%);
+      pointer-events:none;
+    }
+    .page-hero::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:1px;
+      background:linear-gradient(90deg,transparent,var(--border-soft),transparent);
+    }
+    .ph-tag { font-family:var(--font-mono); font-size:10px; font-weight:500; letter-spacing:3.5px; text-transform:uppercase; color:var(--crimson); margin-bottom:20px; display:flex; align-items:center; justify-content:center; gap:12px; }
+    .ph-tag-line { width:22px; height:1px; background:var(--crimson); box-shadow:0 0 6px var(--crimson); }
+    .ph-title { font-family:var(--font-display); font-size:clamp(64px,9vw,120px); line-height:0.88; letter-spacing:3px; color:var(--text-primary); margin-bottom:20px; }
+    .ph-title span { color:var(--crimson); text-shadow:0 0 28px var(--crimson-glow); }
+    .ph-sub { font-family:var(--font-body); font-size:16px; font-weight:300; color:var(--text-secondary); max-width:520px; margin:0 auto; line-height:1.75; }
+
+    /* TOGGLE MENSUEL / ANNUEL */
+    .billing-toggle {
+      display:flex; align-items:center; justify-content:center; gap:16px;
+      margin: 48px 0 0;
+    }
+    .toggle-lbl { font-family:var(--font-cond); font-size:13px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-muted); transition:color 0.2s; }
+    .toggle-lbl.active { color:var(--text-primary); }
+    .toggle-wrap {
+      width:48px; height:26px; background:var(--bg-raised); border:1px solid var(--border-soft);
+      border-radius:13px; cursor:pointer; position:relative; transition:border-color 0.2s;
+    }
+    .toggle-wrap:hover { border-color:var(--crimson); }
+    .toggle-knob {
+      width:18px; height:18px; border-radius:50%;
+      background:var(--crimson); box-shadow:0 0 8px var(--crimson-glow);
+      position:absolute; top:3px; left:4px;
+      transition:transform 0.25s, background 0.2s;
+    }
+    .toggle-wrap.annual .toggle-knob { transform:translateX(22px); background:var(--magenta-light); box-shadow:0 0 8px var(--magenta-glow); }
+    .toggle-badge { font-family:var(--font-mono); font-size:9px; font-weight:500; letter-spacing:1px; color:var(--magenta-light); background:var(--magenta-dim); border:1px solid var(--magenta-dim); padding:3px 8px; border-radius:20px; }
+
+    /* PLANS GRID */
+    .plans-section { padding: 60px 64px 100px; }
+    .plans-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border-dim); max-width:1100px; margin:0 auto; }
+
+    .plan-card { background:var(--bg-card); padding:44px 36px; position:relative; transition:background 0.22s; }
+    .plan-card:hover { background:var(--bg-raised); }
+    .plan-card.featured { background:var(--bg-raised); }
+
+    .plan-bar { position:absolute; top:0; left:0; right:0; height:2px; }
+    .plan-card.featured .plan-bar { background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light)); box-shadow:0 0 20px var(--crimson-glow),0 0 40px var(--magenta-glow); }
+    .plan-card:nth-child(1) .plan-bar { background:linear-gradient(90deg,transparent,var(--magenta-dim),transparent); }
+    .plan-card:nth-child(3) .plan-bar { background:linear-gradient(90deg,transparent,var(--led-mid),transparent); box-shadow:0 0 10px var(--led-mid-glow); }
+
+    .plan-popular { position:absolute; top:-1px; left:50%; transform:translateX(-50%); font-family:var(--font-mono); font-size:9px; font-weight:500; letter-spacing:2px; text-transform:uppercase; color:#fff; background:var(--crimson); padding:5px 16px; white-space:nowrap; box-shadow:0 0 14px var(--crimson-glow); }
+
+    .plan-name { font-family:var(--font-mono); font-size:11px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px; }
+    .plan-desc { font-family:var(--font-body); font-size:13px; font-weight:300; color:var(--text-muted); margin-bottom:28px; line-height:1.6; }
+
+    .plan-price-wrap { margin-bottom:6px; display:flex; align-items:baseline; gap:4px; }
+    .plan-price { font-family:var(--font-display); font-size:72px; line-height:1; color:var(--text-primary); }
+    .plan-card.featured .plan-price { color:var(--crimson-light); text-shadow:0 0 24px var(--crimson-glow); }
+    .plan-currency { font-family:var(--font-display); font-size:32px; color:var(--text-muted); align-self:flex-start; margin-top:12px; }
+    .plan-period { font-family:var(--font-body); font-size:13px; font-weight:300; color:var(--text-muted); margin-bottom:8px; }
+    .plan-annual-note { font-family:var(--font-mono); font-size:9px; letter-spacing:1px; color:var(--magenta-light); margin-bottom:32px; min-height:16px; }
+
+    .plan-divider { height:1px; background:var(--border-dim); margin-bottom:28px; }
+
+    .plan-feats { list-style:none; display:flex; flex-direction:column; gap:13px; margin-bottom:36px; }
+    .plan-feats li { font-family:var(--font-body); font-size:14px; font-weight:300; color:var(--text-secondary); display:flex; align-items:center; gap:10px; }
+    .plan-feats li.off { color:var(--text-muted); text-decoration:line-through; }
+    .pf-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; display:inline-block; }
+    .pf-dot.cr { background:var(--crimson); box-shadow:0 0 7px var(--crimson); }
+    .pf-dot.mg { background:var(--magenta-light); box-shadow:0 0 7px var(--magenta-light); }
+    .pf-dot.lm { background:var(--led-mid); box-shadow:0 0 7px var(--led-mid); }
+    .pf-dot.off { background:var(--text-muted); box-shadow:none; }
+
+    .plan-btn { width:100%; padding:15px; font-family:var(--font-cond); font-size:13px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; background:transparent; color:var(--text-muted); border:1px solid var(--border-soft); cursor:pointer; transition:all 0.22s; }
+    .plan-card.featured .plan-btn { background:var(--crimson); color:#fff; border-color:var(--crimson); box-shadow:0 0 20px var(--crimson-glow); }
+    .plan-btn:hover { border-color:var(--magenta-light); color:var(--led-mid); box-shadow:0 0 12px var(--magenta-glow); }
+    .plan-card.featured .plan-btn:hover { background:var(--crimson-light); box-shadow:0 0 30px var(--crimson-glow); }
+
+    /* COMPARATIF */
+    .compare-section { padding:0 64px 100px; }
+    .compare-title-wrap { text-align:center; margin-bottom:52px; }
+    .compare-label { font-family:var(--font-mono); font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--crimson); margin-bottom:14px; display:flex; align-items:center; justify-content:center; gap:12px; }
+    .compare-label-line { width:22px; height:1px; background:var(--crimson); box-shadow:0 0 6px var(--crimson); }
+    .compare-h { font-family:var(--font-display); font-size:clamp(40px,4.5vw,60px); line-height:0.92; letter-spacing:2px; color:var(--text-primary); }
+
+    .compare-table { width:100%; max-width:960px; margin:0 auto; border-collapse:collapse; }
+    .compare-table thead th { font-family:var(--font-cond); font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-primary); padding:16px 24px; text-align:center; border-bottom:1px solid var(--border-soft); }
+    .compare-table thead th:first-child { text-align:left; color:var(--text-muted); }
+    .compare-table thead th.featured-col { color:var(--crimson-light); }
+    .compare-table tbody tr { border-bottom:1px solid var(--border-dim); transition:background 0.15s; }
+    .compare-table tbody tr:hover { background:var(--bg-mid); }
+    .compare-table tbody td { padding:14px 24px; font-family:var(--font-body); font-size:14px; font-weight:300; color:var(--text-secondary); text-align:center; }
+    .compare-table tbody td:first-child { text-align:left; color:var(--text-primary); font-weight:400; }
+    .compare-table tbody tr.section-row td { font-family:var(--font-mono); font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--crimson); padding-top:28px; padding-bottom:8px; font-weight:500; }
+    .check { color:var(--crimson); font-size:16px; }
+    .check.mg { color:var(--magenta-light); }
+    .check.lm { color:var(--led-mid); }
+    .dash { color:var(--text-muted); font-size:18px; }
+
+    /* FAQ */
+    .faq-section { padding:0 64px 100px; max-width:800px; margin:0 auto; }
+    .faq-title-wrap { text-align:center; margin-bottom:52px; }
+    .faq-h { font-family:var(--font-display); font-size:clamp(40px,4.5vw,60px); line-height:0.92; letter-spacing:2px; color:var(--text-primary); }
+    .faq-item { border-bottom:1px solid var(--border-dim); }
+    .faq-q { display:flex; align-items:center; justify-content:space-between; gap:20px; padding:22px 0; cursor:pointer; font-family:var(--font-cond); font-size:16px; font-weight:600; letter-spacing:1px; color:var(--text-primary); transition:color 0.2s; user-select:none; }
+    .faq-q:hover { color:var(--crimson); }
+    .faq-q:hover .faq-icon { border-color:var(--crimson); color:var(--crimson); }
+    .faq-icon { width:24px; height:24px; border:1px solid var(--border-soft); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px; color:var(--text-muted); transition:all 0.2s; font-family:monospace; }
+    .faq-a { font-family:var(--font-body); font-size:14px; font-weight:300; color:var(--text-secondary); line-height:1.75; max-height:0; overflow:hidden; transition:max-height 0.35s ease, padding 0.25s; }
+    .faq-item.open .faq-a { max-height:200px; padding-bottom:20px; }
+    .faq-item.open .faq-icon { border-color:var(--crimson); color:var(--crimson); transform:rotate(45deg); }
+
+    /* CTA BOTTOM */
+    .cta { background:var(--bg-mid); padding:92px 64px; display:flex; align-items:center; justify-content:space-between; gap:60px; flex-wrap:wrap; border-top:1px solid var(--border-dim); position:relative; overflow:hidden; }
+    .cta::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--crimson) 0%,var(--led-mid) 50%,var(--magenta-light) 100%); box-shadow:0 0 18px var(--crimson-glow),0 0 36px var(--magenta-glow); }
+    .cta-aura-l { position:absolute; left:-120px; top:50%; transform:translateY(-50%); width:440px; height:440px; border-radius:50%; background:radial-gradient(circle,rgba(232,25,44,0.08) 0%,transparent 70%); pointer-events:none; }
+    .cta-aura-r { position:absolute; right:-100px; top:50%; transform:translateY(-50%); width:380px; height:380px; border-radius:50%; background:radial-gradient(circle,rgba(192,38,211,0.08) 0%,transparent 70%); pointer-events:none; }
+    .cta-title { font-family:var(--font-display); font-size:clamp(48px,6vw,82px); line-height:0.88; letter-spacing:3px; color:var(--text-primary); position:relative; z-index:2; }
+    .cta-title .cr { color:var(--crimson); text-shadow:0 0 28px var(--crimson-glow); }
+    .cta-r { display:flex; flex-direction:column; gap:22px; max-width:370px; position:relative; z-index:2; }
+    .cta-p { font-family:var(--font-body); font-size:15px; font-weight:300; color:var(--text-secondary); line-height:1.75; }
+    .btn-cta { font-family:var(--font-cond); font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--crimson-light); background:transparent; border:1px solid var(--crimson); padding:16px 42px; cursor:pointer; align-self:flex-start; box-shadow:0 0 14px var(--crimson-dim); transition:all 0.22s; }
+    .btn-cta:hover { background:var(--crimson); color:#fff; box-shadow:0 0 28px var(--crimson-glow); }
+
+    /* FOOTER */
+    footer { background:var(--bg-deep); border-top:1px solid var(--border-dim); padding:64px 64px 32px; position:relative; }
+    footer::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent); box-shadow:0 0 8px var(--magenta-glow); }
+    .foot-top { display:flex; justify-content:space-between; flex-wrap:wrap; gap:48px; margin-bottom:48px; }
+    .foot-logo { font-family:var(--font-display); font-size:26px; letter-spacing:6px; color:var(--text-primary); text-decoration:none; display:block; }
+    .foot-logo em { color:var(--crimson); font-style:normal; text-shadow:0 0 12px var(--crimson-glow); }
+    .foot-tag { font-family:var(--font-mono); font-size:10px; color:var(--text-muted); margin-top:8px; letter-spacing:1.5px; }
+    .foot-cols { display:flex; gap:56px; flex-wrap:wrap; }
+    .foot-col-t { font-family:var(--font-mono); font-size:9px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--text-muted); margin-bottom:16px; }
+    .foot-col ul { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .foot-col a { font-family:var(--font-body); font-size:13px; font-weight:300; color:var(--text-muted); text-decoration:none; transition:color 0.2s; }
+    .foot-col a:hover { color:var(--crimson); }
+    .foot-btm { border-top:1px solid var(--border-dim); padding-top:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+    .foot-copy { font-family:var(--font-body); font-size:12px; font-weight:300; color:var(--text-muted); }
+    .foot-badge { font-family:var(--font-mono); font-size:10px; font-weight:500; letter-spacing:2.5px; color:var(--magenta-light); }
+
+    @media(max-width:1024px) { nav{padding:0 32px} .nav-links{display:none} .plans-section,.compare-section,.faq-section,.cta{padding-left:32px;padding-right:32px} .page-hero{padding:60px 32px 48px} .plans-grid{grid-template-columns:1fr} }
+    @media(max-width:768px) { footer{padding:48px 32px 24px} .foot-cols{gap:32px} }
+  
+  </style>
+</head>
+<body>
+
+<div class="led-top"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">FORGE<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="entrainements.html">Entraînements</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="coaches.html">Coaches</a></li>
+    <li><a href="communaute.html">Communauté</a></li>
+    <li><a href="tarifs.html" class="active">Tarifs</a></li></ul></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-login" href="login.html" id="nav-login-lnk">Connexion</a>
+    <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='login.html#register'">Commencer →</button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="ph-tag"><span class="ph-tag-line"></span>Tarifs simples &amp; transparents<span class="ph-tag-line"></span></div>
+  <h1 class="ph-title">INVESTIS<br><span>EN TOI</span></h1>
+  <p class="ph-sub">Pas de frais cachés. Pas d'engagement. Annule quand tu veux. Chaque plan donne accès à la plateforme complète.</p>
+
+  <div class="billing-toggle">
+    <span class="toggle-lbl active" id="lbl-monthly">Mensuel</span>
+    <div class="toggle-wrap" id="billing-toggle" onclick="toggleBilling()">
+      <div class="toggle-knob"></div>
+    </div>
+    <span class="toggle-lbl" id="lbl-annual">Annuel</span>
+    <span class="toggle-badge">−20%</span>
+  </div>
+</div>
+
+<!-- PLANS -->
+<section class="plans-section">
+  <div class="plans-grid">
+
+    <!-- STARTER -->
+    <div class="plan-card">
+      <div class="plan-bar"></div>
+      <div class="plan-name">Starter</div>
+      <div class="plan-desc">Pour découvrir ForgeX et commencer ton aventure fitness sans risque.</div>
+      <div class="plan-price-wrap">
+        <span class="plan-currency">€</span>
+        <span class="plan-price">0</span>
+      </div>
+      <div class="plan-period">Pour toujours · gratuit</div>
+      <div class="plan-annual-note"></div>
+      <div class="plan-divider"></div>
+      <ul class="plan-feats">
+        <li><span class="pf-dot mg"></span>3 programmes au choix</li>
+        <li><span class="pf-dot mg"></span>Suivi de progression basique</li>
+        <li><span class="pf-dot mg"></span>Accès à la communauté</li>
+        <li><span class="pf-dot mg"></span>App mobile (iOS &amp; Android)</li>
+        <li class="off"><span class="pf-dot off"></span>Nutrition &amp; macros</li>
+        <li class="off"><span class="pf-dot off"></span>IA Adaptative</li>
+        <li class="off"><span class="pf-dot off"></span>Sessions coaching</li>
+      </ul>
+      <button class="plan-btn" onclick="window.location.href='login.html#register'">Commencer gratuit</button>
+    </div>
+
+    <!-- PRO -->
+    <div class="plan-card featured">
+      <div class="plan-bar"></div>
+      <div class="plan-popular">Le plus populaire</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-desc">Pour les personnes sérieuses qui veulent des résultats rapides et durables.</div>
+      <div class="plan-price-wrap">
+        <span class="plan-currency">€</span>
+        <span class="plan-price" id="pro-price">19</span>
+      </div>
+      <div class="plan-period" id="pro-period">Par mois · sans engagement</div>
+      <div class="plan-annual-note" id="pro-note"></div>
+      <div class="plan-divider"></div>
+      <ul class="plan-feats">
+        <li><span class="pf-dot cr"></span>Tous les programmes (340+)</li>
+        <li><span class="pf-dot cr"></span>Nutrition &amp; calcul des macros</li>
+        <li><span class="pf-dot cr"></span>IA Adaptative (charge &amp; volume)</li>
+        <li><span class="pf-dot cr"></span>Analytics avancés &amp; graphes</li>
+        <li><span class="pf-dot cr"></span>1 session coaching/mois</li>
+        <li><span class="pf-dot cr"></span>Photos before/after</li>
+        <li><span class="pf-dot cr"></span>Support prioritaire</li>
+      </ul>
+      <button class="plan-btn" onclick="window.location.href='login.html#register'">Commencer Pro</button>
+    </div>
+
+    <!-- ELITE -->
+    <div class="plan-card">
+      <div class="plan-bar"></div>
+      <div class="plan-name">Elite</div>
+      <div class="plan-desc">Pour les athlètes exigeants qui veulent un accompagnement entièrement sur-mesure.</div>
+      <div class="plan-price-wrap">
+        <span class="plan-currency">€</span>
+        <span class="plan-price" id="elite-price">49</span>
+      </div>
+      <div class="plan-period" id="elite-period">Par mois · sans engagement</div>
+      <div class="plan-annual-note" id="elite-note"></div>
+      <div class="plan-divider"></div>
+      <ul class="plan-feats">
+        <li><span class="pf-dot lm"></span>Tout ce qui est inclus dans Pro</li>
+        <li><span class="pf-dot lm"></span>Coach personnel dédié</li>
+        <li><span class="pf-dot lm"></span>Sessions live illimitées</li>
+        <li><span class="pf-dot lm"></span>Plan d'entraînement 100% sur-mesure</li>
+        <li><span class="pf-dot lm"></span>Plan nutritionnel personnalisé</li>
+        <li><span class="pf-dot lm"></span>Accès aux nouvelles features en avant-première</li>
+        <li><span class="pf-dot lm"></span>Support 24/7</li>
+      </ul>
+      <button class="plan-btn" onclick="window.location.href='login.html#register'">Commencer Elite</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- COMPARATIF -->
+<section class="compare-section">
+  <div class="compare-title-wrap">
+    <div class="compare-label"><span class="compare-label-line"></span>Comparatif complet<span class="compare-label-line"></span></div>
+    <h2 class="compare-h">TOUT EN DÉTAIL</h2>
+  </div>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Starter</th>
+        <th class="featured-col">Pro</th>
+        <th>Elite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="section-row"><td colspan="4">Entraînements</td></tr>
+      <tr><td>Programmes disponibles</td><td>3</td><td>340+</td><td>340+ &amp; sur-mesure</td></tr>
+      <tr><td>Vidéos HD coaching</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>IA Adaptative</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Plan sur-mesure par coach</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check lm">✓</span></td></tr>
+
+      <tr class="section-row"><td colspan="4">Nutrition</td></tr>
+      <tr><td>Journal alimentaire</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Calcul des macros auto</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Plan nutritionnel sur-mesure</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check lm">✓</span></td></tr>
+
+      <tr class="section-row"><td colspan="4">Suivi &amp; Stats</td></tr>
+      <tr><td>Tableau de bord basique</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Analytics avancés</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Photos before/after</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+
+      <tr class="section-row"><td colspan="4">Coaching</td></tr>
+      <tr><td>Sessions coaching/mois</td><td>0</td><td>1</td><td>Illimitées</td></tr>
+      <tr><td>Coach dédié personnel</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check lm">✓</span></td></tr>
+      <tr><td>Corrections de forme vidéo</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+
+      <tr class="section-row"><td colspan="4">Support</td></tr>
+      <tr><td>Support communauté</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Support prioritaire</td><td><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Support 24/7</td><td><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check lm">✓</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="faq-title-wrap">
+    <div class="compare-label"><span class="compare-label-line"></span>Questions fréquentes<span class="compare-label-line"></span></div>
+    <h2 class="faq-h">FAQ</h2>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      Est-ce que je peux annuler à tout moment ?
+      <div class="faq-icon">+</div>
+    </div>
+    <div class="faq-a">Oui, sans condition. Tu peux annuler ton abonnement à tout moment depuis ton espace membre, sans frais ni pénalité. L'accès reste actif jusqu'à la fin de la période en cours.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      Est-ce que les 7 jours d'essai gratuit nécessitent une carte bancaire ?
+      <div class="faq-icon">+</div>
+    </div>
+    <div class="faq-a">Non. Tu peux tester ForgeX Pro pendant 7 jours sans renseigner aucune information de paiement. À la fin de l'essai, tu choisis si tu souhaites continuer ou non.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      Comment fonctionne le plan annuel ?
+      <div class="faq-icon">+</div>
+    </div>
+    <div class="faq-a">En choisissant la facturation annuelle, tu économises 20% par rapport au tarif mensuel. Le montant est prélevé en une seule fois au début de l'abonnement. Tu peux tout de même annuler et être remboursé au prorata des mois restants.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      Puis-je changer de plan en cours d'abonnement ?
+      <div class="faq-icon">+</div>
+    </div>
+    <div class="faq-a">Oui, tu peux upgrader ou downgrader ton plan à n'importe quel moment. Le changement prend effet immédiatement et la différence est calculée au prorata.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">
+      Comment se passe l'accès au coach dans le plan Elite ?
+      <div class="faq-icon">+</div>
+    </div>
+    <div class="faq-a">Après souscription au plan Elite, tu seras mis en contact avec un coach certifié dans les 24h. Tu échanges directement via la messagerie intégrée ou en sessions vidéo live selon tes préférences.</div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta">
+  <div class="cta-aura-l"></div><div class="cta-aura-r"></div>
+  <div class="cta-title">7 JOURS<br>GRATUITS,<br><span class="cr">SANS RISQUE.</span></div>
+  <div class="cta-r">
+    <p class="cta-p">Rejoins ForgeX aujourd'hui. Aucune carte bancaire requise pour l'essai. Tu annules quand tu veux, sans question.</p>
+    <button class="btn-cta" onclick="window.location.href='login.html#register'">Commencer l'essai gratuit →</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div>
+      <a class="foot-logo" href="index.html">FORGE<em>X</em></a>
+      <div class="foot-tag">// forge ton corps. forge ta discipline.</div>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col"><div class="foot-col-t">Plateforme</div><ul><li><a href="entrainements.html">Entraînements</a></li><li><a href="nutrition.html">Nutrition</a></li><li><a href="coaches.html">Coaching</a></li><li><a href="communaute.html">Communauté</a></li></ul></div>
+      <div class="foot-col"><div class="foot-col-t">Programmes</div><ul><li><a href="#">Débutant</a></li><li><a href="#">Intermédiaire</a></li><li><a href="#">Avancé</a></li><li><a href="#">Prise de masse</a></li></ul></div>
+      <div class="foot-col"><div class="foot-col-t">Légal</div><ul><li><a href="#">CGU</a></li><li><a href="#">Confidentialité</a></li><li><a href="#">Mentions légales</a></li></ul></div>
+    </div>
+  </div>
+  <div class="foot-btm">
+    <span class="foot-copy">© 2025 ForgeX — Tous droits réservés</span>
+    <span class="foot-badge">FORGEX // SYS_ACTIVE</span>
+  </div>
+  <div style="padding:16px 64px;background:var(--bg-mid);border-top:1px solid var(--border-dim);display:flex;gap:20px;flex-wrap:wrap">
+    <a href="blog.html" style="font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s">📝 Blog</a>
+    <a href="faq.html" style="font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s">❓ FAQ</a>
+  </div>
+</footer>
+
+<script>
+  let isAnnual = false;
+
+  function toggleBilling() {
+    isAnnual = !isAnnual;
+    const toggle = document.getElementById('billing-toggle');
+    const lblM = document.getElementById('lbl-monthly');
+    const lblA = document.getElementById('lbl-annual');
+    const proPrice = document.getElementById('pro-price');
+    const elitePrice = document.getElementById('elite-price');
+    const proPeriod = document.getElementById('pro-period');
+    const elitePeriod = document.getElementById('elite-period');
+    const proNote = document.getElementById('pro-note');
+    const eliteNote = document.getElementById('elite-note');
+
+    if (isAnnual) {
+      toggle.classList.add('annual');
+      lblM.classList.remove('active');
+      lblA.classList.add('active');
+      proPrice.textContent = '15';
+      elitePrice.textContent = '39';
+      proPeriod.textContent = 'Par mois · facturé 182€/an';
+      elitePeriod.textContent = 'Par mois · facturé 468€/an';
+      proNote.textContent = '→ Économise 46€/an';
+      eliteNote.textContent = '→ Économise 120€/an';
+    } else {
+      toggle.classList.remove('annual');
+      lblM.classList.add('active');
+      lblA.classList.remove('active');
+      proPrice.textContent = '19';
+      elitePrice.textContent = '49';
+      proPeriod.textContent = 'Par mois · sans engagement';
+      elitePeriod.textContent = 'Par mois · sans engagement';
+      proNote.textContent = '';
+      eliteNote.textContent = '';
+    }
+  }
+
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const allItems = document.querySelectorAll('.faq-item');
+    allItems.forEach(i => { if (i !== item) i.classList.remove('open'); });
+    item.classList.toggle('open');
+  }
+</script>
+
+<script src="forgex.js"></script>
+<script src="forgex-ui.js"></script>
+<script src="forgex-nav.js"></script>
+</body>
+</html>

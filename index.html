@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX — Forge ton corps. Forge ta discipline.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="forgex-auth.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg-deep:#05050A; --bg-mid:#09090F; --bg-card:#0D0D16; --bg-raised:#111120;
+      --border-dim:rgba(255,255,255,0.04); --border-soft:rgba(255,255,255,0.08);
+      --crimson:#E8192C; --crimson-light:#FF3D52; --crimson-dim:rgba(232,25,44,0.18); --crimson-glow:rgba(232,25,44,0.40);
+      --magenta:#C026D3; --magenta-light:#D946EF; --magenta-dim:rgba(192,38,211,0.15); --magenta-glow:rgba(192,38,211,0.35);
+      --led-mid:#E879F9; --led-mid-glow:rgba(232,121,249,0.25);
+      --text-primary:#F2F0F8; --text-secondary:#8B8A9E; --text-muted:#4A4A62;
+      --font-display:'Bebas Neue',sans-serif; --font-body:'Barlow',sans-serif;
+      --font-cond:'Barlow Condensed',sans-serif; --font-mono:'DM Mono',monospace;
+    }
+    html { scroll-behavior: smooth; }
+    body { background:var(--bg-deep); color:var(--text-primary); font-family:var(--font-body); font-weight:400; line-height:1.6; overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+
+    .led-top { height:2px; background:linear-gradient(90deg,transparent 0%,var(--crimson) 20%,var(--led-mid) 50%,var(--magenta) 80%,transparent 100%); box-shadow:0 0 10px var(--crimson-glow),0 0 30px var(--magenta-glow); }
+
+    nav { background:rgba(5,5,10,0.96); backdrop-filter:blur(20px); display:flex; align-items:center; justify-content:space-between; padding:0 64px; height:66px; border-bottom:1px solid var(--border-dim); position:sticky; top:0; z-index:100; }
+    nav::after { content:''; position:absolute; bottom:-1px; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent 0%,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent 100%); }
+    .nav-logo { font-family:var(--font-display); font-size:26px; letter-spacing:6px; color:var(--text-primary); text-decoration:none; line-height:1; }
+    .nav-logo em { font-style:normal; color:var(--crimson); text-shadow:0 0 18px var(--crimson-glow); }
+    .nav-links { display:flex; gap:40px; list-style:none; }
+    .nav-links a { font-family:var(--font-cond); font-size:13px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--text-muted); text-decoration:none; padding-bottom:2px; border-bottom:1px solid transparent; transition:color 0.2s,border-color 0.2s; }
+    .nav-links a:hover { color:var(--text-primary); border-bottom-color:var(--crimson); }
+    .nav-right { display:flex; align-items:center; gap:24px; }
+    .nav-login { font-family:var(--font-cond); font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); text-decoration:none; transition:color 0.2s; }
+    .nav-login:hover { color:var(--text-primary); }
+    .nav-cta { font-family:var(--font-cond); font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--crimson-light); background:transparent; border:1px solid var(--crimson); padding:9px 22px; cursor:pointer; box-shadow:0 0 10px var(--crimson-dim); transition:all 0.22s; }
+    .nav-cta:hover { background:var(--crimson); color:#fff; box-shadow:0 0 22px var(--crimson-glow); }
+
+    .hero { min-height:100vh; background:var(--bg-deep); display:grid; grid-template-columns:1fr; position:relative; overflow:hidden; }
+    .hero-ambient { position:absolute; inset:0; pointer-events:none; }
+    .amb-1 { position:absolute; top:-160px; left:-120px; width:700px; height:700px; border-radius:50%; background:radial-gradient(circle,rgba(232,25,44,0.06) 0%,transparent 65%); }
+    .amb-2 { position:absolute; bottom:-80px; right:320px; width:560px; height:560px; border-radius:50%; background:radial-gradient(circle,rgba(192,38,211,0.08) 0%,transparent 65%); }
+    .amb-3 { position:absolute; top:35%; right:60px; width:380px; height:380px; border-radius:50%; background:radial-gradient(circle,rgba(232,121,249,0.05) 0%,transparent 65%); }
+    .hero-scan { position:absolute; inset:0; background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.006) 3px,rgba(255,255,255,0.006) 4px); pointer-events:none; }
+    .hero-left { padding:100px 64px 80px; display:flex; flex-direction:column; justify-content:center; position:relative; z-index:2; }
+    .hero-eyebrow { display:inline-flex; align-items:center; gap:12px; font-family:var(--font-mono); font-size:10px; font-weight:500; letter-spacing:3px; text-transform:uppercase; color:var(--crimson); margin-bottom:28px; }
+    .eyebrow-dot { width:7px; height:7px; border-radius:50%; background:var(--crimson); box-shadow:0 0 8px var(--crimson),0 0 18px var(--crimson-glow); animation:blink 2.4s ease-in-out infinite; flex-shrink:0; }
+    @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.8)} }
+    .hero-h1 { font-family:var(--font-display); font-size:clamp(82px,9.5vw,136px); line-height:0.87; letter-spacing:3px; color:var(--text-primary); }
+    .hero-h1 .l-cr { color:var(--crimson); text-shadow:0 0 24px var(--crimson-glow),0 0 60px rgba(232,25,44,0.12); }
+    .hero-h1 .l-mg { color:var(--magenta-light); text-shadow:0 0 24px var(--magenta-glow),0 0 60px rgba(192,38,211,0.12); }
+    .hero-sub { font-family:var(--font-body); font-size:15px; font-weight:300; color:var(--text-secondary); line-height:1.75; max-width:460px; margin:30px 0 44px; }
+    .hero-actions { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .btn-primary { font-family:var(--font-cond); font-size:13px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#fff; background:var(--crimson); border:none; padding:15px 38px; cursor:pointer; text-decoration:none; display:inline-block; box-shadow:0 0 18px var(--crimson-glow),0 4px 24px rgba(232,25,44,0.25); transition:all 0.22s; }
+    .btn-primary:hover { box-shadow:0 0 30px var(--crimson-glow),0 6px 32px rgba(232,25,44,0.4); transform:translateY(-2px); }
+    .btn-ghost { font-family:var(--font-cond); font-size:13px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--text-secondary); background:transparent; border:1px solid var(--border-soft); padding:15px 38px; cursor:pointer; text-decoration:none; display:inline-block; transition:all 0.22s; }
+    .btn-ghost:hover { border-color:var(--magenta); color:var(--led-mid); box-shadow:0 0 14px var(--magenta-glow); }
+    .hero-right { background:var(--bg-card); border-left:1px solid var(--border-dim); display:flex; flex-direction:column; justify-content:flex-end; padding:40px; position:relative; z-index:2; overflow:hidden; }
+    .hero-right::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--magenta-light),transparent); box-shadow:0 0 14px var(--magenta-glow); }
+    .hero-badge { position:absolute; top:22px; right:22px; font-family:var(--font-mono); font-size:9px; font-weight:500; letter-spacing:2.5px; color:var(--magenta-light); border:1px solid var(--magenta-dim); padding:5px 11px; box-shadow:0 0 10px var(--magenta-glow); }
+    .hstats { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border-dim); }
+    .hstat { background:var(--bg-card); padding:26px 22px; }
+    .hstat-n { font-family:var(--font-display); font-size:42px; line-height:1; margin-bottom:5px; color:var(--text-primary); }
+    .hstat-n.cr { color:var(--crimson-light); text-shadow:0 0 14px var(--crimson-glow); }
+    .hstat-n.mg { color:var(--led-mid); text-shadow:0 0 14px var(--led-mid-glow); }
+    .hstat-l { font-family:var(--font-mono); font-size:9px; font-weight:400; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); }
+
+    .ticker { background:var(--bg-mid); border-top:1px solid var(--border-dim); border-bottom:1px solid var(--border-dim); padding:13px 0; overflow:hidden; white-space:nowrap; position:relative; }
+    .ticker::before,.ticker::after { content:''; position:absolute; top:0; bottom:0; width:100px; z-index:2; }
+    .ticker::before { left:0; background:linear-gradient(90deg,var(--bg-mid),transparent); }
+    .ticker::after { right:0; background:linear-gradient(-90deg,var(--bg-mid),transparent); }
+    .ticker-track { display:inline-flex; gap:60px; animation:tick 24s linear infinite; }
+    .tk { font-family:var(--font-display); font-size:14px; letter-spacing:4px; text-transform:uppercase; display:inline-flex; align-items:center; gap:16px; }
+    .tk.cr{color:var(--crimson)} .tk.mg{color:var(--led-mid)} .tk.dim{color:var(--text-muted)}
+    .tk-dot { width:3px; height:3px; border-radius:50%; flex-shrink:0; display:inline-block; }
+    .tk-dot.r{background:var(--crimson);box-shadow:0 0 6px var(--crimson)} .tk-dot.m{background:var(--led-mid);box-shadow:0 0 6px var(--led-mid)}
+    @keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+    .section{padding:92px 64px} .section.alt{background:var(--bg-mid)}
+    .s-tag{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--crimson);margin-bottom:14px;display:flex;align-items:center;gap:12px}
+    .s-tag-line{width:22px;height:1px;background:var(--crimson);box-shadow:0 0 6px var(--crimson);flex-shrink:0}
+    .s-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:56px;gap:40px;flex-wrap:wrap}
+    .s-title{font-family:var(--font-display);font-size:clamp(48px,5.5vw,74px);line-height:0.92;letter-spacing:2px;color:var(--text-primary)}
+    .s-desc{font-family:var(--font-body);font-size:14px;font-weight:300;color:var(--text-secondary);line-height:1.75;max-width:310px}
+
+    .modules-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border-dim)}
+    .mod{background:var(--bg-card);padding:36px 28px;position:relative;overflow:hidden;cursor:pointer;transition:background 0.25s}
+    .mod:hover{background:var(--bg-raised)}
+    .mod-bar{position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity 0.3s}
+    .mod-bar.cr{background:linear-gradient(90deg,transparent,var(--crimson),transparent);box-shadow:0 0 12px var(--crimson-glow)}
+    .mod-bar.mg{background:linear-gradient(90deg,transparent,var(--magenta-light),transparent);box-shadow:0 0 12px var(--magenta-glow)}
+    .mod-bar.lm{background:linear-gradient(90deg,transparent,var(--led-mid),transparent);box-shadow:0 0 12px var(--led-mid-glow)}
+    .mod:hover .mod-bar{opacity:1}
+    .mod-num{font-family:var(--font-mono);font-size:10px;letter-spacing:2px;color:var(--text-muted);margin-bottom:22px}
+    .mod-icon{width:46px;height:46px;border:1px solid var(--border-soft);display:flex;align-items:center;justify-content:center;margin-bottom:22px;font-size:20px;transition:border-color 0.25s,box-shadow 0.25s}
+    .mod:hover .mod-icon{border-color:var(--crimson);box-shadow:0 0 12px var(--crimson-dim)}
+    .mod-title{font-family:var(--font-cond);font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-primary);margin-bottom:10px}
+    .mod-text{font-family:var(--font-body);font-size:13px;font-weight:300;color:var(--text-secondary);line-height:1.65;margin-bottom:22px}
+    .mod-link{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--crimson);text-decoration:none}
+    .mod-link::after{content:' →'}
+
+    .progs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-dim)}
+    .prog{background:var(--bg-card);overflow:hidden;cursor:pointer;transition:background 0.25s;position:relative}
+    .prog:hover{background:var(--bg-raised)}
+    .prog-led{position:absolute;bottom:0;left:0;right:0;height:1px;opacity:0;transition:opacity 0.3s}
+    .prog:hover .prog-led{opacity:1}
+    .prog:nth-child(1) .prog-led{background:linear-gradient(90deg,transparent,var(--crimson),transparent);box-shadow:0 0 8px var(--crimson)}
+    .prog:nth-child(2) .prog-led{background:linear-gradient(90deg,transparent,var(--magenta-light),transparent);box-shadow:0 0 8px var(--magenta-light)}
+    .prog:nth-child(3) .prog-led{background:linear-gradient(90deg,transparent,var(--led-mid),transparent);box-shadow:0 0 8px var(--led-mid)}
+    .prog-thumb{height:230px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .pt1{background:#0A0308} .pt2{background:#06030D} .pt3{background:#08020D}
+    .prog-grid{position:absolute;inset:0}
+    .pt1 .prog-grid{background-image:linear-gradient(rgba(232,25,44,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(232,25,44,0.035) 1px,transparent 1px);background-size:44px 44px}
+    .pt2 .prog-grid{background-image:linear-gradient(rgba(192,38,211,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(192,38,211,0.05) 1px,transparent 1px);background-size:44px 44px}
+    .pt3 .prog-grid{background-image:linear-gradient(rgba(232,121,249,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(232,121,249,0.04) 1px,transparent 1px);background-size:44px 44px}
+    .prog-aura{position:absolute;width:200px;height:200px;border-radius:50%}
+    .pt1 .prog-aura{background:radial-gradient(circle,rgba(232,25,44,0.18) 0%,transparent 70%)}
+    .pt2 .prog-aura{background:radial-gradient(circle,rgba(192,38,211,0.22) 0%,transparent 70%)}
+    .pt3 .prog-aura{background:radial-gradient(circle,rgba(232,121,249,0.18) 0%,transparent 70%)}
+    .prog-n{font-family:var(--font-display);font-size:96px;position:relative;z-index:2;line-height:1}
+    .pn1{color:rgba(232,25,44,0.85);text-shadow:0 0 28px var(--crimson),0 0 60px var(--crimson-glow)}
+    .pn2{color:rgba(192,38,211,0.85);text-shadow:0 0 28px var(--magenta),0 0 60px var(--magenta-glow)}
+    .pn3{color:rgba(232,121,249,0.85);text-shadow:0 0 28px var(--led-mid),0 0 60px var(--led-mid-glow)}
+    .prog-lvl{position:absolute;top:14px;left:14px;z-index:3;font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:5px 11px;border:1px solid}
+    .lv1{color:var(--crimson-light);border-color:rgba(232,25,44,0.35);background:rgba(232,25,44,0.07)}
+    .lv2{color:var(--magenta-light);border-color:rgba(192,38,211,0.35);background:rgba(192,38,211,0.07)}
+    .lv3{color:var(--led-mid);border-color:rgba(232,121,249,0.35);background:rgba(232,121,249,0.07)}
+    .prog-body{padding:22px 26px}
+    .prog-title{font-family:var(--font-cond);font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-primary);margin-bottom:10px}
+    .prog-meta{display:flex;gap:18px;flex-wrap:wrap}
+    .prog-meta-i{font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--text-muted)}
+
+    .split{display:grid;grid-template-columns:1fr 1fr}
+    .split-l{background:var(--bg-deep);padding:92px 64px;display:flex;flex-direction:column;justify-content:center;position:relative;border-right:1px solid var(--border-dim)}
+    .split-l::after{content:'';position:absolute;top:0;bottom:0;right:-1px;width:1px;background:linear-gradient(180deg,transparent 0%,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent 100%);box-shadow:0 0 10px var(--magenta-glow)}
+    .split-r{background:var(--bg-mid);padding:80px 64px;display:flex;flex-direction:column;justify-content:center}
+    .feats{display:flex;flex-direction:column;margin-top:10px}
+    .feat{display:flex;align-items:flex-start;gap:20px;padding:22px 0;border-bottom:1px solid var(--border-dim);transition:padding-left 0.2s;cursor:pointer}
+    .feat:first-child{padding-top:0}
+    .feat:hover{padding-left:8px}
+    .feat:hover .feat-n{color:var(--crimson)}
+    .feat-n{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);padding-top:3px;flex-shrink:0;min-width:22px;transition:color 0.2s}
+    .feat-t{font-family:var(--font-cond);font-size:17px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-primary);margin-bottom:5px}
+    .feat-p{font-family:var(--font-body);font-size:13px;font-weight:300;color:var(--text-secondary);line-height:1.65}
+    .chart{background:var(--bg-card);border:1px solid var(--border-soft);padding:34px;position:relative;overflow:hidden}
+    .chart::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-light) 45%,var(--crimson) 75%,transparent);box-shadow:0 0 10px var(--magenta-glow)}
+    .chart-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+    .chart-big{font-family:var(--font-display);font-size:58px;line-height:1;color:var(--crimson);text-shadow:0 0 22px var(--crimson-glow)}
+    .chart-sub{font-family:var(--font-cond);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin:4px 0 26px}
+    .bars{display:flex;align-items:flex-end;gap:6px;height:140px;margin-bottom:10px}
+    .bar-c{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;height:100%}
+    .bar-bg{width:100%;background:var(--bg-raised);border:1px solid var(--border-dim);position:relative;flex:1}
+    .bar-f{position:absolute;bottom:0;left:0;right:0;background:var(--text-muted)}
+    .bar-f.cr{background:var(--crimson);box-shadow:0 0 10px var(--crimson-glow),0 -4px 14px rgba(232,25,44,0.28)}
+    .bar-f.mg{background:var(--magenta-light);box-shadow:0 0 10px var(--magenta-glow),0 -4px 14px rgba(192,38,211,0.28)}
+    .bar-l{font-family:var(--font-mono);font-size:9px;color:var(--text-muted);letter-spacing:1px}
+
+    .pricing{padding:92px 64px;background:var(--bg-deep)}
+    .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-dim)}
+    .pcard{background:var(--bg-card);padding:38px 30px;position:relative;cursor:pointer;transition:background 0.22s}
+    .pcard:hover{background:var(--bg-raised)} .pcard.feat{background:var(--bg-raised)}
+    .pcard-bar{position:absolute;top:0;left:0;right:0;height:2px}
+    .pcard.feat .pcard-bar{background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light));box-shadow:0 0 16px var(--crimson-glow),0 0 30px var(--magenta-glow)}
+    .pcard-badge{position:absolute;top:14px;right:14px;font-family:var(--font-mono);font-size:8px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--crimson-light);border:1px solid var(--crimson-dim);padding:4px 9px;box-shadow:0 0 8px var(--crimson-glow)}
+    .pcard-plan{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:18px}
+    .pcard-price{font-family:var(--font-display);font-size:62px;line-height:1;color:var(--text-primary);margin-bottom:4px}
+    .pcard.feat .pcard-price{color:var(--crimson-light);text-shadow:0 0 20px var(--crimson-glow)}
+    .pcard-per{font-family:var(--font-body);font-size:13px;font-weight:300;color:var(--text-muted);margin-bottom:30px}
+    .pcard-feats{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:34px}
+    .pcard-feats li{font-family:var(--font-body);font-size:14px;font-weight:300;color:var(--text-secondary);display:flex;align-items:center;gap:10px}
+    .pf-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:inline-block}
+    .pf-dot.cr{background:var(--crimson);box-shadow:0 0 7px var(--crimson)}
+    .pf-dot.mg{background:var(--magenta-light);box-shadow:0 0 7px var(--magenta-light)}
+    .pf-dot.lm{background:var(--led-mid);box-shadow:0 0 7px var(--led-mid)}
+    .pcard-btn{width:100%;padding:13px;font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:transparent;color:var(--text-muted);border:1px solid var(--border-soft);cursor:pointer;transition:all 0.22s}
+    .pcard.feat .pcard-btn{background:var(--crimson);color:#fff;border-color:var(--crimson);box-shadow:0 0 18px var(--crimson-glow)}
+    .pcard-btn:hover{border-color:var(--magenta-light);color:var(--led-mid);box-shadow:0 0 12px var(--magenta-glow)}
+    .pcard.feat .pcard-btn:hover{box-shadow:0 0 28px var(--crimson-glow)}
+
+    .cta{background:var(--bg-mid);padding:92px 64px;display:flex;align-items:center;justify-content:space-between;gap:60px;flex-wrap:wrap;border-top:1px solid var(--border-dim);position:relative;overflow:hidden}
+    .cta::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--crimson) 0%,var(--led-mid) 50%,var(--magenta-light) 100%);box-shadow:0 0 18px var(--crimson-glow),0 0 36px var(--magenta-glow)}
+    .cta-aura-l{position:absolute;left:-120px;top:50%;transform:translateY(-50%);width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(232,25,44,0.08) 0%,transparent 70%);pointer-events:none}
+    .cta-aura-r{position:absolute;right:-100px;top:50%;transform:translateY(-50%);width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(192,38,211,0.08) 0%,transparent 70%);pointer-events:none}
+    .cta-title{font-family:var(--font-display);font-size:clamp(52px,6.5vw,90px);line-height:0.88;letter-spacing:3px;color:var(--text-primary);position:relative;z-index:2}
+    .cta-title .cr{color:var(--crimson);text-shadow:0 0 28px var(--crimson-glow)}
+    .cta-title .mg{color:var(--led-mid);text-shadow:0 0 28px var(--led-mid-glow)}
+    .cta-r{display:flex;flex-direction:column;gap:22px;max-width:370px;position:relative;z-index:2}
+    .cta-p{font-family:var(--font-body);font-size:15px;font-weight:300;color:var(--text-secondary);line-height:1.75}
+    .btn-cta{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--crimson-light);background:transparent;border:1px solid var(--crimson);padding:16px 42px;cursor:pointer;align-self:flex-start;box-shadow:0 0 14px var(--crimson-dim);transition:all 0.22s}
+    .btn-cta:hover{background:var(--crimson);color:#fff;box-shadow:0 0 28px var(--crimson-glow)}
+
+    footer{background:var(--bg-deep);border-top:1px solid var(--border-dim);padding:64px 64px 32px;position:relative}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent);box-shadow:0 0 8px var(--magenta-glow)}
+    .foot-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:48px;margin-bottom:48px}
+    .foot-logo{font-family:var(--font-display);font-size:26px;letter-spacing:6px;color:var(--text-primary);text-decoration:none;display:block}
+    .foot-logo em{color:var(--crimson);font-style:normal;text-shadow:0 0 12px var(--crimson-glow)}
+    .foot-tag{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-top:8px;letter-spacing:1.5px}
+    .foot-cols{display:flex;gap:56px;flex-wrap:wrap}
+    .foot-col-t{font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+    .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .foot-col a{font-family:var(--font-body);font-size:13px;font-weight:300;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .foot-col a:hover{color:var(--crimson)}
+    .foot-btm{border-top:1px solid var(--border-dim);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .foot-copy{font-family:var(--font-body);font-size:12px;font-weight:300;color:var(--text-muted)}
+    .foot-badge{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2.5px;color:var(--magenta-light)}
+
+    @media(max-width:1100px){.hero{grid-template-columns:1fr}.hero-right{display:none}.modules-grid{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}.split-l::after{display:none}nav{padding:0 32px}.nav-links{display:none}.section,.pricing,.cta{padding:60px 32px}.hero-left{padding:80px 32px 60px}}
+    @media(max-width:768px){
+      .progs{grid-template-columns:1fr}
+      .pricing-grid{grid-template-columns:1fr}
+      footer{padding:48px 32px 24px}
+      .foot-cols{gap:32px}
+      .hero-left{padding:48px 28px 40px}
+      .h1{font-size:clamp(56px,14vw,90px)}
+      .hstats{grid-template-columns:repeat(2,1fr)}
+      .modules-grid{grid-template-columns:1fr}
+      .split{grid-template-columns:1fr}
+      .split-l,.split-r{padding:40px 28px}
+      .section,.pricing,.cta{padding-left:28px;padding-right:28px}
+      .cta{flex-direction:column;gap:32px}
+      .foot-top{flex-direction:column;gap:28px}
+      #fx-scroll-top{bottom:20px;right:16px;width:40px;height:40px;font-size:16px}
+    }
+  
+  </style>
+</head>
+<body>
+
+<div class="led-top"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">FORGE<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="entrainements.html">Entraînements</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="coaches.html">Coaches</a></li>
+    <li><a href="communaute.html">Communauté</a></li>
+    <li><a href="tarifs.html">Tarifs</a></li></ul></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-login" href="login.html" id="nav-login-lnk">Connexion</a>
+    <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='tarifs.html'">Commencer →</button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-ambient"><div class="amb-1"></div><div class="amb-2"></div><div class="amb-3"></div></div>
+  <div class="hero-scan"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow"><span class="eyebrow-dot"></span>Plateforme fitness complète</div>
+    <h1 class="hero-h1">FORGE<br><span class="l-cr">TON</span><br><span class="l-mg">CORPS.</span></h1>
+    <p class="hero-sub">Entraînements structurés, nutrition sur-mesure, coaching expert.<br>Tout en un. Conçu pour les gens sérieux.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="register.html">Essai gratuit 7 jours →</a>
+      <a class="btn-ghost" href="entrainements.html">Voir les programmes</a>
+    </div>
+  </div>
+
+</section>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="tk cr"><span class="tk-dot r"></span>Musculation</span>
+    <span class="tk dim"><span class="tk-dot r"></span>Nutrition</span>
+    <span class="tk mg"><span class="tk-dot m"></span>Coaching Live</span>
+    <span class="tk dim"><span class="tk-dot r"></span>Cardio &amp; HIIT</span>
+    <span class="tk cr"><span class="tk-dot m"></span>Mobilité</span>
+    <span class="tk dim"><span class="tk-dot r"></span>Suivi Perso</span>
+    <span class="tk mg"><span class="tk-dot m"></span>Communauté</span>
+    <span class="tk dim"><span class="tk-dot r"></span>IA Adaptative</span>
+    <span class="tk cr"><span class="tk-dot r"></span>Musculation</span>
+    <span class="tk dim"><span class="tk-dot r"></span>Nutrition</span>
+    <span class="tk mg"><span class="tk-dot m"></span>Coaching Live</span>
+    <span class="tk dim"><span class="tk-dot r"></span>Cardio &amp; HIIT</span>
+    <span class="tk cr"><span class="tk-dot m"></span>Mobilité</span>
+    <span class="tk dim"><span class="tk-dot r"></span>Suivi Perso</span>
+    <span class="tk mg"><span class="tk-dot m"></span>Communauté</span>
+    <span class="tk dim"><span class="tk-dot r"></span>IA Adaptative</span>
+  </div>
+</div>
+
+<section class="section alt">
+  <div class="s-head">
+    <div><div class="s-tag"><span class="s-tag-line"></span>Ce qu'on te propose</div><h2 class="s-title">LA PLATEFORME<br>COMPLÈTE</h2></div>
+    <p class="s-desc">Tout ce dont tu as besoin pour transformer ton physique, dans un seul endroit. Sans compromis.</p>
+  </div>
+  <div class="modules-grid">
+    <div class="mod"><div class="mod-bar cr"></div><div class="mod-num">01 / MODULE</div><div class="mod-icon">🏋️</div><div class="mod-title">Entraînements</div><p class="mod-text">Programmes par objectif, niveau et équipement. Vidéos HD avec coaching audio intégré.</p><a class="mod-link" href="entrainements.html">Découvrir</a></div>
+    <div class="mod"><div class="mod-bar mg"></div><div class="mod-num">02 / MODULE</div><div class="mod-icon">🥗</div><div class="mod-title">Nutrition</div><p class="mod-text">Plans alimentaires personnalisés, calcul des macros automatique, recettes et journal quotidien.</p><a class="mod-link" href="nutrition.html">Découvrir</a></div>
+    <div class="mod"><div class="mod-bar lm"></div><div class="mod-num">03 / MODULE</div><div class="mod-icon">📊</div><div class="mod-title">Suivi &amp; Stats</div><p class="mod-text">Tableau de bord complet, progression temps réel, photos before/after, analytics avancés.</p><a class="mod-link" href="#">Découvrir</a></div>
+    <div class="mod"><div class="mod-bar cr"></div><div class="mod-num">04 / MODULE</div><div class="mod-icon">🎯</div><div class="mod-title">Coaching Pro</div><p class="mod-text">Sessions live avec des coachs certifiés, corrections de forme et plans entièrement sur-mesure.</p><a class="mod-link" href="coaches.html">Découvrir</a></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="s-head">
+    <div><div class="s-tag"><span class="s-tag-line"></span>Nos programmes phares</div><h2 class="s-title">CHOISIS<br>TON NIVEAU</h2></div>
+    <p class="s-desc">Du débutant à l'athlète confirmé — un programme pour chaque étape de ta progression.</p>
+  </div>
+  <div class="progs">
+    <div class="prog"><div class="prog-led"></div><div class="prog-thumb pt1"><div class="prog-grid"></div><div class="prog-aura"></div><div class="prog-n pn1">01</div><span class="prog-lvl lv1">Débutant</span></div><div class="prog-body"><div class="prog-title">Foundation</div><div class="prog-meta"><span class="prog-meta-i">8 semaines</span><span class="prog-meta-i">3 séances/sem</span><span class="prog-meta-i">Salle / Maison</span></div></div></div>
+    <div class="prog"><div class="prog-led"></div><div class="prog-thumb pt2"><div class="prog-grid"></div><div class="prog-aura"></div><div class="prog-n pn2">02</div><span class="prog-lvl lv2">Intermédiaire</span></div><div class="prog-body"><div class="prog-title">Hypertrophy X</div><div class="prog-meta"><span class="prog-meta-i">12 semaines</span><span class="prog-meta-i">5 séances/sem</span><span class="prog-meta-i">Salle</span></div></div></div>
+    <div class="prog"><div class="prog-led"></div><div class="prog-thumb pt3"><div class="prog-grid"></div><div class="prog-aura"></div><div class="prog-n pn3">03</div><span class="prog-lvl lv3">Avancé</span></div><div class="prog-body"><div class="prog-title">Beast Mode</div><div class="prog-meta"><span class="prog-meta-i">16 semaines</span><span class="prog-meta-i">6 séances/sem</span><span class="prog-meta-i">Salle Elite</span></div></div></div>
+  </div>
+</section>
+
+<div class="split">
+  <div class="split-l">
+    <div class="s-tag"><span class="s-tag-line"></span>Pourquoi ForgeX</div>
+    <h2 class="s-title" style="margin-bottom:34px">CE QUI<br>NOUS<br>DISTINGUE</h2>
+    <div class="feats">
+      <div class="feat"><div class="feat-n">01</div><div><div class="feat-t">IA Adaptative</div><p class="feat-p">Tes séances s'adaptent selon tes performances. La charge et le volume évoluent avec toi en temps réel.</p></div></div>
+      <div class="feat"><div class="feat-n">02</div><div><div class="feat-t">App Mobile Complète</div><p class="feat-p">Tout ton programme dans ta poche. Offline, timer intégré, logs automatiques synchronisés.</p></div></div>
+      <div class="feat"><div class="feat-n">03</div><div><div class="feat-t">Communauté Active</div><p class="feat-p">12 000 membres, challenges hebdo, leaderboards et groupes organisés par objectif.</p></div></div>
+    </div>
+  </div>
+  <div class="split-r">
+    <div class="chart">
+      <div class="chart-lbl">Progression moyenne des membres</div>
+      <div class="chart-big">+34%</div>
+      <div class="chart-sub">Force gagnée en 12 semaines</div>
+      <div class="bars">
+        <div class="bar-c"><div class="bar-bg"><div class="bar-f" style="height:28%"></div></div><div class="bar-l">JAN</div></div>
+        <div class="bar-c"><div class="bar-bg"><div class="bar-f mg" style="height:38%"></div></div><div class="bar-l">FEV</div></div>
+        <div class="bar-c"><div class="bar-bg"><div class="bar-f" style="height:50%"></div></div><div class="bar-l">MAR</div></div>
+        <div class="bar-c"><div class="bar-bg"><div class="bar-f mg" style="height:60%"></div></div><div class="bar-l">AVR</div></div>
+        <div class="bar-c"><div class="bar-bg"><div class="bar-f cr" style="height:70%"></div></div><div class="bar-l">MAI</div></div>
+        <div class="bar-c"><div class="bar-bg"><div class="bar-f mg" style="height:79%"></div></div><div class="bar-l">JUN</div></div>
+        <div class="bar-c"><div class="bar-bg"><div class="bar-f cr" style="height:90%"></div></div><div class="bar-l">JUL</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="pricing">
+  <div class="s-head">
+    <div><div class="s-tag"><span class="s-tag-line"></span>Tarifs simples</div><h2 class="s-title">INVESTIS<br>EN TOI</h2></div>
+    <p class="s-desc">Pas d'engagement. Annule quand tu veux. Chaque plan inclut l'accès complet à la plateforme.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pcard"><div class="pcard-bar" style="background:linear-gradient(90deg,transparent,var(--border-soft),transparent)"></div><div class="pcard-plan">Starter</div><div class="pcard-price">0€</div><div class="pcard-per">Pour toujours</div><ul class="pcard-feats"><li><span class="pf-dot mg"></span>3 programmes accessibles</li><li><span class="pf-dot mg"></span>Suivi basique</li><li><span class="pf-dot mg"></span>Communauté</li><li><span class="pf-dot mg"></span>App mobile</li></ul><button class="pcard-btn" onclick="window.location.href='register.html'">Commencer gratuit</button></div>
+    <div class="pcard feat"><div class="pcard-bar"></div><div class="pcard-badge">Populaire</div><div class="pcard-plan">Pro</div><div class="pcard-price">19€</div><div class="pcard-per">Par mois · sans engagement</div><ul class="pcard-feats"><li><span class="pf-dot cr"></span>Tous les programmes</li><li><span class="pf-dot cr"></span>Nutrition &amp; macros</li><li><span class="pf-dot cr"></span>IA Adaptative</li><li><span class="pf-dot cr"></span>Analytics avancés</li><li><span class="pf-dot cr"></span>1 session coaching/mois</li></ul><button class="pcard-btn" onclick="window.location.href='register.html?plan=pro'">Choisir Pro</button></div>
+    <div class="pcard"><div class="pcard-bar" style="background:linear-gradient(90deg,transparent,var(--led-mid),transparent);box-shadow:0 0 10px var(--led-mid-glow)"></div><div class="pcard-plan">Elite</div><div class="pcard-price">49€</div><div class="pcard-per">Par mois · sans engagement</div><ul class="pcard-feats"><li><span class="pf-dot lm"></span>Tout Pro inclus</li><li><span class="pf-dot lm"></span>Coach dédié</li><li><span class="pf-dot lm"></span>Sessions live illimitées</li><li><span class="pf-dot lm"></span>Plan 100% sur-mesure</li><li><span class="pf-dot lm"></span>Accès prioritaire</li></ul><button class="pcard-btn" onclick="window.location.href='register.html?plan=elite'">Choisir Elite</button></div>
+  </div>
+</section>
+
+<div class="cta">
+  <div class="cta-aura-l"></div><div class="cta-aura-r"></div>
+  <div class="cta-title">PRÊT À<br><span class="cr">TOUT</span><br><span class="mg">CHANGER ?</span></div>
+  <div class="cta-r">
+    <p class="cta-p">Rejoins des milliers de membres qui ont transformé leur corps avec ForgeX. 7 jours gratuits, sans carte bancaire.</p>
+    <button class="btn-cta" onclick="window.location.href='tarifs.html'">Rejoindre maintenant →</button>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-top">
+    <div>
+      <a class="foot-logo" href="index.html">FORGE<em>X</em></a>
+      <div class="foot-tag">// forge ton corps. forge ta discipline.</div>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col"><div class="foot-col-t">Plateforme</div><ul><li><a href="entrainements.html">Entraînements</a></li><li><a href="nutrition.html">Nutrition</a></li><li><a href="coaches.html">Coaching</a></li><li><a href="communaute.html">Communauté</a></li><li><a href="blog.html">Blog</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+      <div class="foot-col"><div class="foot-col-t">Programmes</div><ul><li><a href="#">Débutant</a></li><li><a href="#">Intermédiaire</a></li><li><a href="#">Avancé</a></li><li><a href="#">Prise de masse</a></li></ul></div>
+      <div class="foot-col"><div class="foot-col-t">Légal</div><ul><li><a href="#">CGU</a></li><li><a href="#">Confidentialité</a></li><li><a href="#">Mentions légales</a></li></ul></div>
+    </div>
+  </div>
+  <div class="foot-btm">
+    <span class="foot-copy">© 2025 ForgeX — Tous droits réservés</span>
+    <span class="foot-badge">FORGEX // SYS_ACTIVE</span>
+  </div>
+</footer>
+
+
+<script src="forgex.js"></script>
+<script src="forgex-ui.js"></script>
+<script src="forgex-nav.js"></script>
+</body>
+</html>

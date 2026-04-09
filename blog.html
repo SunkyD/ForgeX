@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX — Blog & Articles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="forgex-auth.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-deep:#05050A;--bg-mid:#09090F;--bg-card:#0D0D16;--bg-raised:#111120;
+      --border-dim:rgba(255,255,255,0.04);--border-soft:rgba(255,255,255,0.08);
+      --crimson:#E8192C;--crimson-light:#FF3D52;--crimson-dim:rgba(232,25,44,0.18);--crimson-glow:rgba(232,25,44,0.40);
+      --magenta:#C026D3;--magenta-light:#D946EF;--magenta-dim:rgba(192,38,211,0.15);--magenta-glow:rgba(192,38,211,0.35);
+      --led-mid:#E879F9;--led-mid-glow:rgba(232,121,249,0.25);
+      --text-primary:#F2F0F8;--text-secondary:#8B8A9E;--text-muted:#4A4A62;
+      --font-display:'Bebas Neue',sans-serif;--font-body:'Barlow',sans-serif;
+      --font-cond:'Barlow Condensed',sans-serif;--font-mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg-deep);color:var(--text-primary);font-family:var(--font-body);font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;opacity:0;transition:opacity 0.4s}
+
+    .led-top{height:2px;background:linear-gradient(90deg,transparent,var(--crimson) 20%,var(--led-mid) 50%,var(--magenta) 80%,transparent);box-shadow:0 0 10px var(--crimson-glow),0 0 30px var(--magenta-glow)}
+
+    nav{background:rgba(5,5,10,0.96);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:66px;border-bottom:1px solid var(--border-dim);position:sticky;top:0;z-index:200}
+    nav::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent)}
+    .nav-logo{font-family:var(--font-display);font-size:26px;letter-spacing:6px;color:var(--text-primary);text-decoration:none;line-height:1}
+    .nav-logo em{font-style:normal;color:var(--crimson);text-shadow:0 0 18px var(--crimson-glow)}
+    .nav-links{display:flex;gap:40px;list-style:none}
+    .nav-links a{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text-primary);border-bottom-color:var(--crimson)}
+    .nav-right{display:flex;align-items:center;gap:24px}
+    .nav-login{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .nav-cta{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--crimson-light);background:transparent;border:1px solid var(--crimson);padding:9px 22px;cursor:pointer;box-shadow:0 0 10px var(--crimson-dim);transition:all 0.22s}
+    .nav-cta:hover{background:var(--crimson);color:#fff;box-shadow:0 0 22px var(--crimson-glow)}
+
+    /* HERO */
+    .page-hero{padding:80px 64px 60px;position:relative;overflow:hidden;border-bottom:1px solid var(--border-dim)}
+    .page-hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;border-radius:50%;background:radial-gradient(circle,rgba(192,38,211,0.05),transparent 65%);pointer-events:none}
+    .ph-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:var(--magenta-light);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+    .ph-tag::before{content:'';width:22px;height:1px;background:var(--magenta-light);box-shadow:0 0 6px var(--magenta-light)}
+    .ph-title{font-family:var(--font-display);font-size:clamp(64px,9vw,120px);line-height:0.88;letter-spacing:3px;margin-bottom:20px}
+    .ph-title .cr{color:var(--crimson);text-shadow:0 0 24px var(--crimson-glow)}
+    .ph-sub{font-size:16px;font-weight:300;color:var(--text-secondary);max-width:520px;line-height:1.75}
+
+    /* FILTRES */
+    .filters{padding:20px 64px;background:var(--bg-mid);border-bottom:1px solid var(--border-dim);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .filter-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;background:var(--bg-card);border:1px solid var(--border-soft);color:var(--text-muted);padding:6px 14px;cursor:pointer;transition:all 0.2s}
+    .filter-btn:hover,.filter-btn.active{border-color:var(--crimson);color:var(--crimson-light);background:var(--crimson-dim)}
+
+    /* ARTICLES GRID */
+    .articles-section{padding:60px 64px 80px}
+    .articles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-dim)}
+    .article-card{background:var(--bg-card);cursor:pointer;transition:background 0.22s;display:flex;flex-direction:column;position:relative;overflow:hidden}
+    .article-card:hover{background:var(--bg-raised)}
+    .article-card:first-child{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;background:var(--bg-raised)}
+    .article-thumb{height:200px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;font-size:64px}
+    .article-card:first-child .article-thumb{height:100%;min-height:280px}
+    .thumb-glow{position:absolute;inset:0;pointer-events:none}
+    .article-body{padding:24px 22px;flex:1;display:flex;flex-direction:column}
+    .article-cat{font-family:var(--font-mono);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .article-cat-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+    .article-title{font-family:var(--font-display);font-size:clamp(20px,2.5vw,28px);letter-spacing:1.5px;color:var(--text-primary);line-height:1.1;margin-bottom:10px}
+    .article-card:first-child .article-title{font-size:clamp(28px,3vw,40px)}
+    .article-excerpt{font-size:13px;font-weight:300;color:var(--text-secondary);line-height:1.7;flex:1;margin-bottom:16px}
+    .article-meta{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border-dim)}
+    .article-author{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted)}
+    .article-read{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted)}
+    .article-badge{position:absolute;top:14px;left:14px;font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;background:rgba(5,5,10,0.8)}
+
+    /* ARTICLE MODALE */
+    .art-overlay{position:fixed;inset:0;z-index:9000;background:rgba(5,5,10,0.95);backdrop-filter:blur(10px);display:flex;justify-content:center;align-items:flex-start;overflow-y:auto;opacity:0;pointer-events:none;transition:opacity 0.3s;padding:40px 20px}
+    .art-overlay.open{opacity:1;pointer-events:all}
+    .art-modal{background:var(--bg-card);border:1px solid var(--border-soft);width:min(740px,100%);position:relative;transform:translateY(20px);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+    .art-overlay.open .art-modal{transform:translateY(0)}
+    .art-modal::-webkit-scrollbar{width:3px}
+    .art-led{height:2px;background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light));box-shadow:0 0 14px var(--crimson-glow)}
+    .art-modal-thumb{height:220px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;overflow:hidden}
+    .art-modal-body{padding:36px 40px}
+    .art-modal-cat{font-family:var(--font-mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:10px}
+    .art-modal-title{font-family:var(--font-display);font-size:clamp(32px,4vw,48px);letter-spacing:2px;line-height:0.95;margin-bottom:14px;color:var(--text-primary)}
+    .art-modal-meta{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted);margin-bottom:28px;display:flex;gap:20px;flex-wrap:wrap}
+    .art-modal-content{font-size:15px;font-weight:300;color:var(--text-secondary);line-height:1.85}
+    .art-modal-content h3{font-family:var(--font-cond);font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-primary);margin:28px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--border-dim)}
+    .art-modal-content p{margin-bottom:16px}
+    .art-modal-content ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+    .art-modal-content ul li{padding-left:16px;position:relative}
+    .art-modal-content ul li::before{content:'→';position:absolute;left:0;color:var(--crimson)}
+    .art-modal-content strong{color:var(--text-primary);font-weight:600}
+    .art-modal-content .highlight{background:rgba(232,25,44,0.08);border-left:3px solid var(--crimson);padding:14px 16px;margin:20px 0;font-style:italic}
+    .art-close{position:absolute;top:16px;right:16px;background:rgba(5,5,10,0.7);border:1px solid var(--border-soft);color:var(--text-muted);font-size:18px;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;z-index:2}
+    .art-close:hover{border-color:var(--crimson);color:var(--crimson)}
+
+    /* NEWSLETTER */
+    .newsletter{padding:64px;background:var(--bg-mid);border-top:1px solid var(--border-dim);text-align:center}
+    .nl-title{font-family:var(--font-display);font-size:clamp(36px,5vw,56px);letter-spacing:2px;margin-bottom:12px}
+    .nl-title span{color:var(--crimson);text-shadow:0 0 20px var(--crimson-glow)}
+    .nl-sub{font-size:15px;font-weight:300;color:var(--text-secondary);margin-bottom:28px}
+    .nl-form{display:flex;gap:10px;max-width:440px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+    .nl-input{flex:1;min-width:220px;background:var(--bg-card);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:13px 16px;outline:none;transition:border-color 0.2s}
+    .nl-input:focus{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-dim)}
+    .nl-input::placeholder{color:var(--text-muted)}
+    .nl-btn{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--crimson);color:#fff;border:none;padding:13px 24px;cursor:pointer;box-shadow:0 0 14px var(--crimson-glow);transition:all 0.2s;white-space:nowrap}
+    .nl-btn:hover{background:var(--crimson-light);box-shadow:0 0 22px var(--crimson-glow)}
+
+    /* FOOTER */
+    footer{background:var(--bg-deep);border-top:1px solid var(--border-dim);padding:40px 64px 24px}
+    .foot-btm{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .foot-copy{font-size:12px;font-weight:300;color:var(--text-muted)}
+    .foot-links{display:flex;gap:20px}
+    .foot-links a{font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .foot-links a:hover{color:var(--crimson)}
+
+    @media(max-width:900px){nav{padding:0 24px}.nav-links{display:none}.articles-grid{grid-template-columns:1fr}.article-card:first-child{grid-template-columns:1fr}.page-hero,.articles-section,.filters,.newsletter{padding-left:24px;padding-right:24px}}
+    @media(max-width:600px){.art-modal-body{padding:24px 20px}.nl-form{flex-direction:column}}
+  </style>
+</head>
+<body>
+
+<div class="led-top"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">FORGE<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="entrainements.html">Entraînements</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="coaches.html">Coaches</a></li>
+    <li><a href="communaute.html">Communauté</a></li>
+    <li><a href="blog.html" class="active">Blog</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-login" href="login.html" id="nav-login-lnk">Connexion</a>
+    <button class="nav-cta" id="nav-cta-btn">Commencer →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="ph-tag">Conseils & Guides</div>
+  <h1 class="ph-title">LE BLOG<br><span class="cr">FORGEX</span></h1>
+  <p class="ph-sub">Articles rédigés par des experts. Musculation, nutrition, récupération, mindset — tout ce qu'il faut savoir pour progresser.</p>
+</div>
+
+<!-- FILTRES -->
+<div class="filters">
+  <button class="filter-btn active" data-cat="all">Tous</button>
+  <button class="filter-btn" data-cat="training">Entraînement</button>
+  <button class="filter-btn" data-cat="nutrition">Nutrition</button>
+  <button class="filter-btn" data-cat="science">Science</button>
+  <button class="filter-btn" data-cat="mindset">Mindset</button>
+  <button class="filter-btn" data-cat="guide">Guides</button>
+</div>
+
+<!-- ARTICLES -->
+<section class="articles-section">
+  <div class="articles-grid" id="articles-grid"></div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="newsletter">
+  <div class="nl-title">RESTE <span>INFORMÉ</span></div>
+  <p class="nl-sub">Nouveaux articles chaque semaine. Pas de spam, seulement du contenu de qualité.</p>
+  <div class="nl-form">
+    <input class="nl-input" type="email" placeholder="ton@email.com" id="nl-email">
+    <button class="nl-btn" onclick="subscribeNewsletter()">S'abonner →</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-btm">
+    <span class="foot-copy">© 2025 ForgeX — Tous droits réservés</span>
+    <div class="foot-links">
+      <a href="index.html">Accueil</a>
+      <a href="tarifs.html">Tarifs</a>
+      <a href="faq.html">FAQ</a>
+      <a href="cgu.html">CGU</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MODALE ARTICLE -->
+<div class="art-overlay" id="art-overlay">
+  <div class="art-modal" id="art-modal">
+    <div class="art-led"></div>
+    <button class="art-close" id="art-close">✕</button>
+    <div class="art-modal-thumb" id="art-thumb"></div>
+    <div class="art-modal-body">
+      <div class="art-modal-cat" id="art-cat"></div>
+      <div class="art-modal-title" id="art-title"></div>
+      <div class="art-modal-meta" id="art-meta"></div>
+      <div class="art-modal-content" id="art-content"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ARTICLES = [
+  {
+    id:1, cat:'training', featured:true,
+    icon:'🏋️', bg:'#0A0308', glow:'rgba(232,25,44,0.25)',
+    catLabel:'Entraînement', catColor:'var(--crimson)', catDot:'#E8192C',
+    title:'Le guide ultime du squat : technique parfaite et progression',
+    excerpt:'Le squat est l\'exercice roi de la musculation. Maîtrise chaque détail technique pour maximiser tes gains et zéro blessure.',
+    author:'Karim Bensalem', date:'12 Janvier 2025', readTime:'8 min',
+    badge:'📌 Essentiel',
+    content:`
+      <p>Le squat est sans conteste l'exercice le plus complet et le plus efficace de la musculation. Il sollicite plus de 200 muscles simultanément et stimule la production d'hormones anabolisantes comme la testostérone et la GH.</p>
+
+      <h3>La technique en détail</h3>
+      <p>Avant de charger la barre, maîtrise le mouvement à vide. Voici les points clés :</p>
+      <ul>
+        <li><strong>Position des pieds</strong> : largeur d'épaules à épaules + 1, légèrement ouverts vers l'extérieur (30-45°)</li>
+        <li><strong>Placement de la barre</strong> : barre haute sur les trapèzes (squat athlétique) ou barre basse sur les deltoïdes postérieurs (powerlifting)</li>
+        <li><strong>Descent</strong> : contrôlée, genoux dans l'axe des orteils, dos droit, poitrine haute</li>
+        <li><strong>Profondeur</strong> : cuisses parallèles au sol minimum. "Ass to grass" pour les très mobiles</li>
+        <li><strong>Remontée</strong> : pousse à travers les talons, les hanches et les épaules remontent ensemble</li>
+      </ul>
+
+      <div class="highlight">"Le squat ne blesse pas les genoux. C'est la mauvaise technique qui blesse les genoux." — Mark Rippetoe</div>
+
+      <h3>Programme de progression sur 12 semaines</h3>
+      <p>Pour progresser au squat, utilise la progression linéaire : tu ajoutes 2.5kg à chaque séance. C'est la méthode la plus efficace pour les débutants et intermédiaires :</p>
+      <ul>
+        <li>Semaines 1-4 : 3×5 reps, +2.5kg par séance</li>
+        <li>Semaines 5-8 : 5×3 reps (charges plus lourdes), +2.5kg par semaine</li>
+        <li>Semaines 9-12 : ondulation de charges (lourd/moyen/léger)</li>
+      </ul>
+
+      <h3>Erreurs les plus courantes</h3>
+      <ul>
+        <li><strong>Les genoux qui rentrent</strong> : manque de force des abducteurs → exercices de renforcement</li>
+        <li><strong>Le bum wink</strong> : manque de mobilité des hanches → stretching quotidien</li>
+        <li><strong>La descent en avant</strong> : pectoraux trop serrés ou dorsaux faibles → face pulls et mobility work</li>
+        <li><strong>Soulever les talons</strong> : manque de mobilité des chevilles → chaussures de squat ou talons surélevés</li>
+      </ul>
+
+      <h3>Conclusion</h3>
+      <p>Consacre du temps à maîtriser le squat. C'est l'investissement le plus rentable que tu puisses faire dans ta pratique sportive. Commence léger, monte progressivement, et la force suivra.</p>
+    `
+  },
+  {
+    id:2, cat:'nutrition', featured:false,
+    icon:'🥩', bg:'#050A06', glow:'rgba(0,180,80,0.2)',
+    catLabel:'Nutrition', catColor:'var(--led-mid)', catDot:'#E879F9',
+    title:'Protéines : tout ce que la science dit vraiment',
+    excerpt:'1g/kg ou 2g/kg ? Répartition sur la journée, sources animales vs végétales, timing post-workout — on démêle le vrai du faux.',
+    author:'Dr. Sophie Martin', date:'8 Janvier 2025', readTime:'6 min',
+    content:`
+      <p>La question des protéines est au cœur de toutes les discussions fitness. Pourtant, beaucoup d'informations qui circulent sont soit exagérées, soit outdated. Voici ce que la science dit vraiment en 2025.</p>
+
+      <h3>Combien de protéines par jour ?</h3>
+      <p>La méta-analyse de Morton et al. (2018) portant sur 49 études et 1800 participants conclut que le bénéfice maximum pour l'hypertrophie est atteint à environ <strong>1.62g par kg de poids corporel</strong>. Au-delà, pas d'effet supplémentaire sur la masse musculaire.</p>
+      <p>En pratique, viser <strong>1.6 à 2g/kg</strong> donne une marge confortable. Pour 80kg : 128 à 160g de protéines par jour.</p>
+
+      <div class="highlight">En période de sèche ou de déficit calorique, montez à 2.2-2.4g/kg pour préserver la masse musculaire.</div>
+
+      <h3>La répartition sur la journée</h3>
+      <p>La recherche montre qu'on peut assimiler environ <strong>30-40g de protéines par repas</strong> pour la synthèse protéique musculaire. Répartir sur 4-5 repas est optimal. Sauter des repas et tout concentrer sur un seul n'est pas idéal.</p>
+
+      <h3>Le timing post-workout</h3>
+      <p>La "fenêtre anabolique" de 30 minutes a été exagérée. La recherche montre que tu as en réalité <strong>2 à 4 heures</strong> après l'entraînement pour consommer tes protéines. La priorité reste l'apport total de la journée.</p>
+
+      <h3>Protéines végétales vs animales</h3>
+      <ul>
+        <li>Les protéines animales ont un meilleur profil d'acides aminés (PDCAAS plus élevé)</li>
+        <li>Les végétariens et vegans peuvent atteindre leurs besoins en combinant les sources</li>
+        <li>Augmenter légèrement la dose (10-15% de plus) compense la digestibilité inférieure</li>
+        <li>Le soja est la seule protéine végétale complète — excellente alternative à la whey</li>
+      </ul>
+
+      <h3>Les meilleures sources de protéines</h3>
+      <ul>
+        <li>Blanc de poulet : 23g/100g, 110 kcal — roi de l'efficacité</li>
+        <li>Thon au naturel : 23g/100g, 103 kcal — ultra pratique</li>
+        <li>Œufs entiers : 12g/100g, 143 kcal — protéine de référence absolue (PDCAAS = 1.0)</li>
+        <li>Fromage blanc 0% : 8g/100g, 45 kcal — idéal avant de dormir (caséine)</li>
+        <li>Whey protéine : 74g/100g — supplément pratique, non obligatoire</li>
+      </ul>
+    `
+  },
+  {
+    id:3, cat:'science', featured:false,
+    icon:'🧠', bg:'#06040A', glow:'rgba(192,38,211,0.2)',
+    catLabel:'Science', catColor:'var(--magenta-light)', catDot:'#D946EF',
+    title:'Surcompensation : comment le corps construit du muscle',
+    excerpt:'Comprendre le mécanisme de surcompensation change radicalement ta façon de t\'entraîner. La science derrière chaque PR.',
+    author:'ForgeX Research', date:'5 Janvier 2025', readTime:'5 min',
+    content:`
+      <p>La musculation repose sur un principe biologique fondamental : la surcompensation. Comprendre ce mécanisme te permet d'optimiser chaque aspect de ton entraînement.</p>
+
+      <h3>Le cycle de surcompensation</h3>
+      <p>Quand tu t'entraînes, tu crées des micro-lésions musculaires et tu épuises tes réserves. Ton corps réagit en reconstruisant plus fort qu'avant pour se préparer à ce stress futur. Ce processus suit 4 phases :</p>
+      <ul>
+        <li><strong>Phase 1 — Stimulus</strong> : l'entraînement crée le stress mécanique et métabolique</li>
+        <li><strong>Phase 2 — Fatigue</strong> : performances en baisse, récupération en cours (24-72h)</li>
+        <li><strong>Phase 3 — Surcompensation</strong> : le corps dépasse son niveau initial (72-96h après)</li>
+        <li><strong>Phase 4 — Retour à la normale</strong> : si pas de nouveau stimulus, retour au niveau de départ</li>
+      </ul>
+
+      <div class="highlight">Le moment idéal pour re-s'entraîner est pendant la phase de surcompensation, pas avant (surmenage) ni après (perte des gains).</div>
+
+      <h3>Ce que ça implique pour ton programme</h3>
+      <ul>
+        <li>La fréquence optimale pour un muscle est de 2 fois par semaine (correspond au pic de surcompensation)</li>
+        <li>S'entraîner trop souvent = surmenage, pas de surcompensation</li>
+        <li>S'entraîner trop rarement = retour au niveau de base avant le prochain stimulus</li>
+        <li>Le sommeil et la nutrition pendant la récupération déterminent la qualité de la surcompensation</li>
+      </ul>
+
+      <h3>Les facteurs qui accélèrent la surcompensation</h3>
+      <ul>
+        <li>Sommeil 8-9h (GH maximale en phases de sommeil profond)</li>
+        <li>Protéines suffisantes (matériaux de construction)</li>
+        <li>Surplus calorique léger (énergie pour reconstruire)</li>
+        <li>Stress réduit (le cortisol est catabolique)</li>
+        <li>Hydratation optimale</li>
+      </ul>
+    `
+  },
+  {
+    id:4, cat:'mindset', featured:false,
+    icon:'🔥', bg:'#0A0604', glow:'rgba(255,120,0,0.2)',
+    catLabel:'Mindset', catColor:'#f97316', catDot:'#f97316',
+    title:'La discipline bat la motivation — toujours',
+    excerpt:'La motivation fluctue. La discipline, elle, ne faiblit jamais. Comment construire une routine béton qui résiste aux mauvais jours.',
+    author:'ForgeX Team', date:'2 Janvier 2025', readTime:'4 min',
+    content:`
+      <p>Combien de fois as-tu raté une séance parce que tu "n'avais pas envie" ? La motivation est un sentiment éphémère. La discipline, elle, est un système.</p>
+
+      <h3>La vérité sur la motivation</h3>
+      <p>La motivation est réactive — elle dépend de ton humeur, de ton énergie, de ce que tu as mangé. Les athlètes d'élite ne s'entraînent pas quand ils "se sentent motivés". Ils s'entraînent parce que c'est dans leur agenda, point.</p>
+
+      <div class="highlight">"Amateur attend d'être inspiré. Le professionnel se met au travail." — Steven Pressfield</div>
+
+      <h3>Les 3 piliers de la discipline sportive</h3>
+      <ul>
+        <li><strong>L'identité</strong> : cesse de dire "j'essaie de m'entraîner" et dis "je suis quelqu'un qui s'entraîne". L'identité précède le comportement.</li>
+        <li><strong>Les systèmes</strong> : tes séances sont dans ton agenda comme des réunions. Pas négociables. Tu prépares ta sac la veille. Tu as un rituel pré-entraînement.</li>
+        <li><strong>L'environnement</strong> : ton gym est proche de chez toi ou de ton boulot. Tes vêtements de sport sont prêts. Tu as éliminé les frictions.</li>
+      </ul>
+
+      <h3>La règle des 2 minutes</h3>
+      <p>Quand tu n'as vraiment pas envie, engage-toi juste pour 2 minutes. Mets tes chaussures et commence l'échauffement. 95% du temps, tu finiras la séance complète. Le démarrage est le seul obstacle réel.</p>
+
+      <h3>Gérer les jours sans</h3>
+      <ul>
+        <li>Une séance courte vaut mieux que zéro séance</li>
+        <li>Ne te juge pas sur un jour isolé, juge-toi sur ta constance sur 3 mois</li>
+        <li>Quand tu rates une séance, la règle est simple : ne jamais en rater deux de suite</li>
+        <li>La progression n'est pas linéaire. Les plateaux font partie du processus</li>
+      </ul>
+    `
+  },
+  {
+    id:5, cat:'guide', featured:false,
+    icon:'📋', bg:'#04080A', glow:'rgba(0,160,200,0.2)',
+    catLabel:'Guide', catColor:'#60a5fa', catDot:'#60a5fa',
+    title:'Débutant : le plan complet pour les 3 premiers mois',
+    excerpt:'Programme d\'entraînement, alimentation, récupération — tout ce qu\'il faut faire dans les 12 premières semaines pour poser les bonnes bases.',
+    author:'ForgeX Coaching', date:'28 Décembre 2024', readTime:'10 min',
+    content:`
+      <p>Les 3 premiers mois de musculation sont les plus importants de ta vie sportive. Les bases que tu poses maintenant détermineront tes progrès pour les années à venir. Voici le plan complet.</p>
+
+      <h3>Les 4 semaines de fondation (Sem. 1-4)</h3>
+      <p>Objectif : apprendre les mouvements fondamentaux, pas encore se fatiguer au maximum.</p>
+      <ul>
+        <li>Programme Full Body 3x/semaine (Lun, Mer, Ven)</li>
+        <li>Squat, Développé couché, Traction, Rowing, Développé militaire, Planche</li>
+        <li>3 séries × 10 reps, charge légère</li>
+        <li>Focus total sur la technique</li>
+      </ul>
+
+      <h3>La phase de progression (Sem. 5-8)</h3>
+      <p>Maintenant que la technique est acquise, on commence à progresser sérieusement.</p>
+      <ul>
+        <li>Même programme mais +2.5kg par séance sur chaque exercice</li>
+        <li>Si tu n'arrives pas à finir tes reps, tu n'augmentes pas la charge</li>
+        <li>Commencer à tracker ses charges dans un carnet ou une app</li>
+        <li>Ajouter des exercices d'isolation (curl, triceps, mollets)</li>
+      </ul>
+
+      <h3>La consolidation (Sem. 9-12)</h3>
+      <ul>
+        <li>Passage à 4 séances/semaine (Upper/Lower split)</li>
+        <li>Augmenter le volume : 4 séries × 8-10 reps</li>
+        <li>Introduire la décharge : une semaine légère toutes les 4 semaines</li>
+        <li>Bilan et ajustement du plan pour les 3 mois suivants</li>
+      </ul>
+
+      <div class="highlight">À la fin de ces 3 mois, tu dois avoir des bases techniques solides, +5 à +15kg sur chaque exercice majeur, et une routine alimentaire installée.</div>
+
+      <h3>L'alimentation pour débutant</h3>
+      <ul>
+        <li>Objectif : manger suffisamment (ne pas être en déficit)</li>
+        <li>Protéines : 1.6g/kg minimum</li>
+        <li>Ne pas chercher à "sécher" au début — priorise les gains musculaires</li>
+        <li>Hydratation : 35ml/kg/jour</li>
+        <li>Suppléments optionnels : whey (pratique), créatine (efficacité prouvée)</li>
+      </ul>
+    `
+  },
+  {
+    id:6, cat:'science', featured:false,
+    icon:'😴', bg:'#030508', glow:'rgba(100,80,200,0.2)',
+    catLabel:'Science', catColor:'var(--magenta-light)', catDot:'#D946EF',
+    title:'Sommeil et récupération : l\'arme secrète des athlètes',
+    excerpt:'Le sommeil est le meilleur anabolisant naturel qui existe. Ce qui se passe réellement dans ton corps pendant la nuit va te surprendre.',
+    author:'Dr. Lucas Moreau', date:'22 Décembre 2024', readTime:'5 min',
+    content:`
+      <p>On parle d'entraînement, de nutrition, de suppléments... mais rarement du facteur le plus puissant de récupération : le sommeil. Pourtant, une nuit de mauvais sommeil annule 30% des gains de ta séance.</p>
+
+      <h3>Ce qui se passe pendant ton sommeil</h3>
+      <ul>
+        <li><strong>GH (hormone de croissance)</strong> : 70 à 80% de la production journalière se passe dans les 2 premières heures de sommeil profond</li>
+        <li><strong>Testostérone</strong> : pic de production la nuit, chute de 15% après une nuit de 5h vs 8h</li>
+        <li><strong>Synthèse protéique</strong> : continue pendant le sommeil, d'où l'intérêt des protéines à digestion lente (caséine) avant de dormir</li>
+        <li><strong>Cortisol</strong> : le manque de sommeil augmente le cortisol (hormone catabolique)</li>
+      </ul>
+
+      <h3>Combien d'heures dormir ?</h3>
+      <p>La recherche sportive recommande <strong>8 à 10 heures</strong> pour les athlètes. Le minimum absolu pour ne pas dégrader ses performances est 7h. En dessous, les effets négatifs s'accumulent rapidement.</p>
+
+      <div class="highlight">Roger Federer dormait 12h par nuit pendant sa carrière. LeBron James investit 1.5M$/an dans son sommeil et sa récupération.</div>
+
+      <h3>Optimiser ton sommeil</h3>
+      <ul>
+        <li>Couche-toi à heure fixe — ton horloge biologique adore la régularité</li>
+        <li>Chambre fraîche (17-19°C) — la baisse de température corporelle favorise l'endormissement</li>
+        <li>Obscurité totale — la mélatonine est inhibée par la lumière bleue</li>
+        <li>Pas d'écran 1h avant le coucher</li>
+        <li>Magnésium (200-400mg) avant de dormir — améliore la qualité du sommeil profond</li>
+        <li>Repas protéiné 1-2h avant le coucher (caséine, cottage cheese)</li>
+      </ul>
+    `
+  }
+];
+
+const catColors = {
+  training:'var(--crimson)',nutrition:'var(--led-mid)',
+  science:'var(--magenta-light)',mindset:'#f97316',
+  guide:'#60a5fa'
+};
+
+let activeCat = 'all';
+
+function renderArticles(){
+  const grid = document.getElementById('articles-grid');
+  const data = activeCat === 'all' ? ARTICLES : ARTICLES.filter(a=>a.cat===activeCat);
+
+  grid.innerHTML = data.map((a,i)=>`
+    <div class="article-card${i===0&&activeCat==='all'?' featured':''}" data-id="${a.id}" style="cursor:pointer">
+      <div class="article-thumb" style="background:${a.bg}">
+        <div class="thumb-glow" style="background:radial-gradient(circle,${a.glow} 0%,transparent 70%)"></div>
+        ${a.badge?`<span class="article-badge" style="color:${a.catColor};border:1px solid ${a.catColor}40">${a.badge}</span>`:''}
+        ${a.icon}
+      </div>
+      <div class="article-body">
+        <div class="article-cat" style="color:${a.catColor}">
+          <span class="article-cat-dot" style="background:${a.catDot}"></span>
+          ${a.catLabel}
+        </div>
+        <div class="article-title">${a.title}</div>
+        <div class="article-excerpt">${a.excerpt}</div>
+        <div class="article-meta">
+          <span class="article-author">✍ ${a.author}</span>
+          <span class="article-read">⏱ ${a.readTime}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  grid.querySelectorAll('.article-card').forEach(card=>{
+    card.addEventListener('click',()=>openArticle(parseInt(card.dataset.id)));
+  });
+}
+
+function openArticle(id){
+  const a = ARTICLES.find(x=>x.id===id);
+  if(!a) return;
+  document.getElementById('art-thumb').style.cssText = `background:${a.bg};height:220px;display:flex;align-items:center;justify-content:center;font-size:80px;position:relative;overflow:hidden`;
+  document.getElementById('art-thumb').innerHTML = `<div style="position:absolute;inset:0;background:radial-gradient(circle,${a.glow} 0%,transparent 70%)"></div><span style="position:relative;z-index:2">${a.icon}</span>`;
+  document.getElementById('art-cat').innerHTML = `<span style="color:${a.catColor}">${a.catLabel}</span>`;
+  document.getElementById('art-title').textContent = a.title;
+  document.getElementById('art-meta').innerHTML = `<span>✍ ${a.author}</span><span>📅 ${a.date}</span><span>⏱ ${a.readTime} de lecture</span>`;
+  document.getElementById('art-content').innerHTML = a.content;
+  document.getElementById('art-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('art-close').addEventListener('click',()=>{ document.getElementById('art-overlay').classList.remove('open'); document.body.style.overflow=''; });
+document.getElementById('art-overlay').addEventListener('click',function(e){ if(e.target===this){ this.classList.remove('open'); document.body.style.overflow=''; } });
+document.getElementById('art-modal').addEventListener('click',e=>e.stopPropagation());
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ document.getElementById('art-overlay').classList.remove('open'); document.body.style.overflow=''; } });
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    activeCat = this.dataset.cat;
+    renderArticles();
+  });
+});
+
+function subscribeNewsletter(){
+  const email = document.getElementById('nl-email').value.trim();
+  if(!email||!/\S+@\S+\.\S+/.test(email)) return;
+  const btn = document.querySelector('.nl-btn');
+  btn.textContent = '✓ Abonné !';
+  btn.style.background = '#16a34a';
+  document.getElementById('nl-email').value = '';
+  setTimeout(()=>{ btn.textContent="S'abonner →"; btn.style.background=''; },3000);
+}
+
+renderArticles();
+
+/* Transitions */
+document.querySelectorAll('a[href]').forEach(function(a){
+  const h=a.getAttribute('href');
+  if(!h||h.startsWith('#')||h.startsWith('javascript')||h.startsWith('mailto:')||a.target==='_blank') return;
+  if(h.startsWith('http')&&!h.includes(window.location.hostname)) return;
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    document.body.style.opacity='0'; document.body.style.transition='opacity 0.3s';
+    setTimeout(()=>window.location.href=h,320);
+  });
+});
+requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.style.opacity='1'));
+</script>
+<script src="forgex-nav.js"></script>
+<script src="forgex-ui.js"></script>
+</body>
+</html>

@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX — Communauté</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="forgex-auth.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-deep:#05050A;--bg-mid:#09090F;--bg-card:#0D0D16;--bg-raised:#111120;
+      --border-dim:rgba(255,255,255,0.04);--border-soft:rgba(255,255,255,0.08);
+      --crimson:#E8192C;--crimson-light:#FF3D52;--crimson-dim:rgba(232,25,44,0.18);--crimson-glow:rgba(232,25,44,0.40);
+      --magenta:#C026D3;--magenta-light:#D946EF;--magenta-dim:rgba(192,38,211,0.15);--magenta-glow:rgba(192,38,211,0.35);
+      --led-mid:#E879F9;--led-mid-glow:rgba(232,121,249,0.25);
+      --text-primary:#F2F0F8;--text-secondary:#8B8A9E;--text-muted:#4A4A62;
+      --font-display:'Bebas Neue',sans-serif;--font-body:'Barlow',sans-serif;
+      --font-cond:'Barlow Condensed',sans-serif;--font-mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg-deep);color:var(--text-primary);font-family:var(--font-body);font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;opacity:0;transition:opacity 0.4s ease}
+
+    .led-top{height:2px;background:linear-gradient(90deg,transparent 0%,var(--crimson) 20%,var(--led-mid) 50%,var(--magenta) 80%,transparent 100%);box-shadow:0 0 10px var(--crimson-glow),0 0 30px var(--magenta-glow)}
+
+    nav{background:rgba(5,5,10,0.96);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:66px;border-bottom:1px solid var(--border-dim);position:sticky;top:0;z-index:200}
+    nav::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent)}
+    .nav-logo{font-family:var(--font-display);font-size:26px;letter-spacing:6px;color:var(--text-primary);text-decoration:none;line-height:1}
+    .nav-logo em{font-style:normal;color:var(--crimson);text-shadow:0 0 18px var(--crimson-glow)}
+    .nav-links{display:flex;gap:40px;list-style:none}
+    .nav-links a{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text-primary);border-bottom-color:var(--crimson)}
+    .nav-right{display:flex;align-items:center;gap:24px}
+    .nav-login{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .nav-login:hover{color:var(--text-primary)}
+    .nav-cta{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--crimson-light);background:transparent;border:1px solid var(--crimson);padding:9px 22px;cursor:pointer;box-shadow:0 0 10px var(--crimson-dim);transition:all 0.22s}
+    .nav-cta:hover{background:var(--crimson);color:#fff;box-shadow:0 0 22px var(--crimson-glow)}
+
+    /* ── PAGE HERO ── */
+    .page-hero{padding:60px 64px 48px;position:relative;overflow:hidden;border-bottom:1px solid var(--border-dim)}
+    .page-hero::before{content:'';position:absolute;top:-150px;right:-100px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(192,38,211,0.06) 0%,transparent 65%);pointer-events:none}
+    .ph-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:var(--led-mid);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+    .ph-tag-line{width:22px;height:1px;background:var(--led-mid);box-shadow:0 0 6px var(--led-mid)}
+    .ph-row{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap}
+    .ph-title{font-family:var(--font-display);font-size:clamp(52px,7vw,96px);line-height:0.88;letter-spacing:3px;color:var(--text-primary)}
+    .ph-title .mg{color:var(--led-mid);text-shadow:0 0 24px var(--led-mid-glow)}
+    .ph-stats{display:flex;gap:32px;flex-shrink:0}
+    .ph-stat-n{font-family:var(--font-display);font-size:32px;line-height:1;color:var(--crimson-light);text-shadow:0 0 10px var(--crimson-glow)}
+    .ph-stat-l{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:3px}
+
+    /* ── LAYOUT PRINCIPAL ── */
+    .community-layout{display:grid;grid-template-columns:1fr 360px;gap:0;min-height:calc(100vh - 180px)}
+
+    /* ══════════════════════
+       FORUM GAUCHE
+    ══════════════════════ */
+    .forum-col{border-right:1px solid var(--border-dim);display:flex;flex-direction:column}
+
+    /* Tabs forum */
+    .forum-tabs{display:flex;background:var(--bg-mid);border-bottom:1px solid var(--border-dim);padding:0 32px;position:sticky;top:66px;z-index:50}
+    .ftab{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);padding:14px 20px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
+    .ftab.active{color:var(--crimson-light);border-bottom-color:var(--crimson)}
+    .ftab:hover{color:var(--text-primary)}
+
+    /* Barre actions */
+    .forum-actions{display:flex;align-items:center;gap:12px;padding:20px 32px;border-bottom:1px solid var(--border-dim);background:var(--bg-deep)}
+    .forum-search{flex:1;background:var(--bg-card);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:10px 16px;outline:none;transition:border-color 0.2s}
+    .forum-search::placeholder{color:var(--text-muted)}
+    .forum-search:focus{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-dim)}
+    .btn-new-topic{font-family:var(--font-cond);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--crimson);color:#fff;border:none;padding:10px 20px;cursor:pointer;white-space:nowrap;transition:all 0.2s;box-shadow:0 0 14px var(--crimson-glow)}
+    .btn-new-topic:hover{background:var(--crimson-light);box-shadow:0 0 22px var(--crimson-glow)}
+
+    /* Liste topics */
+    .topics-list{flex:1;overflow-y:auto}
+    .topics-list::-webkit-scrollbar{width:3px}
+    .topics-list::-webkit-scrollbar-thumb{background:var(--border-soft)}
+
+    .topic-item{padding:20px 32px;border-bottom:1px solid var(--border-dim);cursor:pointer;transition:background 0.18s;display:flex;gap:16px;align-items:flex-start}
+    .topic-item:hover{background:var(--bg-mid)}
+    .topic-item.active{background:var(--bg-raised);border-left:2px solid var(--crimson)}
+    .topic-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:16px;flex-shrink:0;letter-spacing:1px}
+    .topic-main{flex:1;min-width:0}
+    .topic-row1{display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap}
+    .topic-cat-badge{font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border:1px solid;flex-shrink:0}
+    .topic-title{font-family:var(--font-cond);font-size:15px;font-weight:700;letter-spacing:1px;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .topic-preview{font-size:12px;font-weight:300;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
+    .topic-meta{display:flex;align-items:center;gap:14px}
+    .topic-meta-item{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted);display:flex;align-items:center;gap:4px}
+    .topic-pin{font-size:10px}
+    .topic-hot{color:var(--crimson);font-family:var(--font-mono);font-size:8px;letter-spacing:1px;padding:1px 6px;border:1px solid rgba(232,25,44,0.3);background:rgba(232,25,44,0.08)}
+
+    /* Vue topic ouvert */
+    .topic-view{padding:32px;display:none;flex-direction:column;gap:0}
+    .topic-view.open{display:flex}
+    .topic-view-header{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border-dim)}
+    .tvh-back{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;margin-bottom:14px;display:inline-flex;align-items:center;gap:6px;transition:color 0.2s;background:none;border:none;padding:0}
+    .tvh-back:hover{color:var(--crimson)}
+    .tvh-cat{font-family:var(--font-mono);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px}
+    .tvh-title{font-family:var(--font-display);font-size:32px;letter-spacing:2px;color:var(--text-primary);line-height:1;margin-bottom:12px}
+    .tvh-meta{display:flex;gap:16px;flex-wrap:wrap}
+    .tvh-meta-item{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted)}
+
+    /* Messages du topic */
+    .topic-messages{display:flex;flex-direction:column;gap:16px;margin-bottom:24px;max-height:460px;overflow-y:auto;padding-right:4px}
+    .topic-messages::-webkit-scrollbar{width:3px}
+    .topic-messages::-webkit-scrollbar-thumb{background:var(--border-soft)}
+    .tmsg{display:flex;gap:12px;align-items:flex-start}
+    .tmsg-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:14px;flex-shrink:0}
+    .tmsg-bubble{flex:1;background:var(--bg-raised);padding:14px 16px;border:1px solid var(--border-dim)}
+    .tmsg-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+    .tmsg-name{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-primary)}
+    .tmsg-time{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted)}
+    .tmsg-badge{font-family:var(--font-mono);font-size:8px;letter-spacing:1px;padding:1px 6px;text-transform:uppercase}
+    .tmsg-txt{font-size:14px;font-weight:300;color:var(--text-secondary);line-height:1.65}
+    .tmsg-actions{display:flex;gap:10px;margin-top:8px}
+    .tmsg-btn{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);background:none;border:none;cursor:pointer;padding:0;transition:color 0.2s}
+    .tmsg-btn:hover{color:var(--crimson)}
+    .tmsg-op .tmsg-bubble{border-color:rgba(232,25,44,0.2);background:rgba(232,25,44,0.04)}
+
+    /* Répondre */
+    .topic-reply{border-top:1px solid var(--border-dim);padding-top:20px}
+    .reply-input{width:100%;background:var(--bg-card);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:12px 16px;outline:none;resize:vertical;min-height:80px;transition:border-color 0.2s;display:block;margin-bottom:10px}
+    .reply-input::placeholder{color:var(--text-muted)}
+    .reply-input:focus{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-dim)}
+    .reply-row{display:flex;justify-content:space-between;align-items:center}
+    .reply-info{font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted)}
+    .btn-reply{font-family:var(--font-cond);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--crimson);color:#fff;border:none;padding:10px 22px;cursor:pointer;transition:all 0.2s;box-shadow:0 0 12px var(--crimson-glow)}
+    .btn-reply:hover{background:var(--crimson-light);box-shadow:0 0 20px var(--crimson-glow)}
+
+    /* ══════════════════════
+       CHAT DROITE
+    ══════════════════════ */
+    .chat-col{display:flex;flex-direction:column;background:var(--bg-mid)}
+
+    .chat-header{padding:18px 24px;border-bottom:1px solid var(--border-dim);background:var(--bg-deep);display:flex;align-items:center;justify-content:space-between;position:sticky;top:66px;z-index:50}
+    .chat-header-left{display:flex;align-items:center;gap:10px}
+    .chat-live-dot{width:8px;height:8px;border-radius:50%;background:var(--crimson);box-shadow:0 0 8px var(--crimson),0 0 16px var(--crimson-glow);animation:pulse-dot 1.8s ease-in-out infinite;flex-shrink:0}
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+    .chat-title{font-family:var(--font-cond);font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-primary)}
+    .chat-online{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted)}
+    .chat-online strong{color:var(--crimson-light)}
+
+    /* Utilisateurs en ligne */
+    .chat-users{padding:12px 16px;border-bottom:1px solid var(--border-dim);display:flex;gap:6px;flex-wrap:wrap;background:var(--bg-card)}
+    .chat-user-pill{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted);padding:3px 8px;background:var(--bg-raised);border:1px solid var(--border-dim)}
+    .cup-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+    /* Messages chat */
+    .chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+    .chat-messages::-webkit-scrollbar{width:3px}
+    .chat-messages::-webkit-scrollbar-thumb{background:var(--border-soft)}
+    .cmsg{display:flex;gap:10px;align-items:flex-start}
+    .cmsg.me{flex-direction:row-reverse}
+    .cmsg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:12px;flex-shrink:0}
+    .cmsg-content{max-width:75%}
+    .cmsg.me .cmsg-content{align-items:flex-end;display:flex;flex-direction:column}
+    .cmsg-name{font-family:var(--font-mono);font-size:8px;letter-spacing:1px;color:var(--text-muted);margin-bottom:3px}
+    .cmsg.me .cmsg-name{text-align:right}
+    .cmsg-bubble{padding:10px 14px;font-size:13px;font-weight:300;color:var(--text-secondary);line-height:1.5;border:1px solid var(--border-dim);background:var(--bg-card)}
+    .cmsg.me .cmsg-bubble{background:var(--crimson-dim);border-color:rgba(232,25,44,0.25);color:var(--text-primary)}
+    .cmsg-time{font-family:var(--font-mono);font-size:8px;letter-spacing:1px;color:var(--text-muted);margin-top:3px}
+    .cmsg-system{text-align:center;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted);padding:4px 0;font-style:italic}
+
+    /* Input chat */
+    .chat-input-area{padding:14px 16px;border-top:1px solid var(--border-dim);background:var(--bg-deep)}
+    .chat-input-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:8px}
+    .chat-input{flex:1;background:var(--bg-card);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:13px;font-weight:300;padding:10px 14px;outline:none;resize:none;min-height:40px;max-height:100px;transition:border-color 0.2s}
+    .chat-input::placeholder{color:var(--text-muted)}
+    .chat-input:focus{border-color:var(--magenta);box-shadow:0 0 0 2px var(--magenta-dim)}
+    .chat-send{width:40px;height:40px;background:var(--crimson);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.2s;box-shadow:0 0 10px var(--crimson-glow);flex-shrink:0}
+    .chat-send:hover{background:var(--crimson-light);box-shadow:0 0 18px var(--crimson-glow)}
+    .chat-emojis{display:flex;gap:6px}
+    .chat-emoji{background:none;border:none;font-size:16px;cursor:pointer;padding:2px;opacity:0.5;transition:opacity 0.2s}
+    .chat-emoji:hover{opacity:1}
+
+    /* Pseudonyme */
+    .pseudo-bar{padding:10px 16px;background:var(--bg-card);border-top:1px solid var(--border-dim);display:flex;align-items:center;gap:8px}
+    .pseudo-input{flex:1;background:transparent;border:none;color:var(--text-muted);font-family:var(--font-mono);font-size:10px;letter-spacing:1px;outline:none;padding:4px 0}
+    .pseudo-input:focus{color:var(--text-primary)}
+    .pseudo-lbl{font-family:var(--font-mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);flex-shrink:0}
+
+    /* ── MODALE NOUVEAU TOPIC ── */
+    .nmodal-overlay{position:fixed;inset:0;z-index:9000;background:rgba(5,5,10,0.92);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.28s}
+    .nmodal-overlay.open{opacity:1;pointer-events:all}
+    .nmodal{background:var(--bg-card);border:1px solid var(--border-soft);width:min(600px,94vw);max-height:88vh;overflow-y:auto;transform:translateY(20px) scale(0.97);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+    .nmodal-overlay.open .nmodal{transform:translateY(0) scale(1)}
+    .nmodal-led{height:2px;background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light));box-shadow:0 0 14px var(--crimson-glow)}
+    .nmodal-header{padding:24px 28px 18px;border-bottom:1px solid var(--border-dim);display:flex;align-items:center;justify-content:space-between}
+    .nmodal-title{font-family:var(--font-display);font-size:28px;letter-spacing:2px;color:var(--text-primary)}
+    .nmodal-close{background:transparent;border:1px solid var(--border-soft);color:var(--text-muted);font-size:16px;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+    .nmodal-close:hover{border-color:var(--crimson);color:var(--crimson)}
+    .nmodal-body{padding:24px 28px;display:flex;flex-direction:column;gap:18px}
+    .nfield label{font-family:var(--font-mono);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:8px}
+    .nfield input,.nfield select,.nfield textarea{width:100%;background:var(--bg-raised);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:12px 16px;outline:none;transition:border-color 0.2s}
+    .nfield input::placeholder,.nfield textarea::placeholder{color:var(--text-muted)}
+    .nfield input:focus,.nfield select:focus,.nfield textarea:focus{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-dim)}
+    .nfield textarea{resize:vertical;min-height:120px}
+    .nfield select option{background:var(--bg-card)}
+    .cat-pills{display:flex;gap:8px;flex-wrap:wrap}
+    .cat-pill{cursor:pointer}
+    .cat-pill input{display:none}
+    .cat-pill-inner{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border:1px solid var(--border-soft);color:var(--text-muted);transition:all 0.2s;display:block}
+    .cat-pill input:checked + .cat-pill-inner{border-color:var(--crimson);color:var(--crimson-light);background:var(--crimson-dim);box-shadow:0 0 8px var(--crimson-dim)}
+    .cat-pill:hover .cat-pill-inner{border-color:var(--border-med,rgba(255,255,255,0.14));color:var(--text-primary)}
+    .btn-publish{font-family:var(--font-cond);font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:var(--crimson);color:#fff;border:none;padding:14px 32px;cursor:pointer;box-shadow:0 0 18px var(--crimson-glow);transition:all 0.22s;width:100%}
+    .btn-publish:hover{background:var(--crimson-light);box-shadow:0 0 28px var(--crimson-glow)}
+
+    /* ── FOOTER ── */
+    footer{background:var(--bg-deep);border-top:1px solid var(--border-dim);padding:48px 64px 28px;position:relative}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent)}
+    .foot-btm{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .foot-copy{font-size:12px;font-weight:300;color:var(--text-muted)}
+    .foot-links{display:flex;gap:24px}
+    .foot-links a{font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .foot-links a:hover{color:var(--crimson)}
+
+    @media(max-width:1024px){
+      nav{padding:0 32px}.nav-links{display:none}
+      .community-layout{grid-template-columns:1fr}
+      .chat-col{display:none}
+      .page-hero{padding:40px 32px 32px}
+    }
+    @media(max-width:768px){
+      .page-hero{padding:32px 20px 24px}
+      .ph-title{font-size:clamp(44px,12vw,70px)}
+      .ph-stats{gap:20px}
+      .forum-tabs{padding:0 16px;overflow-x:auto;scrollbar-width:none}
+      .forum-tabs::-webkit-scrollbar{display:none}
+      .forum-actions{padding:14px 16px;gap:10px}
+      .topic-view{padding:20px 16px}
+      .nmodal{width:96vw}
+      .nmodal-body{padding:18px 20px}
+      .forum-col{min-height:70vh}
+    }
+  
+  </style>
+</head>
+<body>
+
+<div class="led-top"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">FORGE<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="entrainements.html">Entraînements</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="coaches.html">Coaches</a></li>
+    <li><a href="communaute.html" class="active">Communauté</a></li>
+    <li><a href="tarifs.html">Tarifs</a></li></ul></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-login" href="login.html" id="nav-login-lnk">Connexion</a>
+    <button class="nav-cta" id="nav-cta-btn">Commencer →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="ph-tag"><span class="ph-tag-line"></span>Espace membres</div>
+  <div class="ph-row">
+    <h1 class="ph-title">LA <span class="mg">FORGE</span><br>COMMUNITY</h1>
+    <div class="ph-stats">
+      <div>
+        <div class="ph-stat-n" style="color:var(--magenta-light);text-shadow:0 0 10px var(--magenta-glow);display:flex;align-items:center;gap:10px">
+          <span style="width:10px;height:10px;border-radius:50%;background:var(--crimson);box-shadow:0 0 10px var(--crimson),0 0 20px var(--crimson-glow);display:inline-block;animation:pulse-dot 1.8s ease-in-out infinite;flex-shrink:0"></span>
+          <span id="online-count">—</span>
+        </div>
+        <div class="ph-stat-l">Connectés maintenant</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="community-layout">
+
+  <!-- ══ FORUM ══ -->
+  <div class="forum-col">
+
+    <!-- Tabs -->
+    <div class="forum-tabs">
+      <button class="ftab active" data-cat="all">Tous</button>
+      <button class="ftab" data-cat="training">Entraînement</button>
+      <button class="ftab" data-cat="nutrition">Nutrition</button>
+      <button class="ftab" data-cat="progress">Progression</button>
+      <button class="ftab" data-cat="conseils">Conseils</button>
+      <button class="ftab" data-cat="steroides">💉 Stéroïdes</button>
+      <button class="ftab" data-cat="intro">Présentations</button>
+    </div>
+
+    <!-- Actions -->
+    <div class="forum-actions">
+      <input class="forum-search" type="text" id="forum-search" placeholder="Rechercher un topic...">
+      <button class="btn-new-topic" onclick="openNewTopic()">+ Nouveau topic</button>
+    </div>
+
+    <!-- Vue liste / vue topic -->
+    <div id="topics-list-view">
+      <div class="topics-list" id="topics-list"></div>
+    </div>
+
+    <div class="topic-view" id="topic-view">
+      <div class="topic-view-header">
+        <button class="tvh-back" onclick="backToList()">← Retour aux topics</button>
+        <div class="tvh-cat" id="tv-cat"></div>
+        <div class="tvh-title" id="tv-title"></div>
+        <div class="tvh-meta" id="tv-meta"></div>
+      </div>
+      <div class="topic-messages" id="tv-messages"></div>
+      <div class="topic-reply">
+        <textarea class="reply-input" id="reply-input" placeholder="Écris ta réponse..." rows="3"></textarea>
+        <div class="reply-row">
+          <span class="reply-info" id="reply-info">Connecté en tant que <strong id="reply-pseudo" style="color:var(--crimson-light)">Visiteur</strong></span>
+          <button class="btn-reply" onclick="postReply()">Répondre →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ CHAT EN DIRECT ══ -->
+  <div class="chat-col">
+
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-live-dot"></div>
+        <div>
+          <div class="chat-title">Chat en direct</div>
+          <div class="chat-online"><strong id="chat-online-count">24</strong> membres en ligne</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Utilisateurs en ligne -->
+    <div class="chat-users" id="chat-users"></div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <!-- Input -->
+    <div class="chat-input-area">
+      <div class="chat-input-row">
+        <textarea class="chat-input" id="chat-input" placeholder="Écris un message..." rows="1"></textarea>
+        <button class="chat-send" id="chat-send-btn" title="Envoyer">➤</button>
+      </div>
+      <div class="chat-emojis">
+        <button class="chat-emoji" onclick="addEmoji('💪')">💪</button>
+        <button class="chat-emoji" onclick="addEmoji('🔥')">🔥</button>
+        <button class="chat-emoji" onclick="addEmoji('✅')">✅</button>
+        <button class="chat-emoji" onclick="addEmoji('🏋️')">🏋️</button>
+        <button class="chat-emoji" onclick="addEmoji('👊')">👊</button>
+        <button class="chat-emoji" onclick="addEmoji('😤')">😤</button>
+        <button class="chat-emoji" onclick="addEmoji('🥗')">🥗</button>
+        <button class="chat-emoji" onclick="addEmoji('⚡')">⚡</button>
+      </div>
+    </div>
+
+    <!-- Pseudo -->
+    <div class="pseudo-bar">
+      <span class="pseudo-lbl">Pseudo :</span>
+      <input class="pseudo-input" type="text" id="pseudo-input" placeholder="Entre ton pseudo..." maxlength="20">
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALE NOUVEAU TOPIC -->
+<div class="nmodal-overlay" id="nmodal-overlay">
+  <div class="nmodal" id="nmodal">
+    <div class="nmodal-led"></div>
+    <div class="nmodal-header">
+      <div class="nmodal-title">NOUVEAU TOPIC</div>
+      <button class="nmodal-close" id="nmodal-close">✕</button>
+    </div>
+    <div class="nmodal-body">
+      <div class="nfield">
+        <label>Catégorie</label>
+        <div class="cat-pills">
+          <label class="cat-pill"><input type="radio" name="ncat" value="training" checked><div class="cat-pill-inner">Entraînement</div></label>
+          <label class="cat-pill"><input type="radio" name="ncat" value="nutrition"><div class="cat-pill-inner">Nutrition</div></label>
+          <label class="cat-pill"><input type="radio" name="ncat" value="progress"><div class="cat-pill-inner">Progression</div></label>
+          <label class="cat-pill"><input type="radio" name="ncat" value="conseils"><div class="cat-pill-inner">Conseils</div></label>
+          <label class="cat-pill"><input type="radio" name="ncat" value="steroides"><div class="cat-pill-inner">💉 Stéroïdes</div></label>
+          <label class="cat-pill"><input type="radio" name="ncat" value="intro"><div class="cat-pill-inner">Présentation</div></label>
+        </div>
+      </div>
+      <div class="nfield">
+        <label>Titre du topic</label>
+        <input type="text" id="ntopic-title" placeholder="Ex: Comment optimiser ma récupération post-workout ?">
+      </div>
+      <div class="nfield">
+        <label>Ton message</label>
+        <textarea id="ntopic-body" placeholder="Décris ta question, ton expérience ou ton sujet en détail..."></textarea>
+      </div>
+      <div class="nfield">
+        <label>Ton pseudo</label>
+        <input type="text" id="ntopic-pseudo" placeholder="Ex: ForgePro_Kevin">
+      </div>
+      <button class="btn-publish" onclick="publishTopic()">Publier le topic →</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-btm">
+    <span class="foot-copy">© 2025 ForgeX — Communauté bienveillante. Respect mutuel obligatoire.</span>
+    <div class="foot-links">
+      <a href="blog.html">Blog</a>
+      <a href="faq.html">FAQ</a>
+      <a href="index.html">Accueil</a>
+      <a href="tarifs.html">Tarifs</a>
+      <a href="#">Règles</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   DONNÉES — TOPICS
+══════════════════════════════════════════ */
+const CATS = {
+  training:  {label:'Entraînement',  color:'var(--crimson)',       border:'rgba(232,25,44,0.35)',   bg:'rgba(232,25,44,0.08)'},
+  nutrition: {label:'Nutrition',     color:'var(--led-mid)',       border:'rgba(232,121,249,0.35)', bg:'rgba(232,121,249,0.08)'},
+  progress:  {label:'Progression',   color:'var(--magenta-light)', border:'rgba(192,38,211,0.35)', bg:'rgba(192,38,211,0.08)'},
+  conseils:  {label:'Conseils',      color:'#4ade80',              border:'rgba(74,222,128,0.35)', bg:'rgba(74,222,128,0.08)'},
+  intro:     {label:'Présentation',  color:'#60a5fa',              border:'rgba(96,165,250,0.35)', bg:'rgba(96,165,250,0.08)'},
+  steroides: {label:'💉 Stéroïdes', color:'#f97316',              border:'rgba(249,115,22,0.35)', bg:'rgba(249,115,22,0.08)'},
+};
+
+const AVATARS_COLORS = ['#E8192C','#C026D3','#E879F9','#2563eb','#16a34a','#d97706','#dc2626','#7c3aed'];
+function avatarColor(name){ return AVATARS_COLORS[name.charCodeAt(0)%AVATARS_COLORS.length]; }
+function initials(name){ return name.slice(0,2).toUpperCase(); }
+
+let topics = [
+  {id:1,cat:'training',title:'Programme PPL vs Full Body — lequel choisir en débutant ?',author:'AlexForge',date:'Il y a 2h',replies:[
+    {author:'AlexForge',time:'Il y a 2h',text:'Bonjour à tous ! Je commence la muscu et j\'hésite entre un programme PPL (Push Pull Legs) 6 jours/semaine ou un Full Body 3 jours. Je suis débutant complet, je n\'ai jamais touché une barre. Qu\'est-ce que vous recommandez ?',op:true},
+    {author:'KarimBeast',time:'Il y a 1h45',text:'Full Body sans hésiter pour un débutant. La coordination neuromusculaire se développe mieux avec de la fréquence sur chaque mouvement. PPL c\'est pour les intermédiaires+'},
+    {author:'SophieAthlète',time:'Il y a 1h30',text:'Totalement d\'accord. En Full Body tu vas squatter/développer/tirer 3x par semaine. C\'est la fréquence qui fait les progrès au début, pas le volume. 💪'},
+    {author:'MaxPower',time:'Il y a 1h',text:'J\'ai commencé par PPL et j\'aurais dû faire Full Body. La récupération est bien meilleure et la technique s\'améliore plus vite avec plus de pratique sur chaque mouvement.'},
+  ],views:342,hot:true,pinned:false},
+  {id:2,cat:'nutrition',title:'Combien de protéines par jour pour la prise de masse ?',author:'MarieLifter',date:'Il y a 4h',replies:[
+    {author:'MarieLifter',time:'Il y a 4h',text:'On entend tout et son contraire sur les protéines. Certains disent 1g/kg, d\'autres 2g/kg voire plus. Quelle est la vraie réponse scientifique ?',op:true},
+    {author:'DrNutrition',time:'Il y a 3h30',text:'La méta-analyse de Morton et al. (2018) conclut que le maximum est autour de 1.62g/kg pour l\'hypertrophie. Au-delà, pas de bénéfice supplémentaire.'},
+    {author:'ForgePro_Kevin',time:'Il y a 2h',text:'En pratique je vise 2g/kg pour avoir une marge de sécurité. Les études c\'est bien mais on est pas tous pareils. Ça ne coûte rien de prendre un peu plus.'},
+    {author:'MarieLifter',time:'Il y a 1h',text:'Super merci ! Donc 1.6 à 2g/kg c\'est le sweet spot ? Je vais ajuster mon alimentation.'},
+  ],views:512,hot:true,pinned:false},
+  {id:3,cat:'progress',title:'Mon bilan 6 mois — de 65kg à 78kg de muscle sec 🔥',author:'ThomasGains',date:'Il y a 6h',replies:[
+    {author:'ThomasGains',time:'Il y a 6h',text:'Salut la communauté ! Je voulais partager mon bilan après 6 mois de ForgeX. Poids : 65kg → 78kg. Masse grasse : 18% → 14%. Développé couché : 60kg → 100kg. Squat : 80kg → 140kg. Programme utilisé : PPL ForgeX + plan nutrition masse. Merci à tous ceux qui m\'ont conseillé ici !',op:true},
+    {author:'AlexForge',time:'Il y a 5h',text:'INCROYABLE ! +13kg et -4% de masse grasse c\'est du recompo body. Comment t\'as géré la nutrition ?'},
+    {author:'ThomasGains',time:'Il y a 4h',text:'Calculateur de macros ForgeX + surplus de 200-300 kcal seulement. La clé c\'est d\'être constant sur le long terme, pas les extremes.'},
+    {author:'SophieAthlète',time:'Il y a 3h',text:'C\'est super inspirant ! Tu as tenu un journal d\'entraînement ?'},
+  ],views:892,hot:true,pinned:true},
+  {id:4,cat:'training',title:'Douleur épaule en développé couché — advice ?',author:'LucasIronMan',date:'Il y a 8h',replies:[
+    {author:'LucasIronMan',time:'Il y a 8h',text:'Depuis 2 semaines j\'ai une douleur à l\'épaule droite quand je fais le développé couché. Surtout en bas du mouvement. C\'est pas très fort mais ça m\'inquiète. Quelqu\'un a eu ça ?',op:true},
+    {author:'KarimBeast',time:'Il y a 7h',text:'Ça ressemble à une irritation du biceps long ou de la coiffe des rotateurs. STOP le développé et va voir un kiné. En attendant, face pull et rotation externe légère.'},
+    {author:'ForgePro_Kevin',time:'Il y a 6h',text:'Pareil. Vérifie ta technique : coudes à 45° du corps pas 90°. Et descends la barre à la hauteur des pecs pas du menton.'},
+  ],views:218,hot:false,pinned:false},
+  {id:5,cat:'nutrition',title:'Batch cooking dominical — ma routine pour manger propre toute la semaine',author:'SophieAthlète',date:'Il y a 12h',replies:[
+    {author:'SophieAthlète',time:'Il y a 12h',text:'Le batch cooking a changé ma vie ! Je prépare tout le dimanche en 2h et je mange propre du lundi au vendredi sans effort. Voici ma routine : riz + patate douce + 5 sources de protéines différentes + légumes rôtis + sauces. Qui fait pareil ?',op:true},
+    {author:'MarieLifter',time:'Il y a 11h',text:'Oui ! C\'est la seule façon de tenir sur la durée. Si tu dois cuisiner tous les soirs tu finiras par commander une pizza 😂'},
+    {author:'ThomasGains',time:'Il y a 10h',text:'Je rajoute les overnight oats préparés en lot pour les petits-déj. 5 bocaux = 5 matins sans se prendre la tête.'},
+  ],views:445,hot:false,pinned:false},
+  {id:6,cat:'conseils',title:'La récupération c\'est 50% du travail — on en parle pas assez',author:'DrNutrition',date:'Il y a 1j',replies:[
+    {author:'DrNutrition',time:'Il y a 1j',text:'On est obsédés par la charge, les séries, les exercices... Mais personne ne parle de récupération. Sommeil 8h minimum, protéines avant de dormir, stress management. Vous gérez comment votre récup ?',op:true},
+    {author:'MaxPower',time:'Il y a 23h',text:'Massage et glace sur les articulations sensibles. Et surtout : ne pas s\'entraîner si on n\'a pas dormi. Je préfère annuler une séance que m\'entraîner à moitié.'},
+    {author:'KarimBeast',time:'Il y a 22h',text:'La cohérence sur 1 an > 6 mois intenses + blessure. Écoute ton corps, c\'est le conseil le plus important.'},
+  ],views:334,hot:false,pinned:false},
+  {id:7,cat:'intro',title:'Bonjour ! Nouvelle membre, objectif sèche avant l\'été 💪',author:'EmmaFit2025',date:'Il y a 2j',replies:[
+    {author:'EmmaFit2025',time:'Il y a 2j',text:'Bonjour la communauté ! Je m\'appelle Emma, 24 ans, je viens de rejoindre ForgeX. Objectif : perdre 8kg de gras et gagner en tonicité avant l\'été. Je suis débutante en musculation mais pas en sport (danse pendant 10 ans). Contente d\'être là !',op:true},
+    {author:'SophieAthlète',time:'Il y a 2j',text:'Bienvenue Emma ! La danse c\'est une super base — bonne proprioception et gainage naturel. Tu vas progresser vite 🎉'},
+    {author:'ThomasGains',time:'Il y a 2j',text:'Welcome ! N\'hésite pas à poser des questions ici, la communauté est super sympa et bienveillante.'},
+    {author:'AlexForge',time:'Il y a 1j',text:'Bienvenue ! Commence par le programme Full Body Débutant et le calcul de macros en sèche. Deux outils parfaits pour ton objectif.'},
+  ],views:267,hot:false,pinned:false},
+  {id:8,cat:'steroides',title:'Première cure de testostérone — tout ce qu\'il faut savoir',author:'KevinBulk',date:'Il y a 3j',replies:[
+    {author:'KevinBulk',time:'Il y a 3j',text:'Bonjour à tous. Je partage ici les bases pour une première cure de testostérone énanthate. Protocole classique débutant : 250-500mg/semaine pendant 12 semaines. Post-cure (PCT) indispensable : Nolvadex 40/40/20/20mg. Bloodwork avant, pendant et après OBLIGATOIRE.',op:true},
+    {author:'PharmaBro',time:'Il y a 2j',text:'Bon résumé. J\'ajouterais : toujours commencer par une analyse sanguine complète (testostérone totale, LH, FSH, hématocrite, foie). Et ne jamais faire de cure sans avoir au moins 3 ans de naturel solide derrière soi.'},
+    {author:'DocSport77',time:'Il y a 2j',text:'Important : la prise de stéroïdes anabolisants sans prescription médicale est illégale en France. Ce forum est purement informatif. Consultez toujours un médecin spécialisé avant toute démarche.'},
+    {author:'KevinBulk',time:'Il y a 1j',text:'Exactement, le suivi médical est non négociable. Les risques existent : suppression de l\'axe hormonal naturel, effets cardiovasculaires, acné. Informez-vous sérieusement avant de prendre une décision.'},
+  ],views:1240,hot:true,pinned:false},
+  {id:9,cat:'steroides',title:'PCT — Protocoles et expériences post-cure',author:'DocSport77',date:'Il y a 5j',replies:[
+    {author:'DocSport77',time:'Il y a 5j',text:'Thread dédié aux PCT (Post Cycle Therapy). Partagez vos protocoles et retours d\'expérience. Les deux SERMs les plus utilisés : Nolvadex (Tamoxifène) et Clomid (Clomiphène). La PCT vise à relancer la production naturelle de testostérone après suppression par le cycle.',op:true},
+    {author:'PharmaBro',time:'Il y a 4j',text:'Mon protocole après une cure de 12 semaines : attendre 2 semaines post-dernière injection (pour les esters longs), puis Nolvadex 40mg/j pendant 2 semaines, 20mg/j pendant encore 2 semaines. Bloodwork 6 semaines après la fin de la PCT.'},
+    {author:'KevinBulk',time:'Il y a 3j',text:'Le HCG pendant la cure pour maintenir les testicules actifs, ça change vraiment la récupération post-cycle. 250 UI deux fois par semaine suffit généralement.'},
+  ],views:876,hot:false,pinned:false},
+  {id:10,cat:'steroides',title:'Natty vs Enhanced — Discussion ouverte sans jugement',author:'PharmaBro',date:'Il y a 1s',replies:[
+    {author:'PharmaBro',time:'Il y a 1s',text:'Sujet souvent tabou : la différence de résultats entre un athlète naturel et un athlète enhanced. Pas pour inciter, juste pour avoir une discussion honnête et informée. Quels sont vos avis et expériences ?',op:true},
+    {author:'ThomasGains',time:'Il y a 6j',text:'Je suis natty depuis 4 ans et j\'ai fait de beaux progrès. La génétique joue énormément — certains natty outperforment des enhanced. La différence principale c\'est la vitesse de récupération et le plafond génétique.'},
+    {author:'DocSport77',time:'Il y a 5j',text:'D\'un point de vue médical : les substances améliorent clairement les capacités de synthèse protéique et de récupération. Mais les risques à long terme sur le plan cardiovasculaire et hormonal sont réels et documentés.'},
+    {author:'AlexForge',time:'Il y a 4j',text:'Chacun fait ses choix en connaissance de cause. L\'important c\'est d\'être informé des risques et de ne jamais sacrifier sa santé pour l\'esthétique.'},
+  ],views:2100,hot:true,pinned:false},
+];
+
+/* ══════════════════════════════════════════
+   PERSISTANCE — localStorage
+   Les topics créés par les utilisateurs sont
+   sauvegardés et rechargés à chaque visite
+══════════════════════════════════════════ */
+const STORAGE_KEY = 'fx_topics_v1';
+const DEFAULT_IDS = [1,2,3,4,5,6,7,8,9,10]; // IDs des topics par défaut à ne jamais supprimer
+
+function saveUserTopics(){
+  const userTopics = topics.filter(t => !DEFAULT_IDS.includes(t.id));
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(userTopics)); } catch(e){}
+  /* Mettre à jour les stats du compte si connecté */
+  if(FX.isLoggedIn()){
+    const pseudo = FX.getUser();
+    const myCount = userTopics.filter(t => t.author === pseudo).length;
+    FX.updateAccount(pseudo, {stats: Object.assign({}, (FX.getAccount(pseudo)||{}).stats||{}, {topics: myCount})});
+  }
+}
+
+function loadUserTopics(){
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+    saved.forEach(function(t){
+      if(!topics.find(x => x.id === t.id)) topics.push(t);
+    });
+  } catch(e){}
+}
+
+/* Aussi sauvegarder les réponses sur les topics par défaut */
+const REPLIES_KEY = 'forgex_replies_v1';
+function saveReplies(){
+  const repliesMap = {};
+  topics.forEach(function(t){ repliesMap[t.id] = t.replies; });
+  try { localStorage.setItem(REPLIES_KEY, JSON.stringify(repliesMap)); } catch(e){}
+}
+function loadReplies(){
+  try {
+    const saved = JSON.parse(localStorage.getItem(REPLIES_KEY) || '{}');
+    topics.forEach(function(t){
+      if(saved[t.id] && saved[t.id].length > t.replies.length){
+        t.replies = saved[t.id];
+      }
+    });
+  } catch(e){}
+}
+
+loadUserTopics();
+loadReplies();
+
+/* ── Les fonctions d'auth viennent de forgex-auth.js (FX) ── */
+function isLoggedIn(){ return FX.isLoggedIn(); }
+function getCurrentUser(){ return FX.getUser(); }
+
+/* Appliquer la session au chargement */
+(function applySession(){
+  if(FX.isLoggedIn()){
+    const pseudo = FX.getUser();
+    const pseudoEl = document.getElementById('pseudo-input');
+    if(pseudoEl) pseudoEl.value = pseudo;
+  }
+})();
+
+let activeTopicId = null;
+let activeCatFilter = 'all';
+let searchFilter = '';
+
+/* ══════════════════════════════════════════
+   RENDU TOPICS
+══════════════════════════════════════════ */
+function renderTopics(){
+  const list = document.getElementById('topics-list');
+  let data = [...topics];
+  if(activeCatFilter !== 'all') data = data.filter(t => t.cat === activeCatFilter);
+  if(searchFilter) data = data.filter(t => t.title.toLowerCase().includes(searchFilter) || t.author.toLowerCase().includes(searchFilter));
+
+  // Pinned first
+  data.sort((a,b) => (b.pinned - a.pinned) || (b.id - a.id));
+
+  list.innerHTML = data.map(t => {
+    const cat = CATS[t.cat] || CATS.training;
+    const ac = avatarColor(t.author);
+    return `
+    <div class="topic-item${activeTopicId===t.id?' active':''}" data-id="${t.id}">
+      <div class="topic-avatar" style="background:${ac}22;border:1px solid ${ac}44;color:${ac}">${initials(t.author)}</div>
+      <div class="topic-main">
+        <div class="topic-row1">
+          ${t.pinned?'<span class="topic-pin">📌</span>':''}
+          ${t.hot?'<span class="topic-hot">🔥 HOT</span>':''}
+          <span class="topic-cat-badge" style="color:${cat.color};border-color:${cat.border};background:${cat.bg}">${cat.label}</span>
+        </div>
+        <div class="topic-title">${t.title}</div>
+        <div class="topic-preview">${t.replies[0]?.text||''}</div>
+        <div class="topic-meta">
+          <span class="topic-meta-item">👤 ${t.author}</span>
+          <span class="topic-meta-item">💬 ${t.replies.length}</span>
+          <span class="topic-meta-item">👁 ${t.views}</span>
+          <span class="topic-meta-item">🕐 ${t.date}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  list.querySelectorAll('.topic-item').forEach(el => {
+    el.addEventListener('click', function(){ openTopic(parseInt(this.dataset.id)); });
+  });
+}
+
+/* ══════════════════════════════════════════
+   OUVRIR UN TOPIC
+══════════════════════════════════════════ */
+function openTopic(id){
+  const t = topics.find(x => x.id === id);
+  if(!t) return;
+  activeTopicId = id;
+  t.views++;
+
+  const cat = CATS[t.cat] || CATS.training;
+  document.getElementById('tv-cat').textContent = cat.label;
+  document.getElementById('tv-title').textContent = t.title;
+  document.getElementById('tv-meta').innerHTML = `
+    <span class="tvh-meta-item">👤 ${t.author}</span>
+    <span class="tvh-meta-item">💬 ${t.replies.length} réponses</span>
+    <span class="tvh-meta-item">👁 ${t.views} vues</span>
+    <span class="tvh-meta-item">🕐 ${t.date}</span>
+  `;
+
+  renderTopicMessages(t);
+
+  document.getElementById('topics-list-view').style.display = 'none';
+  document.getElementById('topic-view').classList.add('open');
+  renderTopics();
+  updateReplyPseudo();
+}
+
+function renderTopicMessages(t){
+  const container = document.getElementById('tv-messages');
+  container.innerHTML = t.replies.map((r,i) => {
+    const ac = avatarColor(r.author);
+    return `
+    <div class="tmsg${r.op?' tmsg-op':''}">
+      <div class="tmsg-avatar" style="background:${ac}22;border:1px solid ${ac}44;color:${ac}">${initials(r.author)}</div>
+      <div class="tmsg-bubble">
+        <div class="tmsg-header">
+          <span class="tmsg-name">${r.author}</span>
+          ${r.op?`<span class="tmsg-badge" style="background:var(--crimson-dim);color:var(--crimson-light);border:1px solid rgba(232,25,44,0.3)">OP</span>`:''}
+          <span class="tmsg-time">${r.time}</span>
+        </div>
+        <div class="tmsg-txt">${r.text}</div>
+        <div class="tmsg-actions">
+          <button class="tmsg-btn" onclick="likeMsg(${t.id},${i})">👍 J'aime</button>
+          <button class="tmsg-btn" onclick="quoteMsg(${t.id},${i})">↩ Citer</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function backToList(){
+  activeTopicId = null;
+  document.getElementById('topics-list-view').style.display = 'block';
+  document.getElementById('topic-view').classList.remove('open');
+  renderTopics();
+}
+
+function likeMsg(topicId, msgIdx){
+  const btn = event.target;
+  btn.style.color = 'var(--crimson)';
+  btn.textContent = '👍 +1';
+  btn.disabled = true;
+}
+
+function quoteMsg(topicId, msgIdx){
+  const t = topics.find(x => x.id === topicId);
+  const r = t?.replies[msgIdx];
+  if(!r) return;
+  const input = document.getElementById('reply-input');
+  input.value = `> ${r.author} : "${r.text.slice(0,80)}${r.text.length>80?'...':''}"\n\n`;
+  input.focus();
+}
+
+/* ══════════════════════════════════════════
+   POSTER UNE RÉPONSE
+══════════════════════════════════════════ */
+function updateReplyPseudo(){
+  const p = getPseudo();
+  const el = document.getElementById('reply-pseudo');
+  if(el) el.textContent = p || 'Visiteur';
+}
+
+function getPseudo(){
+  return document.getElementById('pseudo-input').value.trim() || document.getElementById('ntopic-pseudo')?.value.trim() || 'Visiteur';
+}
+
+function postReply(){
+  const t = topics.find(x => x.id === activeTopicId);
+  if(!t) return;
+  const text = document.getElementById('reply-input').value.trim();
+  if(!text) return;
+
+  let pseudo;
+  if(isLoggedIn()){
+    pseudo = getCurrentUser();
+  } else {
+    pseudo = document.getElementById('pseudo-input').value.trim() || 'Visiteur';
+  }
+
+  t.replies.push({author: pseudo, time:'À l\'instant', text});
+  document.getElementById('reply-input').value = '';
+  renderTopicMessages(t);
+  renderTopics();
+  /* Sauvegarder via FX (persistance + stats) */
+  FX.addReply(activeTopicId, {author:pseudo, time:'À l\'instant', text});
+  saveReplies();
+  /* Mettre à jour les notifs vues pour ce topic */
+  try{
+    const seen = JSON.parse(localStorage.getItem('fx_notif_seen_v1')||'{}');
+    seen[activeTopicId] = t.replies.length;
+    localStorage.setItem('fx_notif_seen_v1', JSON.stringify(seen));
+  }catch(e){}
+}
+
+/* ══════════════════════════════════════════
+   MODALE CONNEXION RAPIDE
+   Permet de se connecter / créer un compte
+   directement depuis la communauté
+══════════════════════════════════════════ */
+function buildLoginModal(){
+  if(document.getElementById('lmodal-overlay')) return;
+  const overlay = document.createElement('div');
+  overlay.id = 'lmodal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9500;background:rgba(5,5,10,0.95);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.28s';
+  overlay.innerHTML = `
+    <div id="lmodal" style="background:var(--bg-card);border:1px solid var(--border-soft);width:min(440px,94vw);position:relative;transform:translateY(20px) scale(0.97);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)">
+      <div style="height:2px;background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light));box-shadow:0 0 14px var(--crimson-glow)"></div>
+      <button id="lmodal-close" style="position:absolute;top:14px;right:14px;background:transparent;border:1px solid var(--border-soft);color:var(--text-muted);font-size:16px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s">✕</button>
+      <div style="padding:28px">
+        <div style="font-family:var(--font-mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--crimson);margin-bottom:10px">Connexion requise</div>
+        <div style="font-family:var(--font-display);font-size:32px;letter-spacing:2px;color:var(--text-primary);margin-bottom:6px">TON COMPTE</div>
+        <p style="font-size:13px;font-weight:300;color:var(--text-muted);margin-bottom:24px">Connecte-toi ou crée un compte pour publier des topics dans la communauté ForgeX.</p>
+
+        <div id="lmodal-tabs" style="display:flex;border-bottom:1px solid var(--border-dim);margin-bottom:20px">
+          <button class="lmt active" data-tab="login" style="font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--crimson-light);background:none;border:none;border-bottom:2px solid var(--crimson);padding:10px 20px;cursor:pointer;margin-bottom:-1px">Connexion</button>
+          <button class="lmt" data-tab="register" style="font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);background:none;border:none;border-bottom:2px solid transparent;padding:10px 20px;cursor:pointer;margin-bottom:-1px">Créer un compte</button>
+        </div>
+
+        <div id="lm-login">
+          <label style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px">Pseudo</label>
+          <input id="lm-pseudo" type="text" placeholder="Ton pseudo" style="width:100%;background:var(--bg-raised);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:12px 14px;outline:none;margin-bottom:12px;transition:border-color 0.2s">
+          <label style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px">Mot de passe</label>
+          <input id="lm-password" type="password" placeholder="••••••••" style="width:100%;background:var(--bg-raised);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:12px 14px;outline:none;margin-bottom:16px;transition:border-color 0.2s">
+          <div id="lm-err" style="font-family:var(--font-mono);font-size:10px;color:var(--crimson);margin-bottom:10px;display:none"></div>
+          <button onclick="doLogin()" style="width:100%;font-family:var(--font-cond);font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:var(--crimson);color:#fff;border:none;padding:14px;cursor:pointer;box-shadow:0 0 18px var(--crimson-glow)">Se connecter →</button>
+        </div>
+
+        <div id="lm-register" style="display:none">
+          <label style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px">Choisis ton pseudo</label>
+          <input id="lm-rpseudo" type="text" placeholder="Ex: ForgeWarrior42" style="width:100%;background:var(--bg-raised);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:12px 14px;outline:none;margin-bottom:12px">
+          <label style="font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:6px">Mot de passe</label>
+          <input id="lm-rpassword" type="password" placeholder="8 caractères minimum" style="width:100%;background:var(--bg-raised);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;padding:12px 14px;outline:none;margin-bottom:16px">
+          <div id="lm-rerr" style="font-family:var(--font-mono);font-size:10px;color:var(--crimson);margin-bottom:10px;display:none"></div>
+          <button onclick="doRegister()" style="width:100%;font-family:var(--font-cond);font-size:13px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;background:var(--crimson);color:#fff;border:none;padding:14px;cursor:pointer;box-shadow:0 0 18px var(--crimson-glow)">Créer mon compte →</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  /* Tabs */
+  overlay.querySelectorAll('.lmt').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      overlay.querySelectorAll('.lmt').forEach(b=>{
+        b.style.color='var(--text-muted)'; b.style.borderBottom='2px solid transparent';
+      });
+      this.style.color='var(--crimson-light)'; this.style.borderBottom='2px solid var(--crimson)';
+      const tab = this.dataset.tab;
+      document.getElementById('lm-login').style.display    = tab==='login'    ? 'block' : 'none';
+      document.getElementById('lm-register').style.display = tab==='register' ? 'block' : 'none';
+    });
+  });
+
+  /* Fermeture */
+  document.getElementById('lmodal-close').addEventListener('click', closeLoginPrompt);
+  overlay.addEventListener('click', function(e){ if(e.target===this) closeLoginPrompt(); });
+  document.getElementById('lmodal').addEventListener('click', e=>e.stopPropagation());
+
+  /* Enter dans les champs */
+  document.getElementById('lm-password').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  document.getElementById('lm-rpassword').addEventListener('keydown', e=>{ if(e.key==='Enter') doRegister(); });
+}
+
+function openLoginPrompt(){
+  buildLoginModal();
+  const ov = document.getElementById('lmodal-overlay');
+  ov.style.opacity='0'; ov.style.pointerEvents='all';
+  requestAnimationFrame(()=>{ ov.style.opacity='1'; document.getElementById('lmodal').style.transform='translateY(0) scale(1)'; });
+  document.body.style.overflow='hidden';
+  setTimeout(()=>{ document.getElementById('lm-pseudo')?.focus(); }, 200);
+}
+
+function closeLoginPrompt(){
+  const ov = document.getElementById('lmodal-overlay');
+  if(!ov) return;
+  ov.style.opacity='0'; ov.style.pointerEvents='none';
+  document.body.style.overflow='';
+}
+
+/* ── Les comptes sont gérés par forgex-auth.js (FX) ── */
+
+function doLogin(){
+  const pseudo   = document.getElementById('lm-pseudo').value.trim();
+  const password = document.getElementById('lm-password').value;
+  const errEl    = document.getElementById('lm-err');
+  errEl.style.display = 'none';
+  if(!pseudo || !password){ errEl.textContent='Remplis tous les champs.'; errEl.style.display='block'; return; }
+
+  const result = FX.login(pseudo, password);
+  if(!result.ok){ errEl.textContent=result.err; errEl.style.display='block'; return; }
+
+  document.getElementById('pseudo-input').value = pseudo;
+  updateReplyPseudo();
+  closeLoginPrompt();
+  setTimeout(function(){
+    document.getElementById('ntopic-pseudo').value = pseudo;
+    document.getElementById('ntopic-pseudo').readOnly = true;
+    document.getElementById('ntopic-pseudo').style.opacity = '0.6';
+    document.getElementById('nmodal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }, 300);
+}
+
+function doRegister(){
+  const pseudo   = document.getElementById('lm-rpseudo').value.trim();
+  const password = document.getElementById('lm-rpassword').value;
+  const errEl    = document.getElementById('lm-rerr');
+  errEl.style.display = 'none';
+
+  const result = FX.register(pseudo, password, '');
+  if(!result.ok){ errEl.textContent=result.err; errEl.style.display='block'; return; }
+
+  document.getElementById('pseudo-input').value = pseudo;
+  updateReplyPseudo();
+  closeLoginPrompt();
+  setTimeout(function(){
+    document.getElementById('ntopic-pseudo').value = pseudo;
+    document.getElementById('ntopic-pseudo').readOnly = true;
+    document.getElementById('ntopic-pseudo').style.opacity = '0.6';
+    document.getElementById('nmodal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }, 300);
+}
+
+/* ══════════════════════════════════════════
+   NOUVEAU TOPIC
+══════════════════════════════════════════ */
+function openNewTopic(){
+  if(!isLoggedIn()){
+    /* Pas connecté → montrer modale de connexion rapide */
+    openLoginPrompt();
+    return;
+  }
+  /* Pré-remplir le pseudo avec le compte connecté */
+  const pseudo = getCurrentUser();
+  document.getElementById('ntopic-pseudo').value = pseudo;
+  document.getElementById('ntopic-pseudo').readOnly = true;
+  document.getElementById('ntopic-pseudo').style.opacity = '0.6';
+  document.getElementById('nmodal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeNewTopic(){
+  document.getElementById('nmodal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('nmodal-close').addEventListener('click', closeNewTopic);
+document.getElementById('nmodal-overlay').addEventListener('click', function(e){
+  if(e.target === this) closeNewTopic();
+});
+document.getElementById('nmodal').addEventListener('click', e => e.stopPropagation());
+
+function publishTopic(){
+  if(!isLoggedIn()){ openLoginPrompt(); return; }
+  const title = document.getElementById('ntopic-title').value.trim();
+  const body  = document.getElementById('ntopic-body').value.trim();
+  const pseudo = getCurrentUser();
+  const cat   = document.querySelector('input[name="ncat"]:checked')?.value || 'training';
+  if(!title){ showFieldError('ntopic-title', 'Le titre est obligatoire'); return; }
+  if(!body) { showFieldError('ntopic-body',  'Le message est obligatoire'); return; }
+
+  const d = new Date();
+  const dateStr = 'Le ' + d.toLocaleDateString('fr-FR', {day:'numeric',month:'long'}) + ' à ' + d.getHours() + 'h' + String(d.getMinutes()).padStart(2,'0');
+
+  const newTopic = {
+    id: Date.now(),
+    cat, title,
+    author: pseudo,
+    date: dateStr,
+    replies:[{author:pseudo, time:'À l\'instant', text:body, op:true}],
+    views:1, hot:false, pinned:false
+  };
+  topics.unshift(newTopic);
+  saveUserTopics(); /* Sauvegarde unifiée via fx_topics_v1 */
+  closeNewTopic();
+  document.getElementById('ntopic-title').value = '';
+  document.getElementById('ntopic-body').value = '';
+  renderTopics();
+  openTopic(newTopic.id);
+}
+
+function showFieldError(id, msg){
+  const el = document.getElementById(id);
+  el.style.borderColor = 'var(--crimson)';
+  el.style.boxShadow = '0 0 0 2px var(--crimson-dim)';
+  el.placeholder = msg;
+  el.focus();
+  setTimeout(()=>{ el.style.borderColor=''; el.style.boxShadow=''; el.placeholder=''; }, 3000);
+}
+
+/* ══════════════════════════════════════════
+   FILTRES FORUM
+══════════════════════════════════════════ */
+document.querySelectorAll('.ftab').forEach(btn => {
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    activeCatFilter = this.dataset.cat;
+    backToList();
+    renderTopics();
+  });
+});
+
+document.getElementById('forum-search').addEventListener('input', function(){
+  searchFilter = this.value.toLowerCase();
+  renderTopics();
+});
+
+/* ══════════════════════════════════════════
+   CHAT EN DIRECT
+══════════════════════════════════════════ */
+const CHAT_USERS_ONLINE = [
+  {name:'AlexForge',   color:'#E8192C'},
+  {name:'KarimBeast',  color:'#C026D3'},
+  {name:'SophieAthlète',color:'#E879F9'},
+  {name:'ThomasGains', color:'#2563eb'},
+  {name:'MarieLifter', color:'#16a34a'},
+  {name:'MaxPower',    color:'#d97706'},
+  {name:'EmmaFit2025', color:'#7c3aed'},
+  {name:'ForgePro_Kevin',color:'#E8192C'},
+  {name:'LucasIronMan',color:'#dc2626'},
+  {name:'DrNutrition', color:'#059669'},
+];
+
+function renderChatUsers(){
+  const container = document.getElementById('chat-users');
+  container.innerHTML = CHAT_USERS_ONLINE.map(u => `
+    <div class="chat-user-pill">
+      <span class="cup-dot" style="background:${u.color};box-shadow:0 0 5px ${u.color}"></span>
+      ${u.name}
+    </div>
+  `).join('');
+}
+
+let chatMessages = [];
+
+const INITIAL_MSGS = [
+  {author:'SophieAthlète', color:'#E879F9', time:'14:22', text:'Bonjour tout le monde ! Bonne séance à ceux qui s\'entraînent aujourd\'hui 💪', me:false},
+  {author:'KarimBeast',    color:'#C026D3', time:'14:24', text:'Merci ! Je fais chest aujourd\'hui. Objectif 120kg développé couché 🔥', me:false},
+  {author:'ThomasGains',   color:'#2563eb', time:'14:25', text:'Allé ! Tu peux le faire. J\'étais à 100kg y\'a 6 mois, maintenant 130kg.', me:false},
+  {author:'EmmaFit2025',   color:'#7c3aed', time:'14:26', text:'Quelqu\'un peut m\'expliquer la différence entre développé incliné et développé couché ?', me:false},
+  {author:'AlexForge',     color:'#E8192C', time:'14:27', text:'Couché = pecs médians / Incliné = haut des pecs (claviculaire). Les deux sont essentiels !', me:false},
+  {author:'MarieLifter',   color:'#16a34a', time:'14:29', text:'J\'ai essayé la recette overnight oats protéinés. INCROYABLE le goût ! 🥣', me:false},
+  {author:'SophieAthlète', color:'#E879F9', time:'14:30', text:'C\'est ma préférée ! Ajoute de la cannelle et des myrtilles, game changer 😍', me:false},
+  {type:'system', text:'DrNutrition a rejoint le chat'},
+  {author:'DrNutrition',   color:'#059669', time:'14:31', text:'Salut ! Question du jour : est-ce que vous faites attention à votre fenêtre anabolique post-workout ?', me:false},
+  {author:'ForgePro_Kevin',color:'#E8192C', time:'14:32', text:'Shake dans les 30 min après, toujours. Whey + banane, simple et efficace ⚡', me:false},
+];
+
+function initChat(){
+  INITIAL_MSGS.forEach(m => chatMessages.push(m));
+  renderChatMessages();
+  renderChatUsers();
+}
+
+function renderChatMessages(){
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = chatMessages.map(m => {
+    if(m.type === 'system'){
+      return `<div class="cmsg-system">— ${m.text} —</div>`;
+    }
+    return `
+    <div class="cmsg${m.me?' me':''}">
+      <div class="cmsg-avatar" style="background:${m.color}22;border:1px solid ${m.color}44;color:${m.color}">${initials(m.author)}</div>
+      <div class="cmsg-content">
+        <div class="cmsg-name">${m.author} · ${m.time}</div>
+        <div class="cmsg-bubble">${escHtml(m.text)}</div>
+      </div>
+    </div>`;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function escHtml(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function now(){
+  const d = new Date();
+  return d.getHours()+':'+(d.getMinutes()<10?'0':'')+d.getMinutes();
+}
+
+function sendChatMsg(){
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text) return;
+  const pseudo = document.getElementById('pseudo-input').value.trim() || 'Moi';
+  chatMessages.push({author:pseudo, color:'#E8192C', time:now(), text, me:true});
+  input.value = '';
+  input.style.height = 'auto';
+  renderChatMessages();
+
+  // Réponse auto simulée après délai
+  scheduleAutoReply(text);
+}
+
+function addEmoji(e){
+  const input = document.getElementById('chat-input');
+  input.value += e;
+  input.focus();
+}
+
+/* Réponses automatiques simulées */
+const AUTO_REPLIES = [
+  {author:'KarimBeast', color:'#C026D3', replies:['Bien dit 👊','Totalement d\'accord !','C\'est exactement ça.','Bonne question !','Je pense pareil 💪']},
+  {author:'SophieAthlète', color:'#E879F9', replies:['Merci pour le partage !','Super conseil 🙌','On en a besoin ici !','Trop vrai 🔥','Excellent point !']},
+  {author:'AlexForge', color:'#E8192C', replies:['💪','Validé !','La vérité ça.','Exactement ce que je pensais !','T\'as raison à 100%']},
+  {author:'ThomasGains', color:'#2563eb', replies:['Sage conseil 🧠','Je retiens ça !','On progresse ensemble 💪','Belle réflexion','Pareil pour moi !']},
+];
+
+let autoReplyCooldown = false;
+function scheduleAutoReply(text){
+  if(autoReplyCooldown) return;
+  autoReplyCooldown = true;
+  const delay = 1200 + Math.random()*2000;
+  setTimeout(function(){
+    const user = AUTO_REPLIES[Math.floor(Math.random()*AUTO_REPLIES.length)];
+    const reply = user.replies[Math.floor(Math.random()*user.replies.length)];
+    chatMessages.push({author:user.author, color:user.color, time:now(), text:reply, me:false});
+    renderChatMessages();
+    autoReplyCooldown = false;
+  }, delay);
+}
+
+/* Events chat */
+document.getElementById('chat-send-btn').addEventListener('click', sendChatMsg);
+document.getElementById('chat-input').addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendChatMsg(); }
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+});
+document.getElementById('pseudo-input').addEventListener('input', updateReplyPseudo);
+
+/* ══ INIT ══ */
+renderTopics();
+updateReplyPseudo();
+initChat();
+
+/* Marquer tous les topics comme vus à la visite */
+(function markTopicsAsSeen(){
+  const pseudo = FX.isLoggedIn() ? FX.getUser() : null;
+  if(!pseudo) return;
+  const myTopics = FX.getUserTopics().filter(t=>t.author===pseudo);
+  if(!myTopics.length) return;
+  const seen = {};
+  myTopics.forEach(function(t){ seen[t.id] = t.replies?t.replies.length:1; });
+  try{ localStorage.setItem('fx_notif_seen_v1', JSON.stringify(seen)); }catch(e){}
+})();
+
+/* ══ TRANSITIONS ══ */
+document.querySelectorAll('a[href]').forEach(function(a){
+  const h = a.getAttribute('href');
+  if(!h||h.startsWith('#')||h.startsWith('mailto:')||a.target==='_blank') return;
+  if(h.startsWith('http')&&!h.includes(window.location.hostname)) return;
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    document.body.style.opacity='0';
+    document.body.style.transition='opacity 0.3s ease';
+    setTimeout(function(){ window.location.href=h; },320);
+  });
+});
+requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.style.opacity='1'; }); });
+
+/* ══════════════════════════════════════════
+   COMPTEUR EN LIGNE TEMPS RÉEL
+   Via BroadcastChannel + localStorage
+   Compte les onglets/fenêtres ouverts sur le même navigateur
+   + Stocke la présence pour compter sur la même machine
+══════════════════════════════════════════ */
+(function(){
+  const KEY     = 'forgex_presence_v1';
+  const MY_ID   = 'p_' + Math.random().toString(36).slice(2) + Date.now();
+  const HB_MS   = 5000;   // heartbeat toutes les 5s
+  const TTL_MS  = 12000;  // considéré hors-ligne après 12s sans heartbeat
+
+  function getPresence(){
+    try{ return JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){ return {}; }
+  }
+
+  function setPresence(data){
+    try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){}
+  }
+
+  function heartbeat(){
+    const data = getPresence();
+    data[MY_ID] = Date.now();
+    // Nettoyer les sessions expirées
+    const now = Date.now();
+    Object.keys(data).forEach(function(id){
+      if(now - data[id] > TTL_MS) delete data[id];
+    });
+    setPresence(data);
+    return Object.keys(data).length;
+  }
+
+  function updateDisplay(n){
+    const el1 = document.getElementById('online-count');
+    const el2 = document.getElementById('chat-online-count');
+    if(el1) el1.textContent = n;
+    if(el2) el2.textContent = n;
+  }
+
+  // Premier tick immédiat
+  updateDisplay(heartbeat());
+
+  // Heartbeat régulier
+  setInterval(function(){
+    updateDisplay(heartbeat());
+  }, HB_MS);
+
+  // Écouter les changements des autres onglets
+  window.addEventListener('storage', function(e){
+    if(e.key === KEY){
+      const data = getPresence();
+      const now = Date.now();
+      const count = Object.keys(data).filter(function(id){
+        return now - data[id] <= TTL_MS;
+      }).length;
+      updateDisplay(Math.max(1, count));
+    }
+  });
+
+  // BroadcastChannel pour les onglets du même navigateur
+  if(typeof BroadcastChannel !== 'undefined'){
+    const bc = new BroadcastChannel('forgex_online');
+    bc.onmessage = function(){
+      updateDisplay(heartbeat());
+    };
+    setInterval(function(){ bc.postMessage(1); }, HB_MS);
+  }
+
+  // Nettoyage à la fermeture de l'onglet
+  window.addEventListener('beforeunload', function(){
+    const data = getPresence();
+    delete data[MY_ID];
+    setPresence(data);
+  });
+})();
+</script>
+<script src="forgex-ui.js"></script>
+<script src="forgex-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX — FAQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="forgex-auth.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-deep:#05050A;--bg-mid:#09090F;--bg-card:#0D0D16;--bg-raised:#111120;
+      --border-dim:rgba(255,255,255,0.04);--border-soft:rgba(255,255,255,0.08);
+      --crimson:#E8192C;--crimson-light:#FF3D52;--crimson-dim:rgba(232,25,44,0.18);--crimson-glow:rgba(232,25,44,0.40);
+      --magenta:#C026D3;--magenta-light:#D946EF;--magenta-dim:rgba(192,38,211,0.15);--magenta-glow:rgba(192,38,211,0.35);
+      --led-mid:#E879F9;--led-mid-glow:rgba(232,121,249,0.25);
+      --text-primary:#F2F0F8;--text-secondary:#8B8A9E;--text-muted:#4A4A62;
+      --font-display:'Bebas Neue',sans-serif;--font-body:'Barlow',sans-serif;
+      --font-cond:'Barlow Condensed',sans-serif;--font-mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg-deep);color:var(--text-primary);font-family:var(--font-body);font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;opacity:0;transition:opacity 0.4s}
+
+    .led-top{height:2px;background:linear-gradient(90deg,transparent,var(--crimson) 20%,var(--led-mid) 50%,var(--magenta) 80%,transparent);box-shadow:0 0 10px var(--crimson-glow),0 0 30px var(--magenta-glow)}
+
+    nav{background:rgba(5,5,10,0.96);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:66px;border-bottom:1px solid var(--border-dim);position:sticky;top:0;z-index:200}
+    nav::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent)}
+    .nav-logo{font-family:var(--font-display);font-size:26px;letter-spacing:6px;color:var(--text-primary);text-decoration:none;line-height:1}
+    .nav-logo em{font-style:normal;color:var(--crimson);text-shadow:0 0 18px var(--crimson-glow)}
+    .nav-links{display:flex;gap:40px;list-style:none}
+    .nav-links a{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s}
+    .nav-links a:hover{color:var(--text-primary);border-bottom-color:var(--crimson)}
+    .nav-right{display:flex;align-items:center;gap:24px}
+    .nav-login{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .nav-cta{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--crimson-light);background:transparent;border:1px solid var(--crimson);padding:9px 22px;cursor:pointer;box-shadow:0 0 10px var(--crimson-dim);transition:all 0.22s}
+    .nav-cta:hover{background:var(--crimson);color:#fff;box-shadow:0 0 22px var(--crimson-glow)}
+
+    /* HERO */
+    .page-hero{padding:80px 64px 60px;position:relative;overflow:hidden;border-bottom:1px solid var(--border-dim)}
+    .page-hero::before{content:'';position:absolute;top:-150px;right:-100px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(232,25,44,0.055),transparent 65%);pointer-events:none}
+    .ph-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:var(--crimson);margin-bottom:18px;display:flex;align-items:center;gap:12px}
+    .ph-tag::before{content:'';width:22px;height:1px;background:var(--crimson);box-shadow:0 0 6px var(--crimson)}
+    .ph-title{font-family:var(--font-display);font-size:clamp(64px,9vw,120px);line-height:0.88;letter-spacing:3px;margin-bottom:20px}
+    .ph-sub{font-size:16px;font-weight:300;color:var(--text-secondary);max-width:520px;line-height:1.75}
+
+    /* SEARCH */
+    .faq-search-wrap{padding:28px 64px;background:var(--bg-mid);border-bottom:1px solid var(--border-dim)}
+    .faq-search{position:relative;max-width:560px}
+    .faq-search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+    .faq-search-input{width:100%;background:var(--bg-card);border:1px solid var(--border-soft);color:var(--text-primary);font-family:var(--font-body);font-size:15px;font-weight:300;padding:13px 16px 13px 46px;outline:none;transition:border-color 0.2s}
+    .faq-search-input:focus{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-dim)}
+    .faq-search-input::placeholder{color:var(--text-muted)}
+
+    /* LAYOUT */
+    .faq-layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 280px)}
+
+    /* SIDEBAR CATÉGORIES */
+    .faq-sidebar{background:var(--bg-mid);border-right:1px solid var(--border-dim);padding:32px 0;position:sticky;top:66px;height:fit-content}
+    .faq-cat-btn{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;border-left:2px solid transparent;padding:12px 24px;font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);cursor:pointer;transition:all 0.2s;text-align:left}
+    .faq-cat-btn:hover{color:var(--text-primary);background:rgba(255,255,255,0.03)}
+    .faq-cat-btn.active{color:var(--crimson-light);border-left-color:var(--crimson);background:var(--crimson-dim)}
+    .faq-cat-icon{font-size:16px}
+    .faq-cat-count{margin-left:auto;font-family:var(--font-mono);font-size:9px;letter-spacing:1px;color:var(--text-muted);background:var(--bg-raised);border:1px solid var(--border-dim);padding:2px 7px}
+    .faq-cat-btn.active .faq-cat-count{color:var(--crimson-light)}
+
+    /* CONTENU FAQ */
+    .faq-content{padding:48px 56px 80px}
+    .faq-section{margin-bottom:48px}
+    .faq-section-title{font-family:var(--font-display);font-size:32px;letter-spacing:2px;color:var(--text-primary);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+    .faq-section-title span{font-size:28px}
+
+    /* ACCORDÉON */
+    .faq-item{border:1px solid var(--border-dim);margin-bottom:4px;transition:border-color 0.2s}
+    .faq-item.open{border-color:rgba(232,25,44,0.2)}
+    .faq-question{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 20px;cursor:pointer;transition:background 0.2s;background:var(--bg-card)}
+    .faq-item.open .faq-question{background:var(--bg-raised)}
+    .faq-question:hover{background:var(--bg-raised)}
+    .faq-q-text{font-family:var(--font-cond);font-size:15px;font-weight:700;letter-spacing:1px;color:var(--text-primary);line-height:1.3}
+    .faq-item.open .faq-q-text{color:var(--crimson-light)}
+    .faq-chevron{font-size:14px;color:var(--text-muted);transition:transform 0.3s;flex-shrink:0;font-family:var(--font-mono)}
+    .faq-item.open .faq-chevron{transform:rotate(180deg);color:var(--crimson)}
+    .faq-answer{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1)}
+    .faq-item.open .faq-answer{max-height:600px}
+    .faq-answer-inner{padding:0 20px 20px;font-size:14px;font-weight:300;color:var(--text-secondary);line-height:1.8;border-top:1px solid var(--border-dim);padding-top:16px}
+    .faq-answer-inner a{color:var(--crimson);text-decoration:none}
+    .faq-answer-inner a:hover{color:var(--crimson-light)}
+    .faq-answer-inner strong{color:var(--text-primary);font-weight:600}
+
+    /* TAG recherche */
+    .faq-no-result{text-align:center;padding:64px;color:var(--text-muted)}
+    .faq-no-result span{display:block;font-size:40px;margin-bottom:16px;opacity:0.2}
+
+    /* CTA BAS DE PAGE */
+    .faq-cta{margin:0 56px 60px;background:var(--bg-card);border:1px solid var(--border-soft);padding:36px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;position:relative;overflow:hidden}
+    .faq-cta::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light));box-shadow:0 0 12px var(--crimson-glow)}
+    .faq-cta-title{font-family:var(--font-display);font-size:28px;letter-spacing:2px;color:var(--text-primary);margin-bottom:6px}
+    .faq-cta-sub{font-size:14px;font-weight:300;color:var(--text-secondary)}
+    .faq-cta-btn{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--crimson);color:#fff;border:none;padding:13px 24px;cursor:pointer;box-shadow:0 0 14px var(--crimson-glow);transition:all 0.2s;white-space:nowrap;text-decoration:none;display:inline-block}
+    .faq-cta-btn:hover{background:var(--crimson-light);box-shadow:0 0 22px var(--crimson-glow)}
+
+    /* FOOTER */
+    footer{background:var(--bg-deep);border-top:1px solid var(--border-dim);padding:40px 64px 24px}
+    .foot-btm{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .foot-copy{font-size:12px;font-weight:300;color:var(--text-muted)}
+    .foot-links{display:flex;gap:20px}
+    .foot-links a{font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .foot-links a:hover{color:var(--crimson)}
+
+    @media(max-width:900px){
+      nav{padding:0 24px}.nav-links{display:none}
+      .faq-layout{grid-template-columns:1fr}
+      .faq-sidebar{position:static;height:auto;display:flex;flex-wrap:nowrap;overflow-x:auto;padding:12px 16px;gap:8px;border-right:none;border-bottom:1px solid var(--border-dim)}
+      .faq-sidebar::-webkit-scrollbar{display:none}
+      .faq-cat-btn{border-left:none;border-bottom:2px solid transparent;padding:8px 14px;white-space:nowrap;flex-shrink:0}
+      .faq-cat-btn.active{border-bottom-color:var(--crimson);border-left:none;background:transparent}
+      .faq-content{padding:32px 24px 60px}
+      .faq-cta{grid-template-columns:1fr;margin:0 24px 48px}
+      .page-hero,.faq-search-wrap{padding-left:24px;padding-right:24px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="led-top"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">FORGE<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="entrainements.html">Entraînements</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="coaches.html">Coaches</a></li>
+    <li><a href="communaute.html">Communauté</a></li>
+    <li><a href="tarifs.html">Tarifs</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-login" href="login.html" id="nav-login-lnk">Connexion</a>
+    <button class="nav-cta" id="nav-cta-btn">Commencer →</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="ph-tag">Questions fréquentes</div>
+  <h1 class="ph-title">FAQ</h1>
+  <p class="ph-sub">Toutes les réponses à tes questions sur ForgeX — programmes, abonnements, coach IA, nutrition et plus encore.</p>
+</div>
+
+<!-- SEARCH -->
+<div class="faq-search-wrap">
+  <div class="faq-search">
+    <span class="faq-search-icon">🔍</span>
+    <input class="faq-search-input" type="text" id="faq-search" placeholder="Recherche une question...">
+  </div>
+</div>
+
+<div class="faq-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="faq-sidebar" id="faq-sidebar">
+    <button class="faq-cat-btn active" data-cat="all">
+      <span class="faq-cat-icon">⚡</span>Toutes
+      <span class="faq-cat-count" id="count-all">30</span>
+    </button>
+    <button class="faq-cat-btn" data-cat="programmes">
+      <span class="faq-cat-icon">🏋️</span>Programmes
+      <span class="faq-cat-count" id="count-programmes">6</span>
+    </button>
+    <button class="faq-cat-btn" data-cat="abonnement">
+      <span class="faq-cat-icon">💳</span>Abonnement
+      <span class="faq-cat-count" id="count-abonnement">6</span>
+    </button>
+    <button class="faq-cat-btn" data-cat="coaching">
+      <span class="faq-cat-icon">🤖</span>Coach IA
+      <span class="faq-cat-count" id="count-coaching">5</span>
+    </button>
+    <button class="faq-cat-btn" data-cat="nutrition">
+      <span class="faq-cat-icon">🥗</span>Nutrition
+      <span class="faq-cat-count" id="count-nutrition">5</span>
+    </button>
+    <button class="faq-cat-btn" data-cat="compte">
+      <span class="faq-cat-icon">👤</span>Mon compte
+      <span class="faq-cat-count" id="count-compte">4</span>
+    </button>
+    <button class="faq-cat-btn" data-cat="technique">
+      <span class="faq-cat-icon">⚙️</span>Technique
+      <span class="faq-cat-count" id="count-technique">4</span>
+    </button>
+  </aside>
+
+  <!-- CONTENU -->
+  <div class="faq-content">
+    <div id="faq-container"></div>
+
+    <div class="faq-cta">
+      <div>
+        <div class="faq-cta-title">Tu n'as pas trouvé ta réponse ?</div>
+        <div class="faq-cta-sub">Pose ta question à ForgeAI ou rejoins la communauté — nos membres et coachs répondent en moins de 24h.</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a class="faq-cta-btn" href="coaches.html">ForgeAI →</a>
+        <a class="faq-cta-btn" href="communaute.html" style="background:transparent;color:var(--text-muted);border:1px solid var(--border-soft);box-shadow:none">Communauté →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-btm">
+    <span class="foot-copy">© 2025 ForgeX — Tous droits réservés</span>
+    <div class="foot-links">
+      <a href="index.html">Accueil</a>
+      <a href="blog.html">Blog</a>
+      <a href="tarifs.html">Tarifs</a>
+      <a href="cgu.html">CGU</a>
+      <a href="confidentialite.html">Confidentialité</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const FAQ = [
+  /* ── PROGRAMMES ── */
+  {cat:'programmes', q:'Quel programme choisir si je suis débutant ?', a:'Commence par un <strong>Full Body 3 fois par semaine</strong> (lundi, mercredi, vendredi). C\'est le format le plus efficace pour les débutants : chaque muscle est travaillé 3 fois par semaine, ce qui maximise l\'apprentissage moteur et la progression. Retrouve nos programmes débutants dans la section <a href="entrainements.html">Entraînements</a>.'},
+  {cat:'programmes', q:'Combien de fois par semaine dois-je m\'entraîner ?', a:'Ça dépend de ton niveau. <strong>Débutant</strong> : 3x/semaine (Full Body). <strong>Intermédiaire</strong> : 4x/semaine (Upper/Lower). <strong>Avancé</strong> : 5-6x/semaine (PPL ou spécialisé). La règle d\'or : mieux vaut 3 séances constantes sur 1 an que 6 séances pendant 3 semaines puis rien.'},
+  {cat:'programmes', q:'Qu\'est-ce que le PPL (Push Pull Legs) ?', a:'Le PPL est un split 6 jours qui divise les muscles en 3 groupes : <strong>Push</strong> (pectoraux, épaules, triceps), <strong>Pull</strong> (dos, biceps, trapèzes) et <strong>Legs</strong> (quadriceps, ischio, fessiers, mollets). Chaque groupe est travaillé 2 fois par semaine. C\'est le programme phare pour les intermédiaires et avancés cherchant à maximiser l\'hypertrophie.'},
+  {cat:'programmes', q:'Puis-je m\'entraîner tous les jours ?', a:'Techniquement oui, mais ce n\'est pas optimal. Les muscles ont besoin de 48-72h pour récupérer après une séance intense. Tu peux faire 7 séances par semaine en alternant groupes musculaires, mais inclure au moins 1 jour de repos complet par semaine est recommandé pour le système nerveux central.'},
+  {cat:'programmes', q:'Les programmes ForgeX conviennent-ils à la maison ?', a:'Oui. Nos programmes sont classifiés par équipement : <strong>Poids du corps</strong> (aucun équipement), <strong>Haltères</strong> (équipement minimal) et <strong>Salle complète</strong>. Filtre par équipement dans la section Entraînements pour trouver les programmes adaptés à ta situation.'},
+  {cat:'programmes', q:'Comment savoir si je progresse ?', a:'Suis ces 3 indicateurs : <strong>1. La charge</strong> — tu soulèves plus lourd qu\'il y a 4 semaines ? <strong>2. Le volume</strong> — tu fais plus de reps au même poids ? <strong>3. La composition corporelle</strong> — tes photos mensuelles montrent une évolution ? Si aucun de ces indicateurs ne bouge depuis plus de 3 semaines, c\'est un plateau à analyser.'},
+
+  /* ── ABONNEMENT ── */
+  {cat:'abonnement', q:'Quelle est la différence entre les plans Starter, Pro et Elite ?', a:'<strong>Starter (gratuit)</strong> : accès à 3 programmes, communauté de base. <strong>Pro (19€/mois)</strong> : 340+ programmes, calculateur nutritionnel, coach IA ForgeAI, 1 séance coaching/mois. <strong>Elite (49€/mois)</strong> : tout Pro + coach humain dédié, sessions illimitées, plan 100% sur-mesure. Compare les plans sur la <a href="tarifs.html">page Tarifs</a>.'},
+  {cat:'abonnement', q:'Comment annuler mon abonnement ?', a:'Tu peux annuler à tout moment depuis ton <a href="dashboard.html">espace client</a> → Mon plan → Annuler l\'abonnement. L\'annulation prend effet à la fin de la période déjà payée. Tu conserves l\'accès jusqu\'à cette date. Aucun frais supplémentaire.'},
+  {cat:'abonnement', q:'Y a-t-il un engagement ou une période minimale ?', a:'Aucun engagement. Les abonnements sont mensuels et renouvelés automatiquement. Tu peux annuler à tout moment. La formule annuelle (2 mois offerts) est non remboursable une fois activée, mais tu peux l\'annuler pour éviter le renouvellement.'},
+  {cat:'abonnement', q:'Proposez-vous des remboursements ?', a:'Nous proposons une garantie satisfait ou remboursé de <strong>14 jours</strong> sur la première souscription. Si ForgeX ne correspond pas à tes attentes dans les 14 premiers jours, contacte-nous à contact@forgex.fr et nous te remboursons intégralement, sans question.'},
+  {cat:'abonnement', q:'Comment fonctionne le paiement ?', a:'Le paiement est géré via <strong>Stripe</strong>, la solution de paiement la plus sécurisée du marché. Nous acceptons les cartes Visa, Mastercard, American Express et SEPA. Tes données bancaires ne sont jamais stockées sur nos serveurs.'},
+  {cat:'abonnement', q:'Puis-je changer de plan en cours d\'abonnement ?', a:'Oui. Tu peux upgrader ou downgrader à tout moment depuis ton espace client. En cas d\'upgrade, la différence de prix est calculée au prorata du temps restant. En cas de downgrade, le nouveau tarif s\'applique au prochain renouvellement.'},
+
+  /* ── COACH IA ── */
+  {cat:'coaching', q:'Qu\'est-ce que ForgeAI et comment ça fonctionne ?', a:'ForgeAI est ton coach sportif personnel propulsé par l\'intelligence artificielle. Il est entraîné sur des milliers de données en musculation, nutrition et récupération. Tu lui poses une question en langage naturel et il te répond en temps réel, adapté à ton niveau et tes objectifs. Disponible 24h/24 sur la <a href="coaches.html">page Coaches</a>.'},
+  {cat:'coaching', q:'ForgeAI peut-il créer mon programme sur-mesure ?', a:'ForgeAI peut te conseiller sur la structure de ton programme, les exercices adaptés à tes objectifs et niveau, et les ajustements à apporter. Pour un programme 100% personnalisé et suivi semaine par semaine, le plan Elite avec coach humain est recommandé.'},
+  {cat:'coaching', q:'Les conseils de ForgeAI remplacent-ils un médecin ou un nutritionniste ?', a:'Non. ForgeAI est un outil d\'information et de conseil sportif général. Il ne remplace pas l\'avis d\'un professionnel de santé. Pour tout problème médical, blessure ou pathologie, consulte un médecin. Pour un suivi nutritionnel clinique, consulte un diététicien agréé.'},
+  {cat:'coaching', q:'Mes conversations avec ForgeAI sont-elles privées ?', a:'Oui. Tes échanges avec ForgeAI sont confidentiels et ne sont pas partagés avec d\'autres utilisateurs. Consulte notre <a href="confidentialite.html">politique de confidentialité</a> pour les détails sur le traitement des données.'},
+  {cat:'coaching', q:'Comment réserver une séance avec un coach humain ?', a:'Sur la <a href="coaches.html">page Coaches</a>, clique sur "Réserver une séance" sous le profil du coach qui t\'intéresse. Tu remplis le formulaire avec tes disponibilités et objectifs, et le coach te contacte sous 24h pour confirmer.'},
+
+  /* ── NUTRITION ── */
+  {cat:'nutrition', q:'Comment calculer mes besoins caloriques ?', a:'Utilise notre <a href="nutrition.html">calculateur de macros</a> qui applique la formule de Harris-Benedict. Tu rentres ton âge, poids, taille, sexe et niveau d\'activité, et il calcule ton TDEE (dépense énergétique totale). Selon ton objectif (sèche, maintien, masse), il ajuste les calories et te donne les macros exactes.'},
+  {cat:'nutrition', q:'Quelle est la meilleure source de protéines ?', a:'Les œufs ont le meilleur score de valeur biologique (référence absolue = 1.0). En pratique, les meilleures sources sont : <strong>poulet</strong> (23g/100g), <strong>thon au naturel</strong> (23g/100g), <strong>skyr/yaourt grec</strong> (10g/100g), <strong>fromage blanc 0%</strong> (8g/100g). La whey est un supplément pratique mais non obligatoire.'},
+  {cat:'nutrition', q:'Dois-je manger avant l\'entraînement ?', a:'Oui, surtout si ta séance dure plus de 60 minutes. Consomme <strong>1-2h avant</strong> : glucides complexes (avoine, riz, pain complet) + protéines légères. Évite les graisses et fibres en excès juste avant (ralentissent la digestion). Si tu t\'entraînes à jeun, une séance courte (< 45 min) est acceptable.'},
+  {cat:'nutrition', q:'La créatine est-elle efficace et sans danger ?', a:'La créatine monohydrate est le supplément le mieux étudié en science du sport : <strong>plus de 1000 études cliniques</strong>. Elle augmente la force de 5-10%, améliore la récupération et est parfaitement sûre pour les adultes en bonne santé. Dose : 5g/jour, tous les jours, avec un repas. Inutile de faire une phase de charge.'},
+  {cat:'nutrition', q:'Comment fonctionne le journal alimentaire ForgeX ?', a:'Notre <a href="nutrition.html">journal alimentaire</a> contient une base de plus de 277 aliments avec leurs macros. Tu tapes le nom d\'un aliment (ex: "poulet"), tu sélectionnes dans l\'autocomplétion et tu entres la quantité. Les calories, protéines, glucides et lipides se calculent automatiquement. Le journal se remet à zéro automatiquement chaque jour à minuit.'},
+
+  /* ── COMPTE ── */
+  {cat:'compte', q:'Comment créer un compte ForgeX ?', a:'Clique sur <a href="login.html#register">S\'inscrire</a>, choisis un pseudo (3 caractères minimum), un mot de passe (8 caractères minimum) et ton email. C\'est gratuit et immédiat. Tu es redirigé vers ton espace client dès la création.'},
+  {cat:'compte', q:'J\'ai oublié mon mot de passe, que faire ?', a:'Pour l\'instant, la réinitialisation de mot de passe par email n\'est pas encore disponible. Si tu as perdu l\'accès à ton compte, contacte-nous à <strong>contact@forgex.fr</strong> avec le pseudo de ton compte et nous t\'aiderons à le récupérer.'},
+  {cat:'compte', q:'Comment modifier mes informations de profil ?', a:'Dans ton <a href="dashboard.html">espace client</a>, clique sur "Mon profil" dans la sidebar. Tu peux modifier ton email, ton objectif fitness, ton niveau et ta bio. Ton pseudo est définitif et ne peut pas être changé après la création du compte.'},
+  {cat:'compte', q:'Comment supprimer mon compte ?', a:'Pour supprimer ton compte et toutes tes données, envoie une demande à <strong>contact@forgex.fr</strong> depuis l\'adresse email associée à ton compte. Conformément au RGPD, nous traitons les demandes de suppression sous 30 jours.'},
+
+  /* ── TECHNIQUE ── */
+  {cat:'technique', q:'Sur quels appareils puis-je accéder à ForgeX ?', a:'ForgeX est accessible sur tous les navigateurs modernes (Chrome, Firefox, Safari, Edge) depuis ordinateur, tablette et smartphone. Le site est entièrement responsive. Une version PWA (installable comme une app) est en cours de développement.'},
+  {cat:'technique', q:'Mes données sont-elles sauvegardées si je change de navigateur ?', a:'Actuellement, les données du journal nutrition, d\'entraînement et de poids sont sauvegardées dans le <strong>localStorage</strong> de ton navigateur. Si tu changes de navigateur ou d\'appareil, ces données ne se transfèrent pas. Ton compte (profil, topics) est synchronisé via notre système d\'auth.'},
+  {cat:'technique', q:'Le site fonctionne-t-il hors connexion ?', a:'Partiellement. Les pages chargées sont accessibles hors connexion grâce au cache du navigateur. Le journal alimentaire et d\'entraînement fonctionnent hors ligne. La communauté et ForgeAI nécessitent une connexion internet.'},
+  {cat:'technique', q:'Comment signaler un bug ou suggérer une amélioration ?', a:'Utilise le bouton "Retour" (👎) sur nos pages, rejoins la <a href="communaute.html">communauté</a> et poste dans la catégorie Conseils, ou envoie-nous un email à <strong>contact@forgex.fr</strong>. Nous lisons tous les retours et priorisons les améliorations chaque semaine.'},
+];
+
+let activeCat = 'all';
+let searchQuery = '';
+
+function renderFAQ(){
+  const container = document.getElementById('faq-container');
+  let data = FAQ;
+
+  if(searchQuery){
+    const q = searchQuery.toLowerCase();
+    data = FAQ.filter(f => f.q.toLowerCase().includes(q) || f.a.toLowerCase().includes(q));
+  } else if(activeCat !== 'all'){
+    data = FAQ.filter(f => f.cat === activeCat);
+  }
+
+  if(!data.length){
+    container.innerHTML = `
+      <div class="faq-no-result">
+        <span>🔍</span>
+        Aucune question trouvée pour "<strong>${searchQuery}</strong>".<br>
+        <a href="coaches.html" style="color:var(--crimson);text-decoration:none;margin-top:12px;display:inline-block">Pose ta question à ForgeAI →</a>
+      </div>`;
+    return;
+  }
+
+  /* Grouper par catégorie si "all" */
+  const cats = {
+    programmes:{label:'Programmes', icon:'🏋️'},
+    abonnement:{label:'Abonnement', icon:'💳'},
+    coaching:{label:'Coach IA & Coaching', icon:'🤖'},
+    nutrition:{label:'Nutrition', icon:'🥗'},
+    compte:{label:'Mon compte', icon:'👤'},
+    technique:{label:'Technique', icon:'⚙️'},
+  };
+
+  if(activeCat === 'all' && !searchQuery){
+    container.innerHTML = Object.entries(cats).map(([cat,info])=>{
+      const items = data.filter(f=>f.cat===cat);
+      if(!items.length) return '';
+      return `
+        <div class="faq-section" id="section-${cat}">
+          <div class="faq-section-title"><span>${info.icon}</span>${info.label}</div>
+          ${renderItems(items)}
+        </div>`;
+    }).join('');
+  } else {
+    container.innerHTML = `<div class="faq-section">${renderItems(data)}</div>`;
+  }
+
+  /* Events accordéon */
+  container.querySelectorAll('.faq-item').forEach(item=>{
+    item.querySelector('.faq-question').addEventListener('click',function(){
+      const isOpen = item.classList.contains('open');
+      container.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+      if(!isOpen) item.classList.add('open');
+    });
+  });
+}
+
+function renderItems(items){
+  return items.map((f,i)=>`
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-question">
+        <div class="faq-q-text">${highlightSearch(f.q)}</div>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-answer">
+        <div class="faq-answer-inner">${f.a}</div>
+      </div>
+    </div>`).join('');
+}
+
+function highlightSearch(text){
+  if(!searchQuery) return text;
+  const re = new RegExp('('+searchQuery.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')', 'gi');
+  return text.replace(re,'<mark style="background:rgba(232,25,44,0.25);color:var(--crimson-light);padding:0 2px">$1</mark>');
+}
+
+/* Filtres */
+document.querySelectorAll('.faq-cat-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.faq-cat-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    activeCat = this.dataset.cat;
+    searchQuery = '';
+    document.getElementById('faq-search').value = '';
+    renderFAQ();
+  });
+});
+
+/* Recherche */
+let searchTimeout;
+document.getElementById('faq-search').addEventListener('input',function(){
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(()=>{
+    searchQuery = this.value.trim();
+    activeCat = 'all';
+    document.querySelectorAll('.faq-cat-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector('.faq-cat-btn[data-cat="all"]').classList.add('active');
+    renderFAQ();
+  },200);
+});
+
+renderFAQ();
+
+/* Transitions */
+document.querySelectorAll('a[href]').forEach(function(a){
+  const h=a.getAttribute('href');
+  if(!h||h.startsWith('#')||h.startsWith('mailto:')||a.target==='_blank') return;
+  if(h.startsWith('http')&&!h.includes(window.location.hostname)) return;
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    document.body.style.opacity='0';document.body.style.transition='opacity 0.3s';
+    setTimeout(()=>window.location.href=h,320);
+  });
+});
+requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.style.opacity='1'));
+</script>
+<script src="forgex-nav.js"></script>
+<script src="forgex-ui.js"></script>
+</body>
+</html>

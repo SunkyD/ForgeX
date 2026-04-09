@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX — Entraînements</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="forgex-auth.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-deep:#05050A;--bg-mid:#09090F;--bg-card:#0D0D16;--bg-raised:#111120;
+      --border-dim:rgba(255,255,255,0.04);--border-soft:rgba(255,255,255,0.08);
+      --crimson:#E8192C;--crimson-light:#FF3D52;--crimson-dim:rgba(232,25,44,0.18);--crimson-glow:rgba(232,25,44,0.40);
+      --magenta:#C026D3;--magenta-light:#D946EF;--magenta-dim:rgba(192,38,211,0.15);--magenta-glow:rgba(192,38,211,0.35);
+      --led-mid:#E879F9;--led-mid-glow:rgba(232,121,249,0.25);
+      --text-primary:#F2F0F8;--text-secondary:#8B8A9E;--text-muted:#4A4A62;
+      --font-display:'Bebas Neue',sans-serif;--font-body:'Barlow',sans-serif;
+      --font-cond:'Barlow Condensed',sans-serif;--font-mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg-deep);color:var(--text-primary);font-family:var(--font-body);font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+    /* LED TOP */
+    .led-top{height:2px;background:linear-gradient(90deg,transparent 0%,var(--crimson) 20%,var(--led-mid) 50%,var(--magenta) 80%,transparent 100%);box-shadow:0 0 10px var(--crimson-glow),0 0 30px var(--magenta-glow)}
+
+    /* NAV */
+    nav{background:rgba(5,5,10,0.96);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:66px;border-bottom:1px solid var(--border-dim);position:sticky;top:0;z-index:100}
+    nav::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent 100%)}
+    .nav-logo{font-family:var(--font-display);font-size:26px;letter-spacing:6px;color:var(--text-primary);text-decoration:none;line-height:1}
+    .nav-logo em{font-style:normal;color:var(--crimson);text-shadow:0 0 18px var(--crimson-glow)}
+    .nav-links{display:flex;gap:40px;list-style:none}
+    .nav-links a{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:color 0.2s,border-color 0.2s}
+    .nav-links a:hover,.nav-links a.active{color:var(--text-primary);border-bottom-color:var(--crimson)}
+    .nav-right{display:flex;align-items:center;gap:24px}
+    .nav-login{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .nav-login:hover{color:var(--text-primary)}
+    .nav-cta{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--crimson-light);background:transparent;border:1px solid var(--crimson);padding:9px 22px;cursor:pointer;box-shadow:0 0 10px var(--crimson-dim);transition:all 0.22s}
+    .nav-cta:hover{background:var(--crimson);color:#fff;box-shadow:0 0 22px var(--crimson-glow)}
+
+    /* PAGE HERO */
+    .page-hero{
+      padding:80px 64px 60px;background:var(--bg-deep);
+      position:relative;overflow:hidden;
+    }
+    .page-hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:900px;height:900px;border-radius:50%;background:radial-gradient(circle,rgba(232,25,44,0.05) 0%,transparent 60%);pointer-events:none}
+    .page-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border-soft),transparent)}
+    .ph-tag{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--crimson);margin-bottom:20px;display:flex;align-items:center;gap:12px}
+    .ph-tag-line{width:22px;height:1px;background:var(--crimson);box-shadow:0 0 6px var(--crimson)}
+    .ph-title{font-family:var(--font-display);font-size:clamp(64px,9vw,120px);line-height:0.88;letter-spacing:3px;color:var(--text-primary);margin-bottom:20px}
+    .ph-title span{color:var(--crimson);text-shadow:0 0 28px var(--crimson-glow)}
+    .ph-sub{font-family:var(--font-body);font-size:16px;font-weight:300;color:var(--text-secondary);max-width:560px;line-height:1.75}
+    .ph-stats{display:flex;gap:48px;margin-top:40px}
+    .ph-stat-n{font-family:var(--font-display);font-size:36px;line-height:1;color:var(--crimson-light);text-shadow:0 0 12px var(--crimson-glow)}
+    .ph-stat-l{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:4px}
+
+    /* FILTRES */
+    .filters-bar{
+      padding:0 64px;
+      background:var(--bg-mid);
+      border-bottom:1px solid var(--border-dim);
+      position:sticky;top:66px;z-index:90;
+      display:flex;align-items:center;gap:0;
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+    .filters-bar::-webkit-scrollbar{display:none}
+
+    .filter-btn{
+      font-family:var(--font-cond);font-size:12px;font-weight:700;
+      letter-spacing:2px;text-transform:uppercase;
+      color:var(--text-muted);background:transparent;border:none;
+      padding:18px 20px;cursor:pointer;
+      border-bottom:2px solid transparent;
+      white-space:nowrap;
+      transition:color 0.2s,border-color 0.2s;
+    }
+    .filter-btn:hover{color:var(--text-primary)}
+    .filter-btn.active{color:var(--crimson-light);border-bottom-color:var(--crimson);box-shadow:0 2px 12px rgba(232,25,44,0.2)}
+
+    /* BARRE RECHERCHE + NIVEAU */
+    .toolbar{
+      padding:28px 64px;
+      background:var(--bg-deep);
+      display:flex;align-items:center;gap:16px;
+      border-bottom:1px solid var(--border-dim);
+      flex-wrap:wrap;
+    }
+    .search-wrap{position:relative;flex:1;min-width:220px;max-width:380px}
+    .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:14px;pointer-events:none}
+    .search-input{
+      width:100%;background:var(--bg-card);border:1px solid var(--border-soft);
+      color:var(--text-primary);font-family:var(--font-body);font-size:14px;font-weight:300;
+      padding:11px 14px 11px 40px;outline:none;transition:border-color 0.2s;
+    }
+    .search-input::placeholder{color:var(--text-muted)}
+    .search-input:focus{border-color:var(--crimson);box-shadow:0 0 0 2px var(--crimson-dim)}
+    .level-select{
+      background:var(--bg-card);border:1px solid var(--border-soft);
+      color:var(--text-secondary);font-family:var(--font-cond);font-size:12px;
+      font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+      padding:11px 16px;outline:none;cursor:pointer;
+      transition:border-color 0.2s;
+    }
+    .level-select:focus{border-color:var(--crimson)}
+    .sort-select{
+      background:var(--bg-card);border:1px solid var(--border-soft);
+      color:var(--text-secondary);font-family:var(--font-cond);font-size:12px;
+      font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+      padding:11px 16px;outline:none;cursor:pointer;
+      transition:border-color 0.2s;
+    }
+    .count-lbl{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-left:auto}
+
+    /* GRID ENTRAINEMENTS */
+    .workouts-section{padding:48px 64px 80px}
+    .workouts-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+      gap:1px;
+      background:var(--border-dim);
+    }
+
+    /* CARD */
+    .wcard{
+      background:var(--bg-card);
+      display:flex;flex-direction:column;
+      cursor:pointer;
+      transition:background 0.22s;
+      position:relative;overflow:hidden;
+      /* Garantir que les clics passent */
+      pointer-events:all;
+      z-index:2;
+    }
+    .wcard:hover{background:var(--bg-raised)}
+    .wcard-led{position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity 0.3s}
+    .wcard:hover .wcard-led{opacity:1}
+
+    /* Vignette image */
+    .wcard-thumb{
+      height:180px;position:relative;overflow:hidden;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .wcard-bg-chest  {background:#0F0308}
+    .wcard-bg-back   {background:#050B0F}
+    .wcard-bg-legs   {background:#060F05}
+    .wcard-bg-arms   {background:#0F0A03}
+    .wcard-bg-shoulders{background:#0A050F}
+    .wcard-bg-abs    {background:#0F0803}
+    .wcard-bg-cardio {background:#0F0505}
+    .wcard-bg-full   {background:#08050F}
+
+    .wcard-grid-overlay{
+      position:absolute;inset:0;
+      background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+      background-size:36px 36px;
+    }
+    .wcard-aura{position:absolute;width:160px;height:160px;border-radius:50%;opacity:0.9}
+    .wcard-icon{
+      position:relative;z-index:2;
+      font-size:56px;line-height:1;
+      filter:drop-shadow(0 0 20px currentColor);
+    }
+    .wcard-badge-lvl{
+      position:absolute;top:12px;left:12px;z-index:3;
+      font-family:var(--font-mono);font-size:9px;font-weight:500;
+      letter-spacing:2px;text-transform:uppercase;
+      padding:4px 10px;border:1px solid;
+    }
+    .lvl-deb{color:var(--crimson-light);border-color:rgba(232,25,44,0.4);background:rgba(232,25,44,0.08)}
+    .lvl-int{color:var(--magenta-light);border-color:rgba(192,38,211,0.4);background:rgba(192,38,211,0.08)}
+    .lvl-avd{color:var(--led-mid);border-color:rgba(232,121,249,0.4);background:rgba(232,121,249,0.08)}
+
+    .wcard-duration{
+      position:absolute;top:12px;right:12px;z-index:3;
+      font-family:var(--font-mono);font-size:9px;font-weight:500;
+      letter-spacing:1px;color:var(--text-muted);
+      background:rgba(5,5,10,0.7);
+      padding:4px 8px;
+    }
+
+    /* Corps de la card */
+    .wcard-body{padding:20px 22px;flex:1;display:flex;flex-direction:column}
+    .wcard-muscle{
+      font-family:var(--font-mono);font-size:9px;font-weight:500;
+      letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);
+      margin-bottom:8px;
+    }
+    .wcard-name{
+      font-family:var(--font-cond);font-size:19px;font-weight:700;
+      letter-spacing:1.5px;text-transform:uppercase;
+      color:var(--text-primary);margin-bottom:8px;line-height:1.2;
+    }
+    .wcard-desc{
+      font-family:var(--font-body);font-size:13px;font-weight:300;
+      color:var(--text-secondary);line-height:1.6;
+      flex:1;margin-bottom:16px;
+    }
+    .wcard-meta{
+      display:flex;gap:16px;flex-wrap:wrap;
+      padding-top:14px;border-top:1px solid var(--border-dim);
+    }
+    .wcard-meta-item{
+      font-family:var(--font-mono);font-size:9px;font-weight:400;
+      letter-spacing:1px;color:var(--text-muted);
+      display:flex;align-items:center;gap:5px;
+    }
+    .meta-dot{width:4px;height:4px;border-radius:50%;flex-shrink:0}
+
+    /* CTA card */
+    .wcard-cta{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 22px;
+      border-top:1px solid var(--border-dim);
+      background:rgba(232,25,44,0.0);
+      transition:background 0.2s;
+    }
+    .wcard:hover .wcard-cta{background:rgba(232,25,44,0.06)}
+    .wcard-cta-txt{
+      font-family:var(--font-cond);font-size:11px;font-weight:700;
+      letter-spacing:2px;text-transform:uppercase;color:var(--crimson);
+    }
+    .wcard-cta-arr{color:var(--crimson);font-size:16px;transition:transform 0.2s}
+    .wcard:hover .wcard-cta-arr{transform:translateX(4px)}
+
+    /* EMPTY STATE */
+    .empty-state{
+      text-align:center;padding:80px 40px;
+      grid-column:1/-1;
+    }
+    .empty-icon{font-size:48px;margin-bottom:16px;opacity:0.3}
+    .empty-title{font-family:var(--font-display);font-size:32px;letter-spacing:2px;color:var(--text-muted);margin-bottom:8px}
+    .empty-sub{font-size:14px;font-weight:300;color:var(--text-muted)}
+
+    /* MODALE EXERCICE */
+    .modal-overlay{
+      position:fixed;inset:0;z-index:9000;
+      background:rgba(5,5,10,0.92);
+      backdrop-filter:blur(8px);
+      display:flex;align-items:center;justify-content:center;
+      opacity:0;pointer-events:none;
+      transition:opacity 0.28s;
+    }
+    .modal-overlay.open{opacity:1;pointer-events:all}
+    .modal{
+      background:var(--bg-card);
+      border:1px solid var(--border-soft);
+      width:min(680px,92vw);
+      max-height:88vh;
+      overflow-y:auto;
+      position:relative;
+      transform:translateY(20px) scale(0.97);
+      transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .modal-overlay.open .modal{transform:translateY(0) scale(1)}
+    .modal::-webkit-scrollbar{width:4px}
+    .modal::-webkit-scrollbar-thumb{background:var(--crimson);border-radius:2px}
+    .modal-led{height:2px;background:linear-gradient(90deg,var(--crimson),var(--led-mid),var(--magenta-light));box-shadow:0 0 14px var(--crimson-glow)}
+    .modal-header{padding:28px 32px 20px;border-bottom:1px solid var(--border-dim)}
+    .modal-cat{font-family:var(--font-mono);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--crimson);margin-bottom:8px}
+    .modal-title{font-family:var(--font-display);font-size:42px;letter-spacing:2px;color:var(--text-primary);line-height:1;margin-bottom:10px}
+    .modal-tags{display:flex;gap:8px;flex-wrap:wrap}
+    .modal-tag{font-family:var(--font-mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border:1px solid var(--border-soft);color:var(--text-secondary)}
+    .modal-close{
+      position:absolute;top:20px;right:20px;
+      background:transparent;border:1px solid var(--border-soft);
+      color:var(--text-muted);font-size:18px;width:36px;height:36px;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      transition:all 0.2s;
+    }
+    .modal-close:hover{border-color:var(--crimson);color:var(--crimson)}
+    .modal-body{padding:28px 32px}
+    .modal-section{margin-bottom:28px}
+    .modal-section-title{
+      font-family:var(--font-cond);font-size:13px;font-weight:700;
+      letter-spacing:2px;text-transform:uppercase;
+      color:var(--text-primary);
+      margin-bottom:16px;padding-bottom:8px;
+      border-bottom:1px solid var(--border-dim);
+    }
+    .exercise-list{display:flex;flex-direction:column;gap:12px}
+    .exercise-item{
+      display:flex;align-items:flex-start;gap:16px;
+      padding:14px 16px;
+      background:var(--bg-raised);
+      border:1px solid var(--border-dim);
+      transition:border-color 0.2s;
+    }
+    .exercise-item:hover{border-color:rgba(232,25,44,0.25)}
+    .ex-num{
+      font-family:var(--font-display);font-size:28px;line-height:1;
+      color:var(--crimson);text-shadow:0 0 10px var(--crimson-glow);
+      flex-shrink:0;min-width:36px;
+    }
+    .ex-name{
+      font-family:var(--font-cond);font-size:15px;font-weight:700;
+      letter-spacing:1px;text-transform:uppercase;color:var(--text-primary);
+      margin-bottom:4px;
+    }
+    .ex-detail{font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--text-muted)}
+    .ex-tip{font-size:12px;font-weight:300;color:var(--text-secondary);margin-top:4px;line-height:1.5}
+    .modal-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border-dim);margin-bottom:24px}
+    .modal-info-cell{background:var(--bg-raised);padding:16px;text-align:center}
+    .mic-val{font-family:var(--font-display);font-size:28px;color:var(--crimson-light);text-shadow:0 0 10px var(--crimson-glow);line-height:1}
+    .mic-lbl{font-family:var(--font-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);margin-top:4px}
+    .modal-btn{
+      display:block;width:100%;padding:16px;text-align:center;
+      font-family:var(--font-cond);font-size:13px;font-weight:700;
+      letter-spacing:2.5px;text-transform:uppercase;
+      background:var(--crimson);color:#fff;border:none;cursor:pointer;
+      box-shadow:0 0 20px var(--crimson-glow);
+      transition:all 0.22s;
+    }
+    .modal-btn:hover{background:var(--crimson-light);box-shadow:0 0 32px var(--crimson-glow)}
+
+    /* FOOTER */
+    footer{background:var(--bg-deep);border-top:1px solid var(--border-dim);padding:64px 64px 32px;position:relative}
+    footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent);box-shadow:0 0 8px var(--magenta-glow)}
+    .foot-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:48px;margin-bottom:48px}
+    .foot-logo{font-family:var(--font-display);font-size:26px;letter-spacing:6px;color:var(--text-primary);text-decoration:none;display:block}
+    .foot-logo em{color:var(--crimson);font-style:normal;text-shadow:0 0 12px var(--crimson-glow)}
+    .foot-tag{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-top:8px;letter-spacing:1.5px}
+    .foot-cols{display:flex;gap:56px;flex-wrap:wrap}
+    .foot-col-t{font-family:var(--font-mono);font-size:9px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:16px}
+    .foot-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .foot-col a{font-family:var(--font-body);font-size:13px;font-weight:300;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .foot-col a:hover{color:var(--crimson)}
+    .foot-btm{border-top:1px solid var(--border-dim);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .foot-copy{font-family:var(--font-body);font-size:12px;font-weight:300;color:var(--text-muted)}
+    .foot-badge{font-family:var(--font-mono);font-size:10px;font-weight:500;letter-spacing:2.5px;color:var(--magenta-light)}
+
+    @media(max-width:1024px){nav{padding:0 32px}.nav-links{display:none}.page-hero,.workouts-section,.toolbar{padding-left:32px;padding-right:32px}.filters-bar{padding-left:32px}}
+    @media(max-width:768px){
+      .workouts-grid{grid-template-columns:1fr}
+      .ph-stats{gap:28px}
+      footer{padding:48px 32px 24px}
+      .page-hero{padding:48px 20px 36px}
+      .workouts-section{padding:32px 20px 60px}
+      .toolbar{padding:16px 20px;gap:10px}
+      .filters-bar{padding:0 20px}
+      .modal{width:96vw}
+      .modal-body{padding:20px}
+      .modal-info-grid{grid-template-columns:repeat(3,1fr)}
+    }
+  
+  </style>
+</head>
+<body>
+
+<div class="led-top"></div>
+
+<nav>
+  <a class="nav-logo" href="index.html">FORGE<em>X</em></a>
+  <ul class="nav-links">
+    <li><a href="entrainements.html" class="active">Entraînements</a></li>
+    <li><a href="nutrition.html">Nutrition</a></li>
+    <li><a href="coaches.html">Coaches</a></li>
+    <li><a href="communaute.html">Communauté</a></li>
+    <li><a href="tarifs.html">Tarifs</a></li></ul></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-login" href="login.html" id="nav-login-lnk">Connexion</a>
+    <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='login.html'">Commencer →</button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="ph-tag"><span class="ph-tag-line"></span>Bibliothèque complète</div>
+  <h1 class="ph-title">ENTRAÎNE<br><span>TON CORPS</span></h1>
+  <p class="ph-sub">340+ programmes classés par groupe musculaire, niveau et équipement. Trouve la séance parfaite pour aujourd'hui.</p>
+  <div class="ph-stats">
+    <div><div class="ph-stat-n">340+</div><div class="ph-stat-l">Programmes</div></div>
+    <div><div class="ph-stat-n">8</div><div class="ph-stat-l">Groupes musculaires</div></div>
+    <div><div class="ph-stat-n">3</div><div class="ph-stat-l">Niveaux</div></div>
+  </div>
+</div>
+
+<!-- FILTRES PAR MUSCLE -->
+<div class="filters-bar" id="filters-bar">
+  <button class="filter-btn active" data-filter="all">Tout</button>
+  <button class="filter-btn" data-filter="chest">Pectoraux</button>
+  <button class="filter-btn" data-filter="back">Dos</button>
+  <button class="filter-btn" data-filter="legs">Jambes</button>
+  <button class="filter-btn" data-filter="arms">Bras</button>
+  <button class="filter-btn" data-filter="shoulders">Épaules</button>
+  <button class="filter-btn" data-filter="abs">Abdos</button>
+  <button class="filter-btn" data-filter="cardio">Cardio</button>
+  <button class="filter-btn" data-filter="full">Full Body</button>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input class="search-input" type="text" id="search-input" placeholder="Rechercher un programme...">
+  </div>
+  <select class="level-select" id="level-select">
+    <option value="all">Tous niveaux</option>
+    <option value="deb">Débutant</option>
+    <option value="int">Intermédiaire</option>
+    <option value="avd">Avancé</option>
+  </select>
+  <select class="sort-select" id="sort-select">
+    <option value="default">Trier par défaut</option>
+    <option value="duration">Durée croissante</option>
+    <option value="name">Nom A-Z</option>
+  </select>
+  <span class="count-lbl" id="count-lbl">24 programmes</span>
+</div>
+
+<!-- GRILLE -->
+<section class="workouts-section">
+  <div class="workouts-grid" id="workouts-grid"></div>
+</section>
+
+<!-- MODALE -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-led"></div>
+    <button class="modal-close" id="modal-close-btn">✕</button>
+    <div class="modal-header">
+      <div class="modal-cat" id="m-cat"></div>
+      <div class="modal-title" id="m-title"></div>
+      <div class="modal-tags" id="m-tags"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-info-grid" id="m-info"></div>
+      <div class="modal-section">
+        <div class="modal-section-title">Programme des exercices</div>
+        <div class="exercise-list" id="m-exercises"></div>
+      </div>
+      <div class="modal-section" id="m-tips-wrap">
+        <div class="modal-section-title">Conseils du coach</div>
+        <p id="m-tips" style="font-size:14px;font-weight:300;color:var(--text-secondary);line-height:1.75"></p>
+      </div>
+      <button class="modal-btn" id="modal-start-btn">Commencer ce programme →</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div>
+      <a class="foot-logo" href="index.html">FORGE<em>X</em></a>
+      <div class="foot-tag">// forge ton corps. forge ta discipline.</div>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col"><div class="foot-col-t">Plateforme</div><ul><li><a href="entrainements.html">Entraînements</a></li><li><a href="nutrition.html">Nutrition</a></li><li><a href="coaches.html">Coaching</a></li></ul></div>
+      <div class="foot-col"><div class="foot-col-t">Légal</div><ul><li><a href="#">CGU</a></li><li><a href="#">Confidentialité</a></li></ul></div>
+    </div>
+  </div>
+  <div class="foot-btm">
+    <span class="foot-copy">© 2025 ForgeX — Tous droits réservés</span>
+    <span class="foot-badge">FORGEX // SYS_ACTIVE</span>
+  </div>
+  <div style="padding:16px 64px;background:var(--bg-mid);border-top:1px solid var(--border-dim);display:flex;gap:20px;flex-wrap:wrap">
+    <a href="blog.html" style="font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s">📝 Blog</a>
+    <a href="faq.html" style="font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s">❓ FAQ</a>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   DONNÉES — 24 programmes complets
+══════════════════════════════════════════ */
+const WORKOUTS = [
+  /* ── PECTORAUX ── */
+  {id:1,cat:'chest',catLabel:'Pectoraux',name:'Push Day Classic',level:'deb',levelLabel:'Débutant',icon:'💪',bg:'wcard-bg-chest',auraColor:'rgba(232,25,44,0.22)',ledColor:'var(--crimson)',duration:45,sets:3,desc:'Programme de base pour développer la masse pectorale. Idéal pour débuter en musculation.',tags:['Salle','Haltères','Poulie'],exercises:[{name:'Développé couché barre',sets:'4×10',detail:'Repos 90s',tip:'Descends la barre jusqu\'à 1cm de la poitrine, explose vers le haut'},{name:'Écarté haltères',sets:'3×12',detail:'Repos 60s',tip:'Garde un léger fléchi au coude, concentre-toi sur l\'étirement'},{name:'Développé incliné',sets:'3×10',detail:'Repos 90s',tip:'Angle à 30°, vise le haut des pectoraux'},{name:'Dips lestés',sets:'3×12',detail:'Repos 90s',tip:'Penche-toi légèrement en avant pour cibler les pecs'}],tips:'Commence par un bon échauffement des épaules. Ne verrouille jamais les coudes en haut du mouvement. La progression en charge doit être graduelle, 2.5kg par semaine maximum.',duration_val:45,freq:'3×/sem'},
+  {id:2,cat:'chest',catLabel:'Pectoraux',name:'Hypertrophie Pecs',level:'int',levelLabel:'Intermédiaire',icon:'🔥',bg:'wcard-bg-chest',auraColor:'rgba(232,25,44,0.22)',ledColor:'var(--crimson)',duration:60,sets:4,desc:'Volume élevé pour maximiser la croissance musculaire des pectoraux en 4 semaines.',tags:['Salle','Barre','Machine'],exercises:[{name:'Développé couché barre',sets:'5×8',detail:'Repos 2min',tip:'80% de ta RM, technique stricte'},{name:'Développé incliné haltères',sets:'4×10',detail:'Repos 90s',tip:'Supination en montant pour maximiser le pic de contraction'},{name:'Écarté câble croisé',sets:'4×15',detail:'Repos 60s',tip:'Étirement maximum en bas, serrement au centre'},{name:'Pull-over haltère',sets:'3×12',detail:'Repos 60s',tip:'Étire bien le thorax, garde les coudes légèrement fléchis'},{name:'Pompes lestées',sets:'3×max',detail:'Repos 90s',tip:'Cadence lente 3-1-1'}],tips:'Programme en split : chest/dos un jour, jambes le suivant. Mange suffisamment de protéines après la séance (0.3g/kg de poids). Hydrate-toi bien pendant l\'effort.',duration_val:60,freq:'2×/sem'},
+  {id:3,cat:'chest',catLabel:'Pectoraux',name:'Chest Power',level:'avd',levelLabel:'Avancé',icon:'⚡',bg:'wcard-bg-chest',auraColor:'rgba(232,25,44,0.22)',ledColor:'var(--crimson)',duration:75,sets:5,desc:'Programme de force maximale. Méthode 5×5 pour des gains de force spectaculaires.',tags:['Salle','Compétition'],exercises:[{name:'Développé couché barre — 5×5',sets:'5×5',detail:'Repos 3min',tip:'90% RM, spotterter obligatoire'},{name:'Développé incliné barre',sets:'4×6',detail:'Repos 2min30',tip:'Touche la barre à la clavicule'},{name:'Dips lestés',sets:'4×8',detail:'Repos 2min',tip:'Poids supplémentaire à chaque séance'},{name:'Machine pec deck',sets:'3×15',detail:'Repos 60s',tip:'Isolation en fin de séance pour le flush'}],tips:'Ce programme nécessite au moins 2 ans d\'expérience. Récupération minimum 72h entre deux séances poitrine. Sommeil 8h minimum.',duration_val:75,freq:'1×/sem'},
+
+  /* ── DOS ── */
+  {id:4,cat:'back',catLabel:'Dos',name:'Pull Day Starter',level:'deb',levelLabel:'Débutant',icon:'🏋️',bg:'wcard-bg-back',auraColor:'rgba(0,100,200,0.22)',ledColor:'var(--magenta)',duration:40,sets:3,desc:'Les fondamentaux du dos. Traction, rowing, tirage — apprends les mouvements de base.',tags:['Salle','Barre','Poulie'],exercises:[{name:'Traction barre fixe',sets:'4×6',detail:'Repos 2min',tip:'Si tu ne peux pas faire 4, utilise un élastique d\'assistance'},{name:'Rowing barre',sets:'3×10',detail:'Repos 90s',tip:'Dos à 45°, tire vers le nombril, serre les omoplates'},{name:'Tirage poitrine machine',sets:'3×12',detail:'Repos 60s',tip:'Imagine que tu veux mettre tes coudes dans tes poches'},{name:'Face pull',sets:'3×15',detail:'Repos 60s',tip:'Essentiel pour la santé des épaules et la posture'}],tips:'Le dos est souvent négligé car on ne le voit pas devant le miroir. Pourtant c\'est le groupe musculaire le plus important. Apprends à "sentir" le travail musculaire.',duration_val:40,freq:'2×/sem'},
+  {id:5,cat:'back',catLabel:'Dos',name:'V-Taper Builder',level:'int',levelLabel:'Intermédiaire',icon:'🦅',bg:'wcard-bg-back',auraColor:'rgba(0,100,200,0.22)',ledColor:'var(--magenta)',duration:65,sets:4,desc:'Construire un dos large et épais en forme de V. Focus sur les dorsaux et le milieu du dos.',tags:['Salle','Haltères'],exercises:[{name:'Traction lestée pronation',sets:'5×8',detail:'Repos 2min',tip:'Descends complètement, montée explosive'},{name:'Rowing unilatéral haltère',sets:'4×10',detail:'Repos 90s',tip:'Coude haut, tire vers la hanche, pas vers l\'épaule'},{name:'Tirage nuque prise large',sets:'4×12',detail:'Repos 60s',tip:'Danger sur les épaules — ne descends pas sous l\'oreille'},{name:'Rowing horizontal câble',sets:'3×15',detail:'Repos 60s',tip:'Serre bien les omoplates en fin de mouvement'},{name:'Pull-over câble',sets:'3×15',detail:'Repos 60s',tip:'Garde les bras presque tendus, travail des grands dorsaux'}],tips:'La largeur du dos vient des dorsaux (tirage pronation large), l\'épaisseur vient des trapèzes et rhomboïdes (rowing). Alterne les grips pour stimuler différentes fibres.',duration_val:65,freq:'2×/sem'},
+  {id:6,cat:'back',catLabel:'Dos',name:'Deadlift Protocol',level:'avd',levelLabel:'Avancé',icon:'💀',bg:'wcard-bg-back',auraColor:'rgba(0,100,200,0.22)',ledColor:'var(--magenta)',duration:80,sets:5,desc:'Programme centré sur le soulevé de terre. Force pure et développement musculaire global.',tags:['Salle','Powerlifting'],exercises:[{name:'Soulevé de terre conventionnel',sets:'5×5',detail:'Repos 3-4min',tip:'Jamais dos rond. Barre au plus près du corps. Poussée des jambes'},{name:'Soulevé de terre roumain',sets:'4×8',detail:'Repos 2min',tip:'Ischio-jambiers, descends jusqu\'à la douleur d\'étirement'},{name:'Rowing Pendlay',sets:'4×8',detail:'Repos 2min',tip:'Barre au sol entre chaque rep, explosivité'},{name:'Shrugs barre',sets:'3×12',detail:'Repos 90s',tip:'Trapèzes supérieurs, pas besoin de rouler les épaules'}],tips:'Le deadlift est le roi des exercices. Mais aussi le plus dangereux si mal exécuté. Apprends la technique avec un coach avant d\'ajouter de la charge.',duration_val:80,freq:'1×/sem'},
+
+  /* ── JAMBES ── */
+  {id:7,cat:'legs',catLabel:'Jambes',name:'Leg Day Initiation',level:'deb',levelLabel:'Débutant',icon:'🦵',bg:'wcard-bg-legs',auraColor:'rgba(0,180,80,0.22)',ledColor:'var(--led-mid)',duration:45,sets:3,desc:'Le redouté leg day simplifié. Développe des jambes solides avec les exercices fondamentaux.',tags:['Salle','Machine'],exercises:[{name:'Squat barre',sets:'4×10',detail:'Repos 2min',tip:'Descends jusqu\'à ce que les cuisses soient parallèles au sol'},{name:'Presse à cuisse',sets:'3×12',detail:'Repos 90s',tip:'Pieds à largeur d\'épaules, genoux dans l\'axe des orteils'},{name:'Leg extension',sets:'3×15',detail:'Repos 60s',tip:'Ne verrouille pas les genoux en haut'},{name:'Leg curl allongé',sets:'3×12',detail:'Repos 60s',tip:'Ischio-jambiers, monte les talons vers les fesses'},{name:'Mollets debout',sets:'4×20',detail:'Repos 45s',tip:'Amplitude complète, pause en bas'}],tips:'Ne saute JAMAIS le leg day. Les jambes représentent 50% de ta masse musculaire. De plus les squats stimulent la production de testostérone et GH qui profite à tout le corps.',duration_val:45,freq:'2×/sem'},
+  {id:8,cat:'legs',catLabel:'Jambes',name:'Squat Program',level:'int',levelLabel:'Intermédiaire',icon:'🏆',bg:'wcard-bg-legs',auraColor:'rgba(0,180,80,0.22)',ledColor:'var(--led-mid)',duration:70,sets:4,desc:'Programme centré sur le squat. Progression linéaire sur 8 semaines pour maximiser ta force.',tags:['Salle','Barre','Rack'],exercises:[{name:'Back Squat',sets:'5×8',detail:'Repos 2-3min',tip:'Garder la poitrine haute, genoux bien alignés'},{name:'Front Squat',sets:'3×8',detail:'Repos 2min',tip:'Prise mains croisées, coudes hauts'},{name:'Fentes bulgares',sets:'3×10/jambe',detail:'Repos 90s',tip:'Pied arrière sur un banc, descends le genou vers le sol'},{name:'Leg press pied haut',sets:'3×15',detail:'Repos 90s',tip:'Pied haut sur la plateforme = plus de fessiers'},{name:'Flexion ischio machine',sets:'3×12',detail:'Repos 60s',tip:'Contraction maximale en haut du mouvement'}],tips:'La progression en squat est une science. Augmente de 2.5kg par séance en débutant, puis 1.25kg. Si tu stagne, ajoute une séance légère de technique.',duration_val:70,freq:'2×/sem'},
+  {id:9,cat:'legs',catLabel:'Jambes',name:'Glute & Hamstring',level:'int',levelLabel:'Intermédiaire',icon:'🍑',bg:'wcard-bg-legs',auraColor:'rgba(0,180,80,0.22)',ledColor:'var(--led-mid)',duration:55,sets:4,desc:'Focus fessiers et ischio-jambiers. Rondeur, galbe et force des membres inférieurs postérieurs.',tags:['Salle','Machine','Câble'],exercises:[{name:'Hip thrust barre',sets:'5×10',detail:'Repos 90s',tip:'Épaules sur banc, barre sur les hanches, pousse vers le plafond'},{name:'Soulevé de terre roumain',sets:'4×10',detail:'Repos 90s',tip:'Étire bien les ischio, garde le dos droit'},{name:'Fentes latérales',sets:'3×12/jambe',detail:'Repos 60s',tip:'Pousse sur le pied au sol, garde l\'autre tendu'},{name:'Kickback câble',sets:'3×15/jambe',detail:'Repos 45s',tip:'Contraction maximale fessier en haut'},{name:'Leg curl assis',sets:'3×15',detail:'Repos 60s',tip:'Pointe les orteils pour maximiser le travail iso'}],tips:'Hip thrust est LE meilleur exercice pour les fessiers selon la science. Ne néglige pas les ischio : ils stabilisent le genou et préviennent les blessures.',duration_val:55,freq:'2×/sem'},
+
+  /* ── BRAS ── */
+  {id:10,cat:'arms',catLabel:'Bras',name:'Biceps Blast',level:'deb',levelLabel:'Débutant',icon:'💪',bg:'wcard-bg-arms',auraColor:'rgba(255,160,0,0.22)',ledColor:'var(--crimson)',duration:35,sets:3,desc:'Gonfle tes biceps avec ce programme d\'isolation ciblé. Volume et pump garantis.',tags:['Salle','Haltères','Câble'],exercises:[{name:'Curl barre EZ',sets:'4×10',detail:'Repos 90s',tip:'Coudes contre le corps, ne balance pas le torse'},{name:'Curl haltères alterné',sets:'3×12',detail:'Repos 60s',tip:'Supine en montant pour le pic du biceps'},{name:'Curl marteau',sets:'3×12',detail:'Repos 60s',tip:'Cible le brachial antérieur pour l\'épaisseur du bras'},{name:'Curl câble pupitre',sets:'3×15',detail:'Repos 60s',tip:'Tension constante grâce au câble'}],tips:'Les biceps sont un muscle de récupération rapide. Tu peux les travailler 2 à 3 fois par semaine. Varie les angles d\'attaque et les grips.',duration_val:35,freq:'3×/sem'},
+  {id:11,cat:'arms',catLabel:'Bras',name:'Triceps Destroyer',level:'int',levelLabel:'Intermédiaire',icon:'🔱',bg:'wcard-bg-arms',auraColor:'rgba(255,160,0,0.22)',ledColor:'var(--crimson)',duration:40,sets:4,desc:'Les triceps représentent 2/3 du volume des bras. Ce programme les attaque sous tous les angles.',tags:['Salle','Câble','Barre EZ'],exercises:[{name:'Dips corps vertical',sets:'5×10',detail:'Repos 90s',tip:'Corps droit, coudes proches du corps — focus triceps'},{name:'Extension nuque haltère',sets:'4×12',detail:'Repos 90s',tip:'Long chef du triceps, bras derrière la tête'},{name:'Pushdown câble barre droite',sets:'4×15',detail:'Repos 60s',tip:'Chef latéral, ne soulève pas les coudes'},{name:'Kickback haltère',sets:'3×15/bras',detail:'Repos 45s',tip:'Contraction maximale bras tendu'},{name:'Diamond push-ups',sets:'3×max',detail:'Repos 60s',tip:'Mains en diamant sous le sternum'}],tips:'Ne fais pas uniquement des biceps ! Les triceps sont plus gros et donnent la forme du bras. Un bras complet = 1/3 biceps + 2/3 triceps.',duration_val:40,freq:'2×/sem'},
+  {id:12,cat:'arms',catLabel:'Bras',name:'Bras Complets',level:'int',levelLabel:'Intermédiaire',icon:'🦾',bg:'wcard-bg-arms',auraColor:'rgba(255,160,0,0.22)',ledColor:'var(--crimson)',duration:60,sets:4,desc:'Biceps, triceps et avant-bras en une seule séance. Le programme des bras équilibrés.',tags:['Salle','Haltères'],exercises:[{name:'Curl barre supination',sets:'4×10',detail:'Repos 90s',tip:'Chefs longs et courts'},{name:'Dips barre parallèle',sets:'4×10',detail:'Repos 90s',tip:'Corps vertical'},{name:'Curl incliné haltères',sets:'3×12',detail:'Repos 60s',tip:'Étirement maximum du biceps en bas'},{name:'Extension poulie haute',sets:'3×12',detail:'Repos 60s',tip:'Chef long du triceps'},{name:'Curl poignet',sets:'3×20',detail:'Repos 45s',tip:'Avant-bras fléchisseurs'},{name:'Extension poignet',sets:'3×20',detail:'Repos 45s',tip:'Avant-bras extenseurs'}],tips:'Les avant-bras sont souvent oubliés mais essentiels pour la prise en main et la performance en rowing et deadlift. Travaille-les en fin de séance.',duration_val:60,freq:'2×/sem'},
+
+  /* ── ÉPAULES ── */
+  {id:13,cat:'shoulders',catLabel:'Épaules',name:'Shoulder Starter',level:'deb',levelLabel:'Débutant',icon:'🎯',bg:'wcard-bg-shoulders',auraColor:'rgba(192,38,211,0.22)',ledColor:'var(--magenta-light)',duration:40,sets:3,desc:'Programme d\'initiation aux épaules. Développe les 3 faisceaux pour des épaules larges et saines.',tags:['Salle','Haltères'],exercises:[{name:'Développé militaire haltères',sets:'4×10',detail:'Repos 90s',tip:'Faisceau antérieur + médial, pas d\'hyperextension lombaire'},{name:'Élévations latérales',sets:'4×15',detail:'Repos 60s',tip:'LE mouvement pour la largeur. Léger, strict, lent'},{name:'Face pull corde',sets:'3×15',detail:'Repos 60s',tip:'Faisceau postérieur + santé des épaules'},{name:'Rotation externe haltère',sets:'3×15',detail:'Repos 45s',tip:'Coiffe des rotateurs — prévention blessures'}],tips:'Les épaules sont une articulation fragile. Commence toujours par un échauffement spécifique. Ne sacrifie jamais la technique pour la charge sur les élévations latérales.',duration_val:40,freq:'2×/sem'},
+  {id:14,cat:'shoulders',catLabel:'Épaules',name:'Boulder Shoulders',level:'int',levelLabel:'Intermédiaire',icon:'🌋',bg:'wcard-bg-shoulders',auraColor:'rgba(192,38,211,0.22)',ledColor:'var(--magenta-light)',duration:55,sets:4,desc:'Épaules de rocher. Volume et angles variés pour un développement 3D spectaculaire.',tags:['Salle','Machine','Câble'],exercises:[{name:'Développé militaire barre',sets:'5×8',detail:'Repos 2min',tip:'Prise légèrement plus large que les épaules'},{name:'Élévations latérales câble',sets:'4×15',detail:'Repos 60s',tip:'Tension constante vs haltères'},{name:'Oiseau haltères',sets:'4×15',detail:'Repos 60s',tip:'Faisceau postérieur, dos à 90°, coudes légèrement fléchis'},{name:'Arnold Press',sets:'3×12',detail:'Repos 90s',tip:'Rotation de pronation à supination — travail complet'},{name:'Shrugs haltères',sets:'3×15',detail:'Repos 60s',tip:'Trapèzes supérieurs pour la puissance visuelle'}],tips:'Les élévations latérales — fais-les en premier quand tu es frais. C\'est l\'exercice qui donne la largeur. Ne Monte jamais au-dessus de l\'horizontale pour préserver l\'acromion.',duration_val:55,freq:'2×/sem'},
+
+  /* ── ABDOS ── */
+  {id:15,cat:'abs',catLabel:'Abdos',name:'Core Starter',level:'deb',levelLabel:'Débutant',icon:'⚡',bg:'wcard-bg-abs',auraColor:'rgba(232,121,249,0.22)',ledColor:'var(--led-mid)',duration:25,sets:3,desc:'Renforce ta sangle abdominale avec ce programme de base. Gainage, crunch et relevés de jambes.',tags:['Poids corps','Maison'],exercises:[{name:'Planche frontale',sets:'3×45s',detail:'Repos 45s',tip:'Corps aligné, rentre le nombril, respire'},{name:'Crunch classique',sets:'3×20',detail:'Repos 45s',tip:'Ne tire pas sur la nuque, exhale en contractant'},{name:'Relevés de jambes',sets:'3×15',detail:'Repos 60s',tip:'Bas du dos collé au sol tout le long'},{name:'Planche latérale',sets:'3×30s/côté',detail:'Repos 45s',tip:'Obliques et stabilisateurs'},{name:'Mountain climbers',sets:'3×30s',detail:'Repos 45s',tip:'Rapide et contrôlé'}],tips:'Les abdos se font à table. Tu peux avoir des abdos de fer mais invisibles sous 15% de masse grasse. Combine ce programme avec une alimentation saine et un déficit calorique.',duration_val:25,freq:'4×/sem'},
+  {id:16,cat:'abs',catLabel:'Abdos',name:'Six-Pack Program',level:'int',levelLabel:'Intermédiaire',icon:'🔥',bg:'wcard-bg-abs',auraColor:'rgba(232,121,249,0.22)',ledColor:'var(--led-mid)',duration:35,sets:4,desc:'Programme intensif pour des abdominaux saillants. Attaque le core sous tous les angles.',tags:['Salle','Poids corps'],exercises:[{name:'Relevés de jambes barre',sets:'4×15',detail:'Repos 60s',tip:'Pendu à la barre, genoux tendus pour les forts'},{name:'Crunch câble',sets:'4×20',detail:'Repos 60s',tip:'Résistance constante, contraction maximale'},{name:'Roue abdominale',sets:'3×10',detail:'Repos 90s',tip:'Mouvement difficile — ne creuse pas les lombaires'},{name:'Twist russe leste',sets:'3×20',detail:'Repos 60s',tip:'Obliques, pied soulevé pour augmenter la difficulté'},{name:'Planche dynamique',sets:'3×45s',detail:'Repos 60s',tip:'Shoulder tap, hip dip, grenouille'}],tips:'Varie les exercices chaque semaine pour éviter l\'adaptation. Inclus des exercices de rotation pour les obliques — ils sont essentiels pour la définition latérale.',duration_val:35,freq:'3×/sem'},
+
+  /* ── CARDIO ── */
+  {id:17,cat:'cardio',catLabel:'Cardio',name:'HIIT Débutant',level:'deb',levelLabel:'Débutant',icon:'🏃',bg:'wcard-bg-cardio',auraColor:'rgba(232,25,44,0.18)',ledColor:'var(--crimson)',duration:20,sets:0,desc:'Haute intensité par intervalles. Brûle un maximum de calories en un minimum de temps.',tags:['Poids corps','Maison','Salle'],exercises:[{name:'Jumping Jacks',sets:'30s travail / 15s repos',detail:'×8 rounds',tip:'Échauffe-toi 5min avant'},{name:'Burpees',sets:'30s travail / 15s repos',detail:'×8 rounds',tip:'Modifie si besoin (pas de saut)'},{name:'Sprint sur place',sets:'30s travail / 15s repos',detail:'×8 rounds',tip:'Genoux hauts, bras actifs'},{name:'Jump Squat',sets:'30s travail / 15s repos',detail:'×8 rounds',tip:'Atterris en douceur, genoux dans l\'axe'}],tips:'Le HIIT fait brûler des calories pendant 24-48h après l\'effort (afterburn effect). Ne fais pas plus de 3 séances par semaine — la récupération est cruciale.',duration_val:20,freq:'3×/sem'},
+  {id:18,cat:'cardio',catLabel:'Cardio',name:'Endurance Builder',level:'int',levelLabel:'Intermédiaire',icon:'💨',bg:'wcard-bg-cardio',auraColor:'rgba(232,25,44,0.18)',ledColor:'var(--crimson)',duration:45,sets:0,desc:'Programme cardio progressif pour développer ton endurance cardiovasculaire sur 6 semaines.',tags:['Tapis','Vélo','Extérieur'],exercises:[{name:'Échauffement marche',sets:'5 minutes',detail:'Zone 1',tip:'FC < 120bpm'},{name:'Footing léger',sets:'10 minutes',detail:'Zone 2',tip:'Tu peux tenir une conversation'},{name:'Intervalles 1min rapide / 2min lent',sets:'×6 rounds',detail:'Zone 3-4',tip:'RPE 7/10 sur les rapides'},{name:'Course soutenue',sets:'10 minutes',detail:'Zone 3',tip:'Rythme confortable mais challengeant'},{name:'Retour au calme',sets:'5 minutes',detail:'Zone 1',tip:'Marche, étirements dynamiques'}],tips:'La zone 2 (cardio modéré) est la plus efficace pour la santé cardiovasculaire et la combustion des graisses à long terme. Porte une montre cardio si possible.',duration_val:45,freq:'4×/sem'},
+
+  /* ── FULL BODY ── */
+  {id:19,cat:'full',catLabel:'Full Body',name:'Full Body Débutant',level:'deb',levelLabel:'Débutant',icon:'🌟',bg:'wcard-bg-full',auraColor:'rgba(192,38,211,0.2)',ledColor:'var(--magenta)',duration:50,sets:3,desc:'Programme complet 3 fois par semaine. Parfait pour débuter et prendre de bonnes bases.',tags:['Salle','Haltères'],exercises:[{name:'Squat barre',sets:'3×10',detail:'Repos 2min',tip:'Le roi des exercices — maîtrise la technique'},{name:'Développé couché',sets:'3×10',detail:'Repos 90s',tip:'Largeur d\'épaules sur la prise'},{name:'Traction assistée',sets:'3×8',detail:'Repos 2min',tip:'Utilise un élastique si nécessaire'},{name:'Développé militaire',sets:'3×10',detail:'Repos 90s',tip:'Assis ou debout'},{name:'Curl barre',sets:'3×12',detail:'Repos 60s',tip:'Isole bien le biceps'},{name:'Planche',sets:'3×30s',detail:'Repos 45s',tip:'Corps rigide comme une planche'}],tips:'Programme A/B en alternance. Séance A : squat + développé + traction. Séance B : soulevé de terre + incliné + rowing. Reste simple et progresse régulièrement.',duration_val:50,freq:'3×/sem'},
+  {id:20,cat:'full',catLabel:'Full Body',name:'Athlete Performance',level:'avd',levelLabel:'Avancé',icon:'🏅',bg:'wcard-bg-full',auraColor:'rgba(192,38,211,0.2)',ledColor:'var(--magenta)',duration:90,sets:5,desc:'Programme athlétique complet. Force, puissance, endurance musculaire et mobilité.',tags:['Salle','Compétition'],exercises:[{name:'Clean & Jerk',sets:'5×3',detail:'Repos 3min',tip:'Mouvement olympique complexe — apprends avec un coach'},{name:'Back Squat lourd',sets:'5×5',detail:'Repos 3min',tip:'85-90% RM'},{name:'Développé couché lourd',sets:'5×5',detail:'Repos 3min',tip:'85-90% RM'},{name:'Soulevé de terre',sets:'3×3',detail:'Repos 4min',tip:'90-95% RM'},{name:'Traction lestée',sets:'4×6',detail:'Repos 2min',tip:'Poids suspendu à la ceinture'},{name:'Gainage complexe',sets:'5min circuit',detail:'Sans repos',tip:'Planche, relevé, rotation, gainage latéral'}],tips:'Ce programme est pour des athlètes confirmés. La récupération est autant prioritaire que l\'entraînement. Dors 8-9h, mange en surplus et prends des jours de repos complet.',duration_val:90,freq:'4×/sem'},
+  {id:21,cat:'full',catLabel:'Full Body',name:'PPL Split',level:'int',levelLabel:'Intermédiaire',icon:'🔄',bg:'wcard-bg-full',auraColor:'rgba(192,38,211,0.2)',ledColor:'var(--magenta)',duration:65,sets:4,desc:'Push-Pull-Legs, le programme le plus populaire en musculation. 6 séances par semaine.',tags:['Salle','Barre','Machine'],exercises:[{name:'Push (Jour 1) : Développé, Incliné, Dips, Triceps',sets:'Voir détail',detail:'',tip:'Tous les mouvements de poussée'},{name:'Pull (Jour 2) : Traction, Rowing, Tirage, Biceps',sets:'Voir détail',detail:'',tip:'Tous les mouvements de traction'},{name:'Legs (Jour 3) : Squat, Presse, Fentes, Mollets',sets:'Voir détail',detail:'',tip:'Membres inférieurs complets'},{name:'Répéter le cycle',sets:'Jour 4-5-6',detail:'',tip:'Repos le 7ème jour'}],tips:'Le PPL permet de toucher chaque groupe musculaire 2x par semaine, la fréquence optimale pour l\'hypertrophie. Adapte le volume progressivement sur 4-6 semaines.',duration_val:65,freq:'6×/sem'},
+  {id:22,cat:'full',catLabel:'Full Body',name:'Home Warrior',level:'deb',levelLabel:'Débutant',icon:'🏠',bg:'wcard-bg-full',auraColor:'rgba(192,38,211,0.2)',ledColor:'var(--magenta)',duration:35,sets:3,desc:'Programme poids de corps efficace. Aucun équipement nécessaire, entraîne-toi partout.',tags:['Poids corps','Maison','Voyage'],exercises:[{name:'Pompes',sets:'4×max',detail:'Repos 60s',tip:'Varie : classique, serrée, archer, déclinée'},{name:'Squats bulgares',sets:'3×12/jambe',detail:'Repos 90s',tip:'Pied sur une chaise'},{name:'Dips chaise',sets:'3×15',detail:'Repos 60s',tip:'Triceps, corps droit'},{name:'Tirage de table',sets:'3×10',detail:'Repos 90s',tip:'Allongé sous une table solide'},{name:'Gainage',sets:'3×45s',detail:'Repos 45s',tip:'Tous les angles'}],tips:'Le poids de corps peut construire un physique impressionnant. Progresser = augmenter le nombre de reps, ajouter des variantes plus difficiles, ajouter un lest (sac à dos).',duration_val:35,freq:'4×/sem'},
+  {id:23,cat:'cardio',catLabel:'Cardio',name:'Rowing Machine',level:'int',levelLabel:'Intermédiaire',icon:'🚣',bg:'wcard-bg-cardio',auraColor:'rgba(232,25,44,0.18)',ledColor:'var(--crimson)',duration:30,sets:0,desc:'Le rameur : cardio full body sous-estimé. Brûle les calories tout en travaillant dos et bras.',tags:['Salle','Rameur'],exercises:[{name:'Échauffement rameur',sets:'3 minutes',detail:'Cadence lente',tip:'Jambes, hanches, bras — dans cet ordre'},{name:'Intervalles intensité',sets:'1min fort / 1min léger × 8',detail:'FC max 85-90%',tip:'Pousse avec les jambes, pas que les bras'},{name:'Récupération active',sets:'3 minutes',detail:'Très léger',tip:'Ne t\'arrête pas brusquement'}],tips:'Le rameur est l\'un des meilleurs exercices cardiovasculaires car il sollicite 86% des muscles du corps. La technique est primordiale : 60% jambes, 20% hanches, 20% bras.',duration_val:30,freq:'3×/sem'},
+  {id:24,cat:'abs',catLabel:'Abdos',name:'Core Avancé',level:'avd',levelLabel:'Avancé',icon:'💎',bg:'wcard-bg-abs',auraColor:'rgba(232,121,249,0.22)',ledColor:'var(--led-mid)',duration:40,sets:5,desc:'Programme de core pour athlètes confirmés. Stabilité, force et contrôle moteur au maximum.',tags:['Salle','Barre','Anneaux'],exercises:[{name:'L-Sit barre ou anneaux',sets:'5×15s',detail:'Repos 60s',tip:'Jambes tendues parallèles au sol — très difficile'},{name:'Dragon Flag',sets:'4×8',detail:'Repos 90s',tip:'Bruce Lee\'s favorite — force abdominale extrême'},{name:'Relevés de jambes lestés',sets:'4×12',detail:'Repos 60s',tip:'Cheville lestée ou haltère entre les pieds'},{name:'Ab wheel rollout debout',sets:'3×8',detail:'Repos 90s',tip:'Niveau expert — va jusqu\'au sol et reviens'},{name:'Hollow body hold',sets:'3×30s',detail:'Repos 60s',tip:'Position de base de la gymnastique'}],tips:'Le core fort est la base de toutes les performances sportives. Ces exercices demandent une base solide. Maîtrise d\'abord le programme intermédiaire.',duration_val:40,freq:'3×/sem'},
+];
+
+/* ══════════════════════════════════════════
+   ÉTAT
+══════════════════════════════════════════ */
+let activeFilter='all';
+let activeLevel='all';
+let searchQuery='';
+
+/* ══════════════════════════════════════════
+   RENDU
+══════════════════════════════════════════ */
+const auraColors={
+  chest:'rgba(232,25,44,0.28)',
+  back:'rgba(30,120,255,0.22)',
+  legs:'rgba(0,200,80,0.22)',
+  arms:'rgba(255,160,0,0.22)',
+  shoulders:'rgba(192,38,211,0.22)',
+  abs:'rgba(232,121,249,0.22)',
+  cardio:'rgba(232,25,44,0.18)',
+  full:'rgba(192,38,211,0.20)',
+};
+const ledColors={
+  chest:'var(--crimson)',back:'var(--magenta)',legs:'var(--led-mid)',
+  arms:'var(--crimson)',shoulders:'var(--magenta-light)',
+  abs:'var(--led-mid)',cardio:'var(--crimson)',full:'var(--magenta)',
+};
+
+function getLvlClass(l){return l==='deb'?'lvl-deb':l==='int'?'lvl-int':'lvl-avd'}
+
+function renderCards(){
+  const grid=document.getElementById('workouts-grid');
+  let data=[...WORKOUTS];
+
+  if(activeFilter!=='all') data=data.filter(w=>w.cat===activeFilter);
+  if(activeLevel!=='all') data=data.filter(w=>w.level===activeLevel);
+  if(searchQuery) data=data.filter(w=>w.name.toLowerCase().includes(searchQuery)||w.desc.toLowerCase().includes(searchQuery)||w.catLabel.toLowerCase().includes(searchQuery));
+
+  document.getElementById('count-lbl').textContent=data.length+' programme'+(data.length>1?'s':'');
+
+  if(!data.length){
+    grid.innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">AUCUN RÉSULTAT</div><div class="empty-sub">Modifie tes filtres ou ta recherche</div></div>';
+    return;
+  }
+
+  grid.innerHTML=data.map(w=>{
+    const aura=auraColors[w.cat]||'rgba(232,25,44,0.2)';
+    const led=ledColors[w.cat]||'var(--crimson)';
+    return `
+    <div class="wcard" data-id="${w.id}">
+      <div class="wcard-led" style="background:linear-gradient(90deg,transparent,${led},transparent);box-shadow:0 0 12px ${led}"></div>
+      <div class="wcard-thumb ${w.bg}">
+        <div class="wcard-grid-overlay"></div>
+        <div class="wcard-aura" style="background:radial-gradient(circle,${aura} 0%,transparent 70%)"></div>
+        <div class="wcard-icon">${w.icon}</div>
+        <span class="wcard-badge-lvl ${getLvlClass(w.level)}">${w.levelLabel}</span>
+        <span class="wcard-duration">${w.duration}min</span>
+      </div>
+      <div class="wcard-body">
+        <div class="wcard-muscle">${w.catLabel}</div>
+        <div class="wcard-name">${w.name}</div>
+        <div class="wcard-desc">${w.desc}</div>
+        <div class="wcard-meta">
+          <span class="wcard-meta-item"><span class="meta-dot" style="background:${led}"></span>${w.duration}min</span>
+          ${w.sets?`<span class="wcard-meta-item"><span class="meta-dot" style="background:${led}"></span>${w.sets} séries</span>`:''}
+          <span class="wcard-meta-item"><span class="meta-dot" style="background:${led}"></span>${w.freq}</span>
+        </div>
+      </div>
+      <div class="wcard-cta">
+        <span class="wcard-cta-txt">Voir le programme</span>
+        <span class="wcard-cta-arr">→</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  /* Attacher les clics après rendu */
+  grid.querySelectorAll('.wcard').forEach(function(card){
+    card.addEventListener('click', function(e){
+      e.stopPropagation();
+      openModal(parseInt(this.dataset.id));
+    });
+  });
+}
+
+/* ══════════════════════════════════════════
+   MODALE
+══════════════════════════════════════════ */
+function openModal(id){
+  const w=WORKOUTS.find(x=>x.id===id);
+  if(!w)return;
+  const led=ledColors[w.cat]||'var(--crimson)';
+
+  document.getElementById('m-cat').textContent=w.catLabel+' — '+w.levelLabel;
+  document.getElementById('m-title').textContent=w.name;
+  document.getElementById('m-tags').innerHTML=w.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('');
+  document.getElementById('m-info').innerHTML=`
+    <div class="modal-info-cell"><div class="mic-val">${w.duration}min</div><div class="mic-lbl">Durée</div></div>
+    <div class="modal-info-cell"><div class="mic-val">${w.sets||'—'}</div><div class="mic-lbl">Séries</div></div>
+    <div class="modal-info-cell"><div class="mic-val">${w.freq}</div><div class="mic-lbl">Fréquence</div></div>
+  `;
+  document.getElementById('m-exercises').innerHTML=w.exercises.map((ex,i)=>`
+    <div class="exercise-item">
+      <div class="ex-num" style="color:${led}">${String(i+1).padStart(2,'0')}</div>
+      <div>
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-detail">${ex.sets}${ex.detail?' · '+ex.detail:''}</div>
+        ${ex.tip?`<div class="ex-tip">💡 ${ex.tip}</div>`:''}
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('m-tips').textContent=w.tips;
+
+  const ov=document.getElementById('modal-overlay');
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeModalDirect(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ══════════════════════════════════════════
+   FILTRES & EVENTS
+══════════════════════════════════════════ */
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    this.classList.add('active');
+    activeFilter=this.dataset.filter;
+    renderCards();
+  });
+});
+
+document.getElementById('level-select').addEventListener('change',function(){
+  activeLevel=this.value; renderCards();
+});
+
+document.getElementById('search-input').addEventListener('input',function(){
+  searchQuery=this.value.toLowerCase(); renderCards();
+});
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape') closeModalDirect();
+});
+
+/* Event listeners modale */
+document.getElementById('modal-overlay').addEventListener('click',function(e){
+  if(e.target===this) closeModalDirect();
+});
+document.getElementById('modal-close-btn').addEventListener('click',function(e){
+  e.stopPropagation();
+  closeModalDirect();
+});
+document.getElementById('modal-start-btn').addEventListener('click',function(e){
+  e.stopPropagation();
+  closeModalDirect();
+});
+document.getElementById('modal').addEventListener('click',function(e){
+  e.stopPropagation();
+});
+
+/* Init */
+renderCards();
+
+/* ── Transition page légère (sans forgex.js qui bloque les clics) ── */
+document.querySelectorAll('a[href]').forEach(function(a){
+  var h=a.getAttribute('href');
+  if(!h||h.startsWith('#')||h.startsWith('mailto:')||h.startsWith('tel:')||a.target==='_blank') return;
+  if(h.startsWith('http')&&!h.includes(window.location.hostname)) return;
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    document.body.style.opacity='0';
+    document.body.style.transition='opacity 0.3s ease';
+    setTimeout(function(){ window.location.href=h; },320);
+  });
+});
+document.body.style.opacity='0';
+document.body.style.transition='opacity 0.4s ease';
+requestAnimationFrame(function(){
+  requestAnimationFrame(function(){
+    document.body.style.opacity='1';
+  });
+});
+</script>
+<script src="forgex-ui.js"></script>
+<script src="forgex-nav.js"></script>
+</body>
+</html>

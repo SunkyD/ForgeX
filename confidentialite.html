@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ForgeX — Politique de Confidentialité</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="forgex-auth.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg-deep:#05050A;--bg-mid:#09090F;--bg-card:#0D0D16;--bg-raised:#111120;
+      --border-dim:rgba(255,255,255,0.04);--border-soft:rgba(255,255,255,0.08);
+      --crimson:#E8192C;--crimson-light:#FF3D52;--crimson-dim:rgba(232,25,44,0.18);--crimson-glow:rgba(232,25,44,0.40);
+      --magenta:#C026D3;--magenta-light:#D946EF;--magenta-dim:rgba(192,38,211,0.15);--magenta-glow:rgba(192,38,211,0.35);
+      --led-mid:#E879F9;--led-mid-glow:rgba(232,121,249,0.25);
+      --text-primary:#F2F0F8;--text-secondary:#8B8A9E;--text-muted:#4A4A62;
+      --font-display:'Bebas Neue',sans-serif;--font-body:'Barlow',sans-serif;
+      --font-cond:'Barlow Condensed',sans-serif;--font-mono:'DM Mono',monospace;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg-deep);color:var(--text-primary);font-family:var(--font-body);font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;opacity:0;transition:opacity 0.4s ease}
+    .led-top{height:2px;background:linear-gradient(90deg,transparent,var(--crimson) 20%,var(--led-mid) 50%,var(--magenta) 80%,transparent);box-shadow:0 0 10px var(--crimson-glow),0 0 30px var(--magenta-glow)}
+    nav{background:rgba(5,5,10,0.96);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:space-between;padding:0 64px;height:66px;border-bottom:1px solid var(--border-dim);position:sticky;top:0;z-index:100}
+    nav::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta-dim) 30%,var(--crimson-dim) 70%,transparent)}
+    .nav-logo{font-family:var(--font-display);font-size:26px;letter-spacing:6px;color:var(--text-primary);text-decoration:none;line-height:1}
+    .nav-logo em{font-style:normal;color:var(--crimson);text-shadow:0 0 18px var(--crimson-glow)}
+    .nav-right{display:flex;align-items:center;gap:24px}
+    .nav-login{font-family:var(--font-cond);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .nav-login:hover{color:var(--text-primary)}
+    .nav-cta{font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--crimson-light);background:transparent;border:1px solid var(--crimson);padding:9px 22px;cursor:pointer;box-shadow:0 0 10px var(--crimson-dim);transition:all 0.22s}
+    .nav-cta:hover{background:var(--crimson);color:#fff;box-shadow:0 0 22px var(--crimson-glow)}
+    .page-hero{padding:72px 64px 56px;border-bottom:1px solid var(--border-dim);position:relative;overflow:hidden}
+    .page-hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(232,25,44,0.04) 0%,transparent 65%);pointer-events:none}
+    .ph-tag{font-family:var(--font-mono);font-size:10px;letter-spacing:3.5px;text-transform:uppercase;color:var(--crimson);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+    .ph-tag::before{content:'';width:22px;height:1px;background:var(--crimson);box-shadow:0 0 6px var(--crimson)}
+    .ph-title{font-family:var(--font-display);font-size:clamp(56px,8vw,100px);line-height:0.88;letter-spacing:3px;margin-bottom:16px}
+    .ph-sub{font-size:14px;font-weight:300;color:var(--text-muted);font-family:var(--font-mono);letter-spacing:1px}
+    .legal-wrap{max-width:760px;margin:0 auto;padding:64px 64px 96px}
+    .legal-section{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border-dim)}
+    .legal-section:last-child{border-bottom:none}
+    .legal-section-title{font-family:var(--font-cond);font-size:16px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-primary);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--crimson-dim);display:flex;align-items:center;gap:12px}
+    .legal-section-title::before{content:'';width:4px;height:20px;background:var(--crimson);box-shadow:0 0 8px var(--crimson-glow);flex-shrink:0}
+    .legal-section-body{font-size:14px;font-weight:300;color:var(--text-secondary);line-height:1.85}
+    .legal-update{background:var(--bg-card);border:1px solid var(--border-soft);border-left:2px solid var(--crimson);padding:16px 20px;margin-bottom:48px;font-family:var(--font-mono);font-size:10px;letter-spacing:1px;color:var(--text-muted)}
+    .legal-update strong{color:var(--crimson-light)}
+    footer{background:var(--bg-deep);border-top:1px solid var(--border-dim);padding:40px 64px 24px}
+    .foot-btm{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .foot-copy{font-size:12px;font-weight:300;color:var(--text-muted)}
+    .foot-links{display:flex;gap:24px}
+    .foot-links a{font-family:var(--font-cond);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);text-decoration:none;transition:color 0.2s}
+    .foot-links a:hover{color:var(--crimson)}
+    @media(max-width:768px){nav{padding:0 24px}.legal-wrap{padding:40px 24px 64px}.page-hero{padding:48px 24px 40px}footer{padding:32px 24px 20px}}
+  </style>
+</head>
+<body>
+<div class="led-top"></div>
+<nav>
+  <a class="nav-logo" href="index.html">FORGE<em>X</em></a>
+  <div class="nav-right">
+    <a class="nav-login" href="login.html" id="nav-login-lnk">Connexion</a>
+    <button class="nav-cta" id="nav-cta-btn">Commencer →</button>
+  </div>
+</nav>
+<div class="page-hero">
+  <div class="ph-tag">Légal // RGPD</div>
+  <h1 class="ph-title">POLITIQUE DE<br>CONFIDENTIALITÉ</h1>
+  <div class="ph-sub">Dernière mise à jour : 1er janvier 2025</div>
+</div>
+<div class="legal-wrap">
+  <div class="legal-update">
+    <strong>Document légal</strong> — Ce document a été mis à jour le 1er janvier 2025. Pour toute question : <strong>contact@forgex.fr</strong>
+  </div>
+  
+    <div class="legal-section">
+      <h2 class="legal-section-title">1. Responsable du traitement</h2>
+      <div class="legal-section-body">ForgeX SAS, immatriculée au RCS de Paris sous le numéro XXX XXX XXX, dont le siège social est situé 42 Rue de la Performance, 75008 Paris, est responsable du traitement de vos données personnelles. Contact DPO : privacy@forgex.fr</div>
+    </div>
+    <div class="legal-section">
+      <h2 class="legal-section-title">2. Données collectées</h2>
+      <div class="legal-section-body">ForgeX collecte les données suivantes : données d'identification (pseudo, email, mot de passe hashé), données de profil (objectifs, niveau, informations physiques optionnelles), données d'utilisation (programmes consultés, topics créés, messages dans la communauté), données techniques (adresse IP, type de navigateur, cookies). Aucune donnée bancaire n'est stockée sur nos serveurs.</div>
+    </div>
+    <div class="legal-section">
+      <h2 class="legal-section-title">3. Finalités du traitement</h2>
+      <div class="legal-section-body">Vos données sont utilisées pour : la gestion de votre compte et de votre abonnement, la personnalisation de votre expérience sur la plateforme, l'envoi de communications relatives à vos services (confirmation d'abonnement, alertes importantes), l'amélioration de nos services et de notre coach IA, le respect de nos obligations légales.</div>
+    </div>
+    <div class="legal-section">
+      <h2 class="legal-section-title">4. Base légale</h2>
+      <div class="legal-section-body">Le traitement de vos données repose sur : l'exécution du contrat (abonnement, accès aux services), votre consentement pour les communications marketing, notre intérêt légitime pour l'amélioration de nos services, le respect de nos obligations légales.</div>
+    </div>
+    <div class="legal-section">
+      <h2 class="legal-section-title">5. Conservation des données</h2>
+      <div class="legal-section-body">Vos données sont conservées pendant la durée de votre abonnement et 3 ans après sa résiliation pour les obligations légales. Les données de connexion sont conservées 12 mois. Les données anonymisées à des fins statistiques peuvent être conservées indefiniment.</div>
+    </div>
+    <div class="legal-section">
+      <h2 class="legal-section-title">6. Partage des données</h2>
+      <div class="legal-section-body">ForgeX ne vend pas vos données personnelles à des tiers. Vos données peuvent être partagées avec nos sous-traitants techniques (hébergement, paiement Stripe, analytics) dans le cadre de contrats de traitement de données conformes au RGPD. Aucun transfert hors UE sans garanties adéquates.</div>
+    </div>
+    <div class="legal-section">
+      <h2 class="legal-section-title">7. Vos droits</h2>
+      <div class="legal-section-body">Conformément au RGPD, vous disposez des droits suivants : droit d'accès à vos données, droit de rectification, droit à l'effacement (droit à l'oubli), droit à la portabilité, droit d'opposition au traitement, droit à la limitation du traitement. Pour exercer ces droits : privacy@forgex.fr. Vous pouvez également déposer une réclamation auprès de la CNIL.</div>
+    </div>
+    <div class="legal-section">
+      <h2 class="legal-section-title">8. Cookies</h2>
+      <div class="legal-section-body">ForgeX utilise des cookies strictement nécessaires au fonctionnement de la plateforme (session, authentification). Des cookies analytiques anonymes peuvent être utilisés avec votre consentement. Vous pouvez gérer vos préférences de cookies depuis les paramètres de votre navigateur.</div>
+    </div>
+    <div class="legal-section">
+      <h2 class="legal-section-title">9. Sécurité</h2>
+      <div class="legal-section-body">ForgeX met en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données : chiffrement HTTPS, hachage des mots de passe, accès restreint aux données, audits de sécurité réguliers. En cas de violation de données susceptible d'affecter vos droits, vous serez notifié dans les 72 heures.</div>
+    </div>
+</div>
+<footer>
+  <div class="foot-btm">
+    <span class="foot-copy">© 2025 ForgeX SAS — Tous droits réservés</span>
+    <div class="foot-links">
+      <a href="cgu.html">CGU</a>
+      <a href="confidentialite.html">Confidentialité</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+    </div>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('a[href]').forEach(function(a){
+  const h=a.getAttribute('href');
+  if(!h||h.startsWith('#')||h.startsWith('mailto:')||a.target==='_blank') return;
+  if(h.startsWith('http')&&!h.includes(window.location.hostname)) return;
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    document.body.style.opacity='0';
+    document.body.style.transition='opacity 0.3s ease';
+    setTimeout(function(){window.location.href=h;},320);
+  });
+});
+requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.style.opacity='1'; }); });
+</script>
+</body>
+</html>
