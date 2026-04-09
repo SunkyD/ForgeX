@@ -1,103 +1,221 @@
 (function(){
-  var s = document.createElement('style');
-  s.textContent = `
-    .fxb{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:10px;cursor:pointer;z-index:10000;-webkit-tap-highlight-color:transparent}
-    .fxb span{display:block;width:25px;height:3px;background:#fff;border-radius:2px;pointer-events:none}
-    .fxb.o span:nth-child(1){transform:translateY(8px) rotate(45deg);background:#E8192C}
-    .fxb.o span:nth-child(2){opacity:0}
-    .fxb.o span:nth-child(3){transform:translateY(-8px) rotate(-45deg);background:#E8192C}
-    #fxm{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#07070F;z-index:9998;padding-top:70px;overflow-y:auto}
-    #fxm.o{display:block}
-    #fxm a{display:block;color:#fff;font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:18px 24px;border-bottom:1px solid rgba(255,255,255,0.1)}
-    #fxm a:active{background:rgba(232,25,44,0.2)}
-    #fxm .fxc{padding:20px 24px;display:flex;flex-direction:column;gap:12px;margin-top:8px}
-    #fxm .fxc a{border:1px solid rgba(255,255,255,0.2);text-align:center;font-size:15px;padding:15px;border-bottom:none}
-    #fxm .fxc .fxr{color:#FF3D52;border-color:#E8192C;background:none;cursor:pointer;font-family:inherit;width:100%}
-    .fxX{position:fixed;top:14px;right:16px;z-index:9999;background:rgba(255,255,255,0.1);border:none;color:#fff;width:40px;height:40px;font-size:20px;cursor:pointer;border-radius:50%;display:none;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
-    .fxX.o{display:flex}
-    @media(max-width:900px){.fxb{display:flex!important}nav .nav-links{display:none!important}nav .nav-right{display:none!important}nav{padding:0 16px!important}}
-    @media(min-width:901px){#fxm,.fxb,.fxX{display:none!important}}
-  `;
-  document.head.appendChild(s);
 
-  function go(){
-    var nav = document.querySelector('nav');
-    if(!nav) return;
-
-    /* Burger */
-    var b = document.createElement('button');
-    b.className = 'fxb'; b.type = 'button';
-    b.innerHTML = '<span></span><span></span><span></span>';
-    nav.appendChild(b);
-
-    /* Bouton X */
-    var x = document.createElement('button');
-    x.className = 'fxX'; x.type='button'; x.textContent='✕';
-    document.body.appendChild(x);
-
-    /* Menu */
-    var m = document.createElement('div');
-    m.id = 'fxm';
-
-    var links = [
-      ['index.html','🏠 Accueil'],
-      ['entrainements.html','🏋️ Entraînements'],
-      ['nutrition.html','🥗 Nutrition'],
-      ['coaches.html','🤖 Coaches'],
-      ['communaute.html','💬 Communauté'],
-      ['tarifs.html','⚡ Tarifs'],
-      ['blog.html','📝 Blog'],
-      ['faq.html','❓ FAQ'],
-    ];
-
-    /* Lire les liens du nav desktop si dispo */
-    var dl = nav.querySelectorAll('.nav-links a');
-    if(dl.length > 2){
-      links = [];
-      dl.forEach(function(a){ links.push([a.getAttribute('href'), a.textContent.trim()]); });
-      links.push(['blog.html','📝 Blog'],['faq.html','❓ FAQ']);
-    }
-
-    var cur = location.pathname.split('/').pop()||'index.html';
-    links.forEach(function(l){
-      var a = document.createElement('a');
-      a.href = l[0]; a.textContent = l[1];
-      if(l[0]===cur) a.style.color='#FF3D52';
-      a.addEventListener('click', close);
-      m.appendChild(a);
-    });
-
-    /* Auth bottom */
-    var c = document.createElement('div');
-    c.className = 'fxc';
-
-    var li = document.createElement('a');
-    li.id = 'fxm-login'; li.className = 'fxm-la';
-    c.appendChild(li);
-
-    var ct = document.createElement('button');
-    ct.className = 'fxr'; ct.type='button';
-    ct.addEventListener('click',function(){ close(); window.location.href = isOk()?'dashboard.html':'tarifs.html'; });
-    c.appendChild(ct);
-    m.appendChild(c);
-    document.body.appendChild(m);
-
-    sync(); setTimeout(sync,400); setTimeout(sync,1200);
-
-    function open(){ m.classList.add('o'); b.classList.add('o'); x.classList.add('o'); document.body.style.overflow='hidden'; }
-    function close(){ m.classList.remove('o'); b.classList.remove('o'); x.classList.remove('o'); document.body.style.overflow=''; }
-
-    b.addEventListener('click', function(e){ e.stopPropagation(); m.classList.contains('o')?close():open(); });
-    x.addEventListener('click', close);
-
-    function isOk(){ return typeof FX!=='undefined'&&FX.isLoggedIn(); }
-    function sync(){
-      var u = isOk()&&typeof FX!=='undefined'?FX.getUser():null;
-      li.textContent = u?'👤 '+u:'Connexion';
-      li.href = u?'dashboard.html':'login.html';
-      ct.textContent = u?'Mon espace →':'Commencer →';
-    }
+/* CSS injecté */
+var style = document.createElement('style');
+style.textContent = `
+  .fxbtn{
+    display:none!important;
+    flex-direction:column;gap:6px;
+    background:#111;border:1px solid #333;
+    padding:10px 12px;cursor:pointer;
+    position:relative;z-index:99999;
+    -webkit-tap-highlight-color:transparent;
+    min-width:44px;min-height:44px;
+    align-items:center;justify-content:center;
+  }
+  .fxbtn span{
+    display:block;width:22px;height:2px;
+    background:#fff;pointer-events:none;
+  }
+  @media(max-width:900px){
+    .fxbtn{display:flex!important}
+    nav .nav-links{display:none!important}
+    nav .nav-right{display:none!important}
+    nav{padding:0 12px!important}
   }
 
-  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',go):go();
+  #fxoverlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    width:100vw;height:100vh;
+    background:#050508;
+    z-index:999999;
+    overflow-y:scroll;
+    -webkit-overflow-scrolling:touch;
+    top:0;left:0;right:0;bottom:0;
+  }
+  #fxoverlay.show{display:block!important}
+
+  #fxoverlay ul{
+    list-style:none;margin:0;padding:80px 0 0;
+  }
+  #fxoverlay ul li a{
+    display:block;
+    color:#fff!important;
+    font-size:22px;font-weight:800;
+    letter-spacing:3px;text-transform:uppercase;
+    text-decoration:none!important;
+    padding:20px 28px;
+    border-bottom:1px solid #1a1a2e;
+    font-family:Arial,sans-serif;
+  }
+  #fxoverlay ul li a:active,
+  #fxoverlay ul li a:focus{
+    background:#E8192C22;
+    color:#FF3D52!important;
+  }
+  #fxclose{
+    position:fixed;
+    top:14px;right:14px;
+    z-index:9999999;
+    width:48px;height:48px;
+    background:#222;border:2px solid #444;
+    color:#fff;font-size:24px;
+    cursor:pointer;border-radius:8px;
+    display:none;
+    align-items:center;justify-content:center;
+    -webkit-tap-highlight-color:transparent;
+    font-family:Arial,sans-serif;
+    line-height:1;
+  }
+  #fxclose.show{display:flex!important}
+
+  #fxoverlay .fxbottom{
+    padding:24px 28px 80px;
+    display:flex;flex-direction:column;gap:12px;
+    border-top:1px solid #1a1a2e;
+    margin-top:16px;
+  }
+  #fxoverlay .fxbottom a,
+  #fxoverlay .fxbottom button{
+    display:block;width:100%;
+    text-align:center;
+    font-size:16px;font-weight:700;
+    letter-spacing:2px;text-transform:uppercase;
+    padding:16px 20px;
+    font-family:Arial,sans-serif;
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    text-decoration:none;
+  }
+  #fxoverlay .fxbottom a{
+    color:#fff!important;
+    border:1px solid #333;
+    background:#111;
+    box-sizing:border-box;
+  }
+  #fxoverlay .fxbottom button{
+    color:#FF3D52;
+    border:2px solid #E8192C;
+    background:none;
+  }
+`;
+document.head.appendChild(style);
+
+/* ── Overlay ── */
+var overlay = document.createElement('div');
+overlay.id = 'fxoverlay';
+
+var closeBtn = document.createElement('button');
+closeBtn.id = 'fxclose';
+closeBtn.textContent = '✕';
+closeBtn.type = 'button';
+document.body.appendChild(closeBtn);
+
+/* ── Liste de liens ── */
+var ul = document.createElement('ul');
+
+var PAGES = [
+  ['index.html','Accueil'],
+  ['entrainements.html','Entraînements'],
+  ['nutrition.html','Nutrition'],
+  ['coaches.html','Coaches'],
+  ['communaute.html','Communauté'],
+  ['tarifs.html','Tarifs'],
+  ['blog.html','Blog'],
+  ['faq.html','FAQ'],
+];
+
+var cur = (window.location.pathname.split('/').pop()||'index.html');
+
+PAGES.forEach(function(p){
+  var li = document.createElement('li');
+  var a = document.createElement('a');
+  a.href = p[0];
+  a.textContent = p[1];
+  if(p[0] === cur) a.style.color = '#FF3D52';
+  a.addEventListener('click', fermer);
+  li.appendChild(a);
+  ul.appendChild(li);
+});
+
+overlay.appendChild(ul);
+
+/* ── Auth bottom ── */
+var bottom = document.createElement('div');
+bottom.className = 'fxbottom';
+
+var aLogin = document.createElement('a');
+aLogin.id = 'fx-mob-la';
+bottom.appendChild(aLogin);
+
+var btnCta = document.createElement('button');
+btnCta.type = 'button';
+btnCta.id = 'fx-mob-cta';
+btnCta.addEventListener('click', function(){
+  fermer();
+  var ok = typeof FX!=='undefined' && FX.isLoggedIn();
+  window.location.href = ok ? 'dashboard.html' : 'tarifs.html';
+});
+bottom.appendChild(btnCta);
+overlay.appendChild(bottom);
+document.body.appendChild(overlay);
+
+/* ── Burger dans la nav ── */
+function injectBurger(){
+  var nav = document.querySelector('nav');
+  if(!nav || nav.querySelector('.fxbtn')) return;
+  var btn = document.createElement('button');
+  btn.className = 'fxbtn';
+  btn.type = 'button';
+  btn.setAttribute('aria-label','Menu');
+  btn.innerHTML = '<span></span><span></span><span></span>';
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    overlay.classList.contains('show') ? fermer() : ouvrir();
+  });
+  nav.appendChild(btn);
+}
+
+function ouvrir(){
+  overlay.classList.add('show');
+  closeBtn.classList.add('show');
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+  syncAuth();
+}
+
+function fermer(){
+  overlay.classList.remove('show');
+  closeBtn.classList.remove('show');
+  document.documentElement.style.overflow = '';
+  document.body.style.overflow = '';
+}
+
+closeBtn.addEventListener('click', fermer);
+
+function syncAuth(){
+  var la = document.getElementById('fx-mob-la');
+  var ct = document.getElementById('fx-mob-cta');
+  if(!la || !ct) return;
+  var ok = typeof FX!=='undefined' && FX.isLoggedIn();
+  var u  = ok && typeof FX!=='undefined' ? FX.getUser() : null;
+  la.textContent = u ? '👤 '+u : 'Connexion';
+  la.href = u ? 'dashboard.html' : 'login.html';
+  ct.textContent = u ? 'Mon espace →' : 'Commencer →';
+}
+
+/* ── Init ── */
+function init(){
+  injectBurger();
+  syncAuth();
+  setTimeout(syncAuth, 500);
+  setTimeout(syncAuth, 1500);
+}
+
+document.readyState==='loading'
+  ? document.addEventListener('DOMContentLoaded', init)
+  : init();
+
 })();
