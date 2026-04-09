@@ -2,6 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="shortcut icon" href="favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ForgeX — Connexion</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -264,6 +266,8 @@
 
       <!-- ── FORMULAIRE CONNEXION ── -->
       <div id="panel-login">
+        <!-- Message erreur global -->
+        <div id="login-global-err" style="display:none;font-family:var(--font-mono);font-size:11px;letter-spacing:1px;color:#fff;background:rgba(232,25,44,0.15);border:1px solid rgba(232,25,44,0.4);padding:12px 16px;margin-bottom:16px"></div>
         <form id="login-form" onsubmit="handleLogin(event)" novalidate>
           <div class="field" id="field-email">
             <label class="field-label" for="email">Pseudo</label>
@@ -469,17 +473,26 @@
     /* Reset erreurs */
     document.getElementById('field-email').classList.remove('error');
     document.getElementById('field-password').classList.remove('error');
+    const globalErr = document.getElementById('login-global-err');
+    if(globalErr) globalErr.style.display = 'none';
 
     if(!pseudo){ document.getElementById('field-email').classList.add('error'); return; }
     if(!password){ document.getElementById('field-password').classList.add('error'); return; }
 
+    /* Debug : vérifier que FX est bien chargé */
+    if(typeof FX === 'undefined'){
+      if(globalErr){ globalErr.textContent = '⚠️ Erreur système — rechargez la page'; globalErr.style.display='block'; }
+      return;
+    }
+
     const result = FX.login(pseudo, password);
     if(!result.ok){
-      /* Afficher erreur sur le champ pseudo */
       const field = document.getElementById('field-email');
       field.classList.add('error');
       const errEl = field.querySelector('.field-error');
       if(errEl) errEl.textContent = result.err;
+      /* Message global visible */
+      if(globalErr){ globalErr.textContent = '❌ ' + result.err; globalErr.style.display='block'; }
       return;
     }
 
